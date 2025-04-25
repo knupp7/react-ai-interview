@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/Home.css';
-import STRINGS from '../constants/homeStrings';
+import HOME_STRINGS from '../constants/homeStrings';
 
-const steps = STRINGS.SLIDES;
+const steps = HOME_STRINGS.SLIDES;
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,34 +17,21 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      <nav className="navbar">
-        <div className="logo">{STRINGS.NAV.LOGO}</div>
-        <ul className="nav-links">
-          <li className="active">{STRINGS.NAV.HOME}</li>
-          <li>{STRINGS.NAV.INTERVIEW}</li>
-          <li>{STRINGS.NAV.CONTACT}</li>
-        </ul>
-        <div className="auth-buttons">
-          <button className="signup">{STRINGS.NAV.SIGNUP}</button>
-          <button className="login">{STRINGS.NAV.LOGIN}</button>
-        </div>
-      </nav>
-
       <div className="hero">
         <div className="hero-center">
-          <h1>{STRINGS.HERO.TITLE}</h1>
-          <h2>{STRINGS.HERO.SUBTITLE}</h2>
+          <h1>{HOME_STRINGS.HERO.TITLE}</h1>
+          <h2>{HOME_STRINGS.HERO.SUBTITLE}</h2>
 
           <div className="avatar-wrapper">
-            <span className="hero-tag left">{STRINGS.HERO.TAG_LEFT}</span>
+            <span className="hero-tag left">{HOME_STRINGS.HERO.TAG_LEFT}</span>
             <img src="/avatar-placeholder.svg" alt="avatar" className="avatar" />
-            <span className="hero-tag right">{STRINGS.HERO.TAG_RIGHT}</span>
+            <span className="hero-tag right">{HOME_STRINGS.HERO.TAG_RIGHT}</span>
           </div>
         </div>
     </div>
 
       <div className="">
-        <button className="start-button">{STRINGS.HERO.START_BUTTON}</button>
+        <button className="start-button">{HOME_STRINGS.HERO.START_BUTTON}</button>
       </div>
 
       <section className="slider">

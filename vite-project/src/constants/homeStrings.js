@@ -1,4 +1,4 @@
-const STRINGS = {
+const HOME_STRINGS = {
     NAV: {
       LOGO: '🧊 Duri–Intern',
       HOME: 'Home',
@@ -38,4 +38,4 @@ const STRINGS = {
     ],
   };
 
-export default STRINGS;
+export default HOME_STRINGS;
