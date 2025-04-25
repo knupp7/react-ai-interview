@@ -7,6 +7,7 @@
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
   --primary-color: #1f4fe2;
+  --light-primary-color: #f5f8ff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
