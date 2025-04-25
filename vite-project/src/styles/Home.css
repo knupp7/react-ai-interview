@@ -11,55 +11,7 @@ body {
 
 .home-container {
     width: 100%;
-}
-  
-.navbar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #ddd;
-}
-
-.logo {
-    font-weight: bold;
-}
-
-.nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-}
-
-.nav-links li {
-    cursor: pointer;
-    padding: 0.5rem;
-    transition: 0.3s;
-}
-
-.nav-links li:hover,
-.nav-links .active {
-    color: var(--primary-color);
-    font-weight: bold;
-    border-bottom: 2px solid var(--primary-color);
-}
-
-.auth-buttons button {
-    margin-left: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    border: 1px solid #444;
-    cursor: pointer;
-}
-
-.login {
-    background: var(--primary-color);
-    color: white;
-}
-
-.signup {
-    background: white;
-    color: black;
+    padding-top: 70px;
 }
 
 .hero {
