@@ -32,7 +32,6 @@
 .nav-links .active {
     color: var(--primary-color);
     font-weight: bold;
-    border-bottom: 2px solid var(--primary-color);
 }
 
 .auth-buttons button {

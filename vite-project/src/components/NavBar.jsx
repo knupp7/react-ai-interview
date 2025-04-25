@@ -1,6 +1,6 @@
 import React from 'react';
 import APP_STRINGS from '../constants/appStrings';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import '../styles/NavBar.css';
 
 export default function NavBar() {
@@ -8,9 +8,9 @@ export default function NavBar() {
     <nav className="navbar">
       <div className="logo">{APP_STRINGS.NAV.LOGO}</div>
       <ul className="nav-links">
-        <li><Link to="/" className="active">{APP_STRINGS.NAV.HOME}</Link></li>
-        <li><Link to="/interview">{APP_STRINGS.NAV.INTERVIEW}</Link></li>
-        <li><Link to="/contact">{APP_STRINGS.NAV.CONTACT}</Link></li>
+        <li><NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>{APP_STRINGS.NAV.HOME}</NavLink></li>
+        <li><NavLink to="/interview" className={({ isActive }) => isActive ? 'active' : ''}>{APP_STRINGS.NAV.INTERVIEW}</NavLink></li>
+        <li><NavLink to="/contact" className={({ isActive }) => isActive ? 'active' : ''}>{APP_STRINGS.NAV.CONTACT}</NavLink></li>
       </ul>
       <div className="auth-buttons">
         <button className="signup">{APP_STRINGS.NAV.SIGNUP}</button>
