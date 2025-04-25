@@ -1,26 +1,8 @@
 import React, { useState } from 'react';
 import '../styles/Home.css';
+import STRINGS from '../constants/homeStrings';
 
-const steps = [
-  {
-    title: 'STEP 1',
-    description: '면접관 페르소나와 인터뷰 시작',
-    subtitle: '면접관 페르소나',
-    image: '/step1-persona.png',
-  },
-  {
-    title: 'STEP 2',
-    description: '직무, 자소서 기반 맞춤 질문 생성',
-    subtitle: '맞춤 질문',
-    image: '/step2-example.png',
-  },
-  {
-    title: 'STEP 3',
-    description: 'AI가 답변을 분석하여 종합리포트를 제공합니다.',
-    subtitle: '종합리포트 제공',
-    image: '/step3-report.png',
-  },
-];
+const steps = STRINGS.SLIDES;
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,33 +18,33 @@ export default function Home() {
   return (
     <div className="home-container">
       <nav className="navbar">
-        <div className="logo">🧊 Duri–Intern</div>
+        <div className="logo">{STRINGS.NAV.LOGO}</div>
         <ul className="nav-links">
-          <li className="active">Home</li>
-          <li>Interview</li>
-          <li>Contact</li>
+          <li className="active">{STRINGS.NAV.HOME}</li>
+          <li>{STRINGS.NAV.INTERVIEW}</li>
+          <li>{STRINGS.NAV.CONTACT}</li>
         </ul>
         <div className="auth-buttons">
-          <button className="signup">회원가입</button>
-          <button className="login">로그인</button>
+          <button className="signup">{STRINGS.NAV.SIGNUP}</button>
+          <button className="login">{STRINGS.NAV.LOGIN}</button>
         </div>
       </nav>
 
       <div className="hero">
         <div className="hero-center">
-          <h1>합격을 결정짓는</h1>
-          <h2>Ai 모의면접</h2>
+          <h1>{STRINGS.HERO.TITLE}</h1>
+          <h2>{STRINGS.HERO.SUBTITLE}</h2>
 
           <div className="avatar-wrapper">
-            <span className="hero-tag left">직무, 자소서, 회사 맞춤 질문으로 완벽 대비</span>
+            <span className="hero-tag left">{STRINGS.HERO.TAG_LEFT}</span>
             <img src="/avatar-placeholder.svg" alt="avatar" className="avatar" />
-            <span className="hero-tag right">면접 끝나고 바로 받는 AI 분석리포트</span>
+            <span className="hero-tag right">{STRINGS.HERO.TAG_RIGHT}</span>
           </div>
         </div>
     </div>
 
       <div className="">
-        <button className="start-button">지금 바로 시작하기</button>
+        <button className="start-button">{STRINGS.HERO.START_BUTTON}</button>
       </div>
 
       <section className="slider">
