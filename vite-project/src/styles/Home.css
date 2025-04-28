@@ -1,0 +1,157 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    color: black;
+}
+
+.home-container {
+    width: 100%;
+    padding-top: 70px;
+}
+
+.hero {
+    background: var(--light-primary-color);
+    padding: 2rem 0 0 0;
+}
+
+.hero-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.avatar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.hero-tag {
+    background: white;
+    border-radius: 9999px;
+    padding: 0.6rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    margin: 1rem 0 0.5rem;
+    font-weight: bold;
+}
+
+.hero h2 {
+    font-size: 2rem;
+    margin: 0.5rem 0 1rem;
+}
+
+.avatar {
+    width: 300px;
+}
+
+.start-button {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.8rem 2rem;
+    margin-top: 2rem;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.slider {
+    width: 100%;
+    padding: 2rem 2rem 4rem;
+}
+
+.slider-top-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.dots {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: 0.3s;
+}
+
+.dot.active {
+    background: var(--primary-color);
+}
+
+.slide-box {
+    width: 1000px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 0 auto;
+}
+
+.slide-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.text-box {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    text-align: left;
+}
+
+.step-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.step-label {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 2px solid #333;
+    border-radius: 999px;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.step-desc {
+    font-size: 1rem;
+    color: #333;
+}
+
+.step-subtitle {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.step-image {
+    width: 380px;
+    height: 240px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
