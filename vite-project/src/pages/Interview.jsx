@@ -16,8 +16,16 @@ export default function Interview() {
   const [selectedCompany, setSelectedCompany] = useState(DEFAULT_COMPANIES[0]);
   const [selectedRole, setSelectedRole] = useState(DEFAULT_ROLES[0]);
   const [resume, setResume] = useState("");
+  const [errors, setErrors] = useState({
+    name: "",
+    age: "",
+    gender: "",
+    resume: "",
+  });  
 
   const handleSubmit = () => {
+    if (!validateForm()) return; // 유효성 검사 통과하지 않으면 리턴
+  
     const formData = {
       name,
       age,
@@ -32,6 +40,44 @@ export default function Interview() {
     navigate("/interview/chat", { state: formData });
   };
 
+  const validateForm = () => {
+    const newErrors = {
+      name: "",
+      age: "",
+      gender: "",
+      resume: "",
+    };
+  
+    if (!name) {
+      newErrors.name = "이름을 입력해주세요.";
+    } else if (name.length > 7) {
+      newErrors.name = "이름은 7자 이내여야 합니다.";
+    } else if (!/^[가-힣a-zA-Z]+$/.test(name)) {
+      newErrors.name = "이름에는 한글 또는 영문자만 입력 가능합니다.";
+    }
+  
+    if (!age) {
+      newErrors.age = "나이를 입력해주세요.";
+    } else if (!/^\d+$/.test(age)) {
+      newErrors.age = "나이는 숫자만 입력해주세요.";
+    } else if (Number(age) < 1 || Number(age) > 100) {
+      newErrors.age = "나이는 1살 이상 100살 이하로 입력해주세요.";
+    }
+  
+    if (!gender) {
+      newErrors.gender = "성별을 선택해주세요.";
+    }
+  
+    if (!resume || resume.length < 20) {
+      newErrors.resume = "자기소개서는 20자 이상 입력해주세요.";
+    }
+  
+    setErrors(newErrors);
+  
+    // 에러가 하나라도 있으면 false 반환
+    return !Object.values(newErrors).some((msg) => msg);
+  };
+  
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -64,35 +110,44 @@ export default function Interview() {
         </div>
         <div className="form-grid">
           <label>{INTERVIEW_LABELS.name}</label>
-          <input 
+          <div className="input-with-error">
+            <input 
             type="text" 
             value={name} 
             onChange={(e) => setName(e.target.value)}
             placeholder={INTERVIEW_LABELS.name} />
+            {errors.name && <span className="error-msg">{errors.name}</span>}
+          </div>
 
           <label>{INTERVIEW_LABELS.age}</label>
-          <input 
-            type="text" 
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            placeholder={INTERVIEW_LABELS.age} />
+          <div className="input-with-error">
+            <input 
+              type="text" 
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              placeholder={INTERVIEW_LABELS.age} />
+            {errors.age && <span className="error-msg">{errors.age}</span>}
+          </div>
 
           <label>{INTERVIEW_LABELS.gender}</label>
-          <div className="gender-select">
-            <button
-              type="button"
-              className={gender === "male" ? "gender-btn active" : "gender-btn"}
-              onClick={() => setGender("male")}
-            >
-              {GENDER.male}
-            </button>
-            <button
-              type="button"
-              className={gender === "female" ? "gender-btn active" : "gender-btn"}
-              onClick={() => setGender("female")}
-            >
-              {GENDER.female}
-            </button>
+          <div className="input-with-error">
+            <div className="gender-select">
+              <button
+                type="button"
+                className={gender === "male" ? "gender-btn active" : "gender-btn"}
+                onClick={() => setGender("male")}
+              >
+                {GENDER.male}
+              </button>
+              <button
+                type="button"
+                className={gender === "female" ? "gender-btn active" : "gender-btn"}
+                onClick={() => setGender("female")}
+              >
+                {GENDER.female}
+              </button>
+            </div>
+            {errors.gender && <span className="error-msg">{errors.gender}</span>}
           </div>
 
           <label>{INTERVIEW_LABELS.organization}</label>
@@ -151,10 +206,13 @@ export default function Interview() {
         <label>
           {INTERVIEW_LABELS.resume}<span className="required">*</span>
         </label>
-        <textarea
-          value={resume}
-          onChange={(e) => setResume(e.target.value)} 
-          placeholder={INTERVIEW_LABELS.resumePlaceholder}></textarea>
+        <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+          <textarea
+            value={resume}
+            onChange={(e) => setResume(e.target.value)} 
+            placeholder={INTERVIEW_LABELS.resumePlaceholder}/>
+          {errors.resume && <span className="error-msg resume-error">{errors.resume}</span>}
+        </div>
       </div>
 
       <div className="submit-btn">
