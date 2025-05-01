@@ -3,12 +3,38 @@ import '../styles/interview.css';
 
 export default function Interview() {
   const [gender, setGender] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+    }
+  };
 
   return (
     <div className="interview-container">
       <h2 className="section-title">회원정보</h2>
       <div className="profile-section">
-        <div className="profile-image">🙍‍♂️</div>
+      <div className="profile-image-wrapper">
+          <div className="profile-image">
+            {profileImage ? (
+              <img src={profileImage} alt="profile" className="image-preview" />
+            ) : (
+              <span role="img" aria-label="default">🙍‍♂️</span>
+            )}
+          </div>
+          <label className="upload-button">
+            <img src="/ic_camera.svg" alt="카메라" className="camera-icon" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </label>
+        </div>
         <div className="form-grid">
           <label>이름</label>
           <input type="text" placeholder="이름" />

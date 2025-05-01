@@ -43,15 +43,56 @@ hr {
     text-align: left;
 }
 
-.profile-image {
+.profile-image-wrapper {
+    position: relative;
     width: 120px;
     height: 120px;
+}
+  
+.profile-image {
+    width: 100%;
+    height: 100%;
     background-color: #ddd;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 32px;
     border-radius: 8px;
+    overflow: hidden;
+}
+  
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+  
+.upload-button {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    background-color: rgb(166, 166, 166);
+    border: 1px solid #aaa;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.upload-button:hover {
+    background-color: black;
+}
+
+.camera-icon {
+    width: 20px;
+    height: 20px;
+    color: white;
 }
 
 .form-grid {
