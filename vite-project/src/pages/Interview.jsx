@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import '../styles/interview.css';
 import { INTERVIEW_LABELS, GENDER } from "../constants/interviewFormStrings";
+import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../data/interviewSelectOptions";
 
 export default function Interview() {
   const [gender, setGender] = useState(null);
@@ -82,9 +83,9 @@ export default function Interview() {
           {INTERVIEW_LABELS.company}<span className="required">*</span>
         </label>
         <select>
-          <option>네이버</option>
-          <option>카카오</option>
-          <option>라인</option>
+          {DEFAULT_COMPANIES.map((company, idx) => (
+            <option key={idx}>{company}</option>
+          ))}
         </select>
       </div>
 
@@ -93,9 +94,9 @@ export default function Interview() {
           {INTERVIEW_LABELS.role}<span className="required">*</span>
         </label>
         <select>
-          <option>모바일 개발자</option>
-          <option>프론트엔드 개발자</option>
-          <option>백엔드 개발자</option>
+          {DEFAULT_ROLES.map((company, idx) => (
+            <option key={idx}>{company}</option>
+          ))}
         </select>
       </div>
 
