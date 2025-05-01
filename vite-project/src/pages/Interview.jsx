@@ -29,7 +29,7 @@ export default function Interview() {
       resume,
       profileImage,
     };
-    navigate("/interview-chat", { state: formData });
+    navigate("/interview/chat", { state: formData });
   };
 
   const handleImageChange = (e) => {

@@ -15,7 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/interview" element={<Interview />} />
         <Route path="/contact" element={<Contact  />} />
-        <Route path="/interview-chat" element={<InterviewChat />} />  
+        <Route path="/interview/chat" element={<InterviewChat />} />  
       </Routes>
     </div>
   );
