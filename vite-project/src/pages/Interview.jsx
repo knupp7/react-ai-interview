@@ -169,14 +169,14 @@ export default function Interview() {
 
 
       <h2 className="section-title">
-        {INTERVIEW_LABELS.inputInfo}<span className="required">*</span>
+        {INTERVIEW_LABELS.inputInfo}<span className="label-required">*</span>
       </h2>
 
       <hr></hr>
 
       <div className="form-group">
         <label>
-          {INTERVIEW_LABELS.company}<span className="required">*</span>
+          {INTERVIEW_LABELS.company}<span className="label-required">*</span>
         </label>
         <select
           value={selectedCompany}
@@ -190,7 +190,7 @@ export default function Interview() {
 
       <div className="form-group">
         <label>
-          {INTERVIEW_LABELS.role}<span className="required">*</span>
+          {INTERVIEW_LABELS.role}<span className="label-required">*</span>
         </label>
         <select
           value={selectedRole}
@@ -204,7 +204,7 @@ export default function Interview() {
 
       <div className="form-group">
         <label>
-          {INTERVIEW_LABELS.resume}<span className="required">*</span>
+          {INTERVIEW_LABELS.resume}<span className="label-label-required">*</span>
         </label>
         <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
           <textarea
