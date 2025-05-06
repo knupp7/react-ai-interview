@@ -6,7 +6,24 @@ export default function Login() {
   const [userId, setUserId] = useState('');
   const [userPwd, setUserPwd] = useState('');
 
+  const validateForm = (userId, userPwd) => {
+    if (!userId.trim()) {
+      return '아이디를 입력해주세요.';
+    }
+    if (!userPwd) {
+      return '비밀번호를 입력해주세요.';
+    }
+
+    return null; // 유효성 통과
+  };
+
   const handleLogin = () => {
+    const errorMsg = validateForm(userId, userPwd);
+    if (errorMsg) {
+        alert(errorMsg);
+        return;
+    }
+
     // 나중에 서버로 POST 요청
     console.log('Login attempt:', { userId, userPwd });
   };
