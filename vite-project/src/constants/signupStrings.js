@@ -5,6 +5,7 @@ const signupStrings = {
     fields: {
       userid: '아이디',
       userpwd: '비밀번호',
+      userpwdCheck: '비밀번호 확인',
       name: '이름',
       age: '나이',
       gender: '성별',

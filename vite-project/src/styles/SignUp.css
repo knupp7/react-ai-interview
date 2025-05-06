@@ -115,7 +115,7 @@ body {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    min-width: 200px;
+    max-width: 200px;
 }
 
 .gender-buttons {
@@ -136,8 +136,8 @@ body {
 }
 
 .error-placeholder {
-    width: 120px;
-    font-size: 12px;
+    width: 200px;
+    font-size: 10px;
     color: red;
 }
 
