@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/SignUp.css';
+import signupStrings from '../constants/signupStrings';
 
 export default function SignUp() {
     const [gender, setGender] = useState('');
@@ -16,7 +17,7 @@ export default function SignUp() {
     return (
         <div className="signup-container">
             <div className="form-box">
-                <h2 className="signup-title">회원가입</h2>
+                <h2 className="signup-title">{signupStrings.title}</h2>
                 <div className="profile-section">
                     {/* ▶ 프로필 이미지 */}
                     <div className="profile-image-wrapper">
@@ -43,49 +44,49 @@ export default function SignUp() {
                 <form className="signup-form">
                     {/* 아이디 */}
                     <div className="form-row">
-                        <label>아이디</label>
-                        <input type="text" placeholder="아이디" />
+                        <label>{signupStrings.fields.userid}</label>
+                        <input type="text" placeholder={signupStrings.fields.userid} />
                         <span className="error-placeholder"></span>
                     </div>
 
                     {/* 비밀번호 */}
                     <div className="form-row">
-                        <label>비밀번호</label>
-                        <input type="password" placeholder="비밀번호" />
+                        <label>{signupStrings.fields.userpwd}</label>
+                        <input type="password" placeholder={signupStrings.fields.userpwd} />
                         <span className="error-placeholder"></span>
                     </div>
 
                     {/* 이름 */}
                     <div className="form-row">
-                        <label>이름</label>
-                        <input type="text" placeholder="이름" />
+                        <label>{signupStrings.fields.name}</label>
+                        <input type="text" placeholder={signupStrings.fields.name} />
                         <span className="error-placeholder"></span>
                     </div>
 
                     {/* 나이 */}
                     <div className="form-row">
-                        <label>나이</label>
-                        <input type="number" placeholder="나이" />
+                        <label>{signupStrings.fields.age}</label>
+                        <input type="number" placeholder={signupStrings.fields.age} />
                         <span className="error-placeholder"></span>
                     </div>
 
                     {/* 성별 */}
                     <div className="form-row">
-                        <label>성별</label>
+                        <label>{signupStrings.fields.gender}</label>
                         <div className="gender-buttons">
                             <button
                                 type="button"
                                 className={gender === 'male' ? 'selected' : ''}
                                 onClick={() => setGender('male')}
                             >
-                                남자
+                                {signupStrings.genderOptions.male}
                             </button>
                             <button
                                 type="button"
                                 className={gender === 'female' ? 'selected' : ''}
                                 onClick={() => setGender('female')}
                             >
-                                여자
+                                {signupStrings.genderOptions.female}
                             </button>
                         </div>
                         <span className="error-placeholder"></span>
@@ -93,20 +94,20 @@ export default function SignUp() {
 
                     {/* 소속기관 */}
                     <div className="form-row">
-                        <label>회사/학교/소속기관</label>
-                        <input type="text" placeholder="회사/학교/소속기관" />
+                        <label>{signupStrings.fields.organization}</label>
+                        <input type="text" placeholder={signupStrings.fields.organization} />
                         <span className="error-placeholder"></span>
                     </div>
 
                     {/* 직급/직업 */}
                     <div className="form-row">
-                        <label>직급/직업</label>
-                        <input type="text" placeholder="직급/직업" />
+                        <label>{signupStrings.fields.job}</label>
+                        <input type="text" placeholder={signupStrings.fields.job} />
                         <span className="error-placeholder"></span>
                     </div>
 
                     <div className="submit-row">
-                        <button type="submit" className="submit-btn">가입하기</button>
+                        <button type="submit" className="submit-btn">{signupStrings.submit}</button>
                     </div>
                 </form>
             </div>
