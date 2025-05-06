@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/Login.css';
+import LOGIN_STRINGS from '../constants/loginStrings';
 
 export default function Login() {
   return (
@@ -7,26 +8,26 @@ export default function Login() {
       <div className="login-container">
         <div className="title-row">
             <img src="/duri.png" alt="duri character" className="login-char-img" />
-            <h2 className="login-title">DURI-INTERN</h2>
+            <h2 className="login-title">{LOGIN_STRINGS.TITLE}</h2>
         </div>
 
         <div className="input-group">
-          <label>아이디</label>
+          <label>{LOGIN_STRINGS.ID_LABEL}</label>
           <input type="text" />
         </div>
 
         <div className="input-group">
-          <label>비밀번호</label>
+          <label>{LOGIN_STRINGS.PASSWORD_LABEL}</label>
           <input type="password" />
         </div>
 
-        <button className="login-button">로그인</button>
+        <button className="login-button">{LOGIN_STRINGS.LOGIN_BUTTON}</button>
 
         <hr className="divider" />
 
         <div className="signup-section">
-          <span>처음이신가요?</span>
-          <button className="signup-button">회원가입</button>
+          <span>{LOGIN_STRINGS.SIGNUP_QUESTION}</span>
+          <button className="signup-button">{LOGIN_STRINGS.SIGNUP_BUTTON}</button>
         </div>
       </div>
     </div>
