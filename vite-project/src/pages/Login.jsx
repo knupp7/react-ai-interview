@@ -5,8 +5,10 @@ export default function Login() {
   return (
     <div className="login-page">
       <div className="login-container">
-        <img src="/duri.png" alt="duri character" className="character" />
-        <h2>DURI-INTERN</h2>
+        <div className="title-row">
+            <img src="/duri.png" alt="duri character" className="login-char-img" />
+            <h2 className="login-title">DURI-INTERN</h2>
+        </div>
 
         <div className="input-group">
           <label>아이디</label>
