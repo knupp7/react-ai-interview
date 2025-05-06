@@ -88,9 +88,11 @@ export default function Interview() {
 
   return (
     <div className="interview-container">
+      {/* 1. 기본 회원정보 입력 영역 */}
       <h2 className="section-title">{INTERVIEW_LABELS.memberInfo}</h2>
       <div className="profile-section">
-      <div className="profile-image-wrapper">
+        {/* ▶ 프로필 이미지 */}
+        <div className="profile-image-wrapper">
           <div className="profile-image">
             {profileImage ? (
               <img src={profileImage} alt="profile" className="image-preview" />
@@ -108,7 +110,10 @@ export default function Interview() {
             />
           </label>
         </div>
+
+        {/* ▶ 기본 정보 입력 필드: 이름, 나이, 성별, 조직, 직급 */}
         <div className="form-grid">
+          {/* 이름 */}
           <label>{INTERVIEW_LABELS.name}</label>
           <div className="input-with-error">
             <input 
@@ -119,6 +124,7 @@ export default function Interview() {
             {errors.name && <span className="error-msg">{errors.name}</span>}
           </div>
 
+          {/* 나이 */}
           <label>{INTERVIEW_LABELS.age}</label>
           <div className="input-with-error">
             <input 
@@ -129,6 +135,7 @@ export default function Interview() {
             {errors.age && <span className="error-msg">{errors.age}</span>}
           </div>
 
+          {/* 성별 */}
           <label>{INTERVIEW_LABELS.gender}</label>
           <div className="input-with-error">
             <div className="gender-select">
@@ -150,6 +157,7 @@ export default function Interview() {
             {errors.gender && <span className="error-msg">{errors.gender}</span>}
           </div>
 
+          {/* 소속 */}
           <label>{INTERVIEW_LABELS.organization}</label>
           <input 
             type="text" 
@@ -157,6 +165,7 @@ export default function Interview() {
             onChange={(e) => setOrganization(e.target.value)}
             placeholder={INTERVIEW_LABELS.organization} />
 
+          {/* 직급 */}
           <label>{INTERVIEW_LABELS.position}</label>
           <input 
             type="text" 
@@ -167,13 +176,14 @@ export default function Interview() {
       </div>
 
 
-
+      {/* 2. 지원 항목 선택 영역 (기업, 직군, 자소서) */}
       <h2 className="section-title">
         {INTERVIEW_LABELS.inputInfo}<span className="label-required">*</span>
       </h2>
 
       <hr></hr>
 
+      {/* ▶ 기업 선택 */}
       <div className="form-group">
         <label>
           {INTERVIEW_LABELS.company}<span className="label-required">*</span>
@@ -188,6 +198,7 @@ export default function Interview() {
         </select>
       </div>
 
+      {/* ▶ 직군 선택 */}
       <div className="form-group">
         <label>
           {INTERVIEW_LABELS.role}<span className="label-required">*</span>
@@ -202,6 +213,7 @@ export default function Interview() {
         </select>
       </div>
 
+      {/* ▶ 자기소개서 입력 */}
       <div className="form-group">
         <label>
           {INTERVIEW_LABELS.resume}<span className="label-label-required">*</span>
