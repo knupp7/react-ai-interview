@@ -31,7 +31,7 @@ hr {
     text-align: left;
 }
   
-.required {
+.label-required {
     color: red;
     margin-left: 4px;
 }
