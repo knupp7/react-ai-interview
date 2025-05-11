@@ -1,4 +1,5 @@
 import { INTERVIEW_LABELS, GENDER } from "../../constants/interviewFormStrings";
+import ProfileImageUploader from "./ProfileImageUploader";
 
 const ProfileSection = ({ 
   profileImage,
@@ -15,39 +16,12 @@ const ProfileSection = ({
   setPosition,
   errors
 }) => {
-  
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
-    }
-  };
 
   return (
     <>
       <h2 className="section-title">{INTERVIEW_LABELS.memberInfo}</h2>  {/* 회원정보 */}
       <div className="profile-section">
-        <div className="profile-image-wrapper">
-          {/* profile image */}
-          <div className="profile-image">
-            {profileImage ? (
-              <img src={profileImage} alt="profile" className="image-preview" />
-            ) : (
-              <span role="img" aria-label="default">🙍‍♂️</span>
-            )}
-          </div>
-          <label className="upload-button">
-            <img src="/ic_camera.svg" alt="카메라" className="camera-icon" />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-            />
-          </label>
-        </div>
-
+        <ProfileImageUploader profileImage={profileImage} setProfileImage={setProfileImage} />
         <div className="form-grid">   {/* 회원정보 입력 폼 */}
           <label>{INTERVIEW_LABELS.name}</label>
           <div className="input-with-error">
