@@ -46,7 +46,15 @@
     color: white;
 }
 
+.login:hover {
+    transform: scale(0.98);
+}
+
 .signup {
     background: white;
     color: black;
+}
+
+.signup:hover {
+    transform: scale(0.98);
 }

@@ -3,6 +3,8 @@ import Home from './pages/Home'
 import Interview from './pages/Interview'
 import Contact from './pages/Contact'
 import InterviewChat from './pages/InterviewChat'
+import Login from './pages/Login'
+import SignUp from './pages/SignUp'
 import './App.css'
 import NavBar from './components/NavBar';
 import { Routes, Route } from 'react-router-dom';
@@ -15,7 +17,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/interview" element={<Interview />} />
         <Route path="/contact" element={<Contact  />} />
-        <Route path="/interview/chat" element={<InterviewChat />} />  
+        <Route path="/interview/chat" element={<InterviewChat />} /> 
+        <Route path="/login" element={<Login />} /> 
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </div>
   );
