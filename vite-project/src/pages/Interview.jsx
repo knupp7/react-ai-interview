@@ -99,7 +99,7 @@ export default function Interview() {
         resume={resume} setResume={setResume}
         errors={errors} />
 
-      <div className="submit-btn">
+      <div className="interviewStart-btn">
         <button onClick={handleSubmit}>{INTERVIEW_LABELS.submit}</button>
       </div>
     </div>
