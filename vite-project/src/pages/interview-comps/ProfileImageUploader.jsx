@@ -1,6 +1,8 @@
+import styles from "../../styles/interview.module.css";
+
 const ProfileImageUploader = ({
 	profileImage,
-  setProfileImage
+	setProfileImage
 }) => {
 
 	const handleImageChange = (e) => {
@@ -12,17 +14,17 @@ const ProfileImageUploader = ({
 	};
 
 	return (
-		<div className="profile-image-wrapper">
+		<div className={styles.profile_image_wrapper}>
 			{/* profile image */}
-			<div className="profile-image">
+			<div className={styles.profile_image}>
 				{profileImage ? (
-					<img src={profileImage} alt="profile" className="image-preview" />
+					<img src={profileImage} alt="profile" className={styles.image_preview} />
 				) : (
 					<span role="img" aria-label="default">🙍‍♂️</span>
 				)}
 			</div>
-			<label className="upload-button">
-				<img src="/ic_camera.svg" alt="카메라" className="camera-icon" />
+			<label className={styles.upload_button}>
+				<img src="/ic_camera.svg" alt="카메라" className={styles.camera_icon} />
 				<input
 					type="file"
 					accept="image/*"

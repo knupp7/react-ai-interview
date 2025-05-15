@@ -16,25 +16,25 @@
     font-weight: bold;
 }
 
-.nav-links {
+.navLinks {
     display: flex;
     gap: 2rem;
     list-style: none;
 }
 
-.nav-links li {
+.navLinks li {
     cursor: pointer;
     padding: 0.5rem;
     transition: 0.3s;
 }
 
-.nav-links li:hover,
-.nav-links .active {
+.navLinks li:hover,
+.navLinks .active {
     color: var(--primary-color);
     font-weight: bold;
 }
 
-.auth-buttons button {
+.authButtons button {
     margin-left: 0.5rem;
     padding: 0.4rem 0.8rem;
     border: 1px solid #444;

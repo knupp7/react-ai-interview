@@ -1,5 +1,6 @@
 import { INTERVIEW_LABELS, GENDER } from "../../constants/interviewFormStrings";
 import ProfileImageUploader from "./ProfileImageUploader";
+import styles from "../../styles/interview.module.css";
 
 const ProfileSection = ({ 
   profileImage,
@@ -20,59 +21,64 @@ const ProfileSection = ({
   return (
     <>
       {/* ▶ 기본 정보 입력 필드: 이름, 나이, 성별, 조직, 직급 */}
-      <h2 className="section-title">{INTERVIEW_LABELS.memberInfo}</h2>  {/* 회원정보 */}
-      <div className="profile-section">
+      <h2 className={styles.section_title}>{INTERVIEW_LABELS.memberInfo}</h2>
+      <div className={styles.profile_section}>
         <ProfileImageUploader profileImage={profileImage} setProfileImage={setProfileImage} />
-        <div className="form-grid">   {/* 회원정보 입력 폼 */}
-          <label>{INTERVIEW_LABELS.name}</label>  {/* 이름 */}
-          <div className="input-with-error">
+        <div className={styles.form_grid}>
+          {/* 이름 */}
+          <label>{INTERVIEW_LABELS.name}</label>
+          <div className={styles.input_with_error}>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={INTERVIEW_LABELS.name} />
-            {errors.name && <span className="error-msg">{errors.name}</span>}
+            {errors.name && <span className={styles.error_msg}>{errors.name}</span>}
           </div>
 
-          <label>{INTERVIEW_LABELS.age}</label> {/* 나이 */}
-          <div className="input-with-error">
+          {/* 나이 */}
+          <label>{INTERVIEW_LABELS.age}</label>
+          <div className={styles.input_with_error}>
             <input
               type="text"
               value={age}
               onChange={(e) => setAge(e.target.value)}
               placeholder={INTERVIEW_LABELS.age} />
-            {errors.age && <span className="error-msg">{errors.age}</span>}
+            {errors.age && <span className={styles.error_msg}>{errors.age}</span>}
           </div>
 
-          <label>{INTERVIEW_LABELS.gender}</label>  {/* 성별 */}
-          <div className="input-with-error">
-            <div className="gender-select">
+          {/* 성별 */}
+          <label>{INTERVIEW_LABELS.gender}</label>
+          <div className={styles.input_with_error}>
+            <div className={styles.gender_select}>
               <button
                 type="button"
-                className={gender === "male" ? "gender-btn active" : "gender-btn"}
+                className={`${styles.gender_btn} ${gender === "male" ? styles.active : ""}`}
                 onClick={() => setGender("male")}
               >
                 {GENDER.male}
               </button>
               <button
                 type="button"
-                className={gender === "female" ? "gender-btn active" : "gender-btn"}
+                className={`${styles.gender_btn} ${gender === "female" ? styles.active : ""}`}
                 onClick={() => setGender("female")}
               >
                 {GENDER.female}
               </button>
             </div>
-            {errors.gender && <span className="error-msg">{errors.gender}</span>}
+            {errors.gender && <span className={styles.error_msg}>{errors.gender}</span>}
           </div>
 
-          <label>{INTERVIEW_LABELS.organization}</label>  {/* 소속 */}
+          {/* 소속 */}
+          <label>{INTERVIEW_LABELS.organization}</label>
           <input
             type="text"
             value={organization}
             onChange={(e) => setOrganization(e.target.value)}
             placeholder={INTERVIEW_LABELS.organization} />
 
-          <label>{INTERVIEW_LABELS.position}</label>  {/* 직급 */}
+          {/* 직급 */}
+          <label>{INTERVIEW_LABELS.position}</label>
           <input
             type="text"
             value={position}

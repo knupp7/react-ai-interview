@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import HOME_STRINGS from '../../constants/homeStrings';
+import styles from "../../styles/Home.module.css";
 
 const Slider = () => {
   const steps = HOME_STRINGS.SLIDES;
@@ -22,39 +23,39 @@ const Slider = () => {
   }, []);
 
   return (
-    <section className="slider">
-      <div className="slide-wrapper" >
-        {/* <div className="slide-controller"> */}
+    <section className={styles.slider}>
+      <div className={styles.slide_wrapper}>
+        {/* <div className={styles.slide_controller}> */}
         {/* <button onClick={prevStep}>&lt;</button> */}
-        <div className="dots">
+        <div className={styles.dots}>
           {steps.map((_, index) => (
             <span
               key={index}
-              className={`dot ${index === currentIndex ? 'active' : ''}`}
+              className={`${styles.dot} ${index === currentIndex ? styles.active : ''}`}
               onClick={() => setCurrentIndex(index)}
             />
           ))}
         </div>
         {/* <button onClick={nextStep}>&gt;</button> */}
         {/* </div> */}
-        <div className="slide-box">
-          <div className="slide-content">
-            <div className="text-box">
-              <p className="step-title">
-                <span className="step-label">{steps[currentIndex].title}</span>
+        <div className={styles.slide_box}>
+          <div className={styles.slide_content}>
+            <div className={styles.text_box}>
+              <p className={styles.step_title}>
+                <span className={styles.step_label}>{steps[currentIndex].title}</span>
               </p>
-              <p className="step-subtitle">{steps[currentIndex].subtitle}</p>
-              <p className="step-desc">{steps[currentIndex].description}</p>
+              <p className={styles.step_subtitle}>{steps[currentIndex].subtitle}</p>
+              <p className={styles.step_desc}>{steps[currentIndex].description}</p>
             </div>
             <img
               src={steps[currentIndex].image}
               alt="step"
-              className="step-image"
+              className={styles.step_image}
             />
           </div>
         </div>
       </div>
-
+      
     </section>
   );
 }

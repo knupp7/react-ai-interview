@@ -1,5 +1,5 @@
 import { useState } from "react";
-import '../styles/interview.css';
+import styles from '../styles/interview.module.css';
 import { INTERVIEW_LABELS, GENDER } from "../constants/interviewFormStrings";
 import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../data/interviewSelectOptions";
 import { useNavigate } from "react-router-dom";
@@ -81,7 +81,7 @@ export default function Interview() {
   };
 
   return (
-    <div className="interview-container">
+    <div className={styles.interview_container}>
       <ProfileSection
         name={name} setName={setName}
         profileImage={profileImage} setProfileImage={setProfileImage}
@@ -99,7 +99,7 @@ export default function Interview() {
         resume={resume} setResume={setResume}
         errors={errors} />
 
-      <div className="interviewStart-btn">
+      <div className={styles.interviewStart_btn}>
         <button onClick={handleSubmit}>{INTERVIEW_LABELS.submit}</button>
       </div>
     </div>
