@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HOME_STRINGS from '../../constants/homeStrings';
 
 const Slider = () => {
@@ -13,21 +13,30 @@ const Slider = () => {
     setCurrentIndex((prev) => (prev - 1 + steps.length) % steps.length);
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextStep();
+    }, 3000); // 3초 간격
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="slider">
-        <div className="slider-top-controls">
-          <button onClick={prevStep}>&lt;</button>
-          <div className="dots">
-            {steps.map((_, index) => (
-              <span
-                key={index}
-                className={`dot ${index === currentIndex ? 'active' : ''}`}
-              />
-            ))}
-          </div>
-          <button onClick={nextStep}>&gt;</button>
+      <div className="slide-wrapper" >
+        {/* <div className="slide-controller"> */}
+        {/* <button onClick={prevStep}>&lt;</button> */}
+        <div className="dots">
+          {steps.map((_, index) => (
+            <span
+              key={index}
+              className={`dot ${index === currentIndex ? 'active' : ''}`}
+              onClick={() => setCurrentIndex(index)}
+            />
+          ))}
         </div>
-
+        {/* <button onClick={nextStep}>&gt;</button> */}
+        {/* </div> */}
         <div className="slide-box">
           <div className="slide-content">
             <div className="text-box">
@@ -44,7 +53,9 @@ const Slider = () => {
             />
           </div>
         </div>
-      </section>
+      </div>
+
+    </section>
   );
 }
 
