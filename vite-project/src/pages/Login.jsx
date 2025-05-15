@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/Login.css';
+import '../styles/Login.module.css';
 import LOGIN_STRINGS from '../constants/loginStrings';
 
 export default function Login() {

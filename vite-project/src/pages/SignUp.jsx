@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/SignUp.css';
+import '../styles/SignUp.module.css';
 import signupStrings from '../constants/signupStrings';
 import validateSignupForm from '../utils/validateSignupForm';
 
