@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/Login.module.css';
+import styles from '../styles/Login.module.css';
 import LOGIN_STRINGS from '../constants/loginStrings';
 
 export default function Login() {
@@ -29,15 +29,14 @@ export default function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="title-row">
-            <img src="/duri.png" alt="duri character" className="login-char-img" />
-            <h2 className="login-title">{LOGIN_STRINGS.TITLE}</h2>
+    <div className={styles.loginPage}>
+      <div className={styles.loginContainer}>
+        <div className={styles.titleRow}>
+          <img src="/duri.png" alt="duri character" className={styles.loginCharImg} />
+          <h2 className={styles.loginTitle}>{LOGIN_STRINGS.TITLE}</h2>
         </div>
 
-        {/* 아이디 */}
-        <div className="input-group">
+        <div className={styles.inputGroup}>
           <label>{LOGIN_STRINGS.ID_LABEL}</label>
           <input 
             type="text"
@@ -45,8 +44,7 @@ export default function Login() {
             onChange={(e) => setUserId(e.target.value)} />
         </div>
 
-        {/* 비밀번호 */}
-        <div className="input-group">
+        <div className={styles.inputGroup}>
           <label>{LOGIN_STRINGS.PASSWORD_LABEL}</label>
           <input 
             type="password"
@@ -54,15 +52,15 @@ export default function Login() {
             onChange={(e) => setUserPwd(e.target.value)} />
         </div>
 
-        <button className="login-button" onClick={handleLogin}>
+        <button className={styles.loginButton} onClick={handleLogin}>
             {LOGIN_STRINGS.LOGIN_BUTTON}
         </button>
 
-        <hr className="divider" />
+        <hr className={styles.divider} />
 
-        <div className="signup-section">
+        <div className={styles.signupSection}>
           <span>{LOGIN_STRINGS.SIGNUP_QUESTION}</span>
-          <button className="signup-button">{LOGIN_STRINGS.SIGNUP_BUTTON}</button>
+          <button className={styles.signupButton}>{LOGIN_STRINGS.SIGNUP_BUTTON}</button>
         </div>
       </div>
     </div>
