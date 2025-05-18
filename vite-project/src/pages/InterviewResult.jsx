@@ -4,6 +4,7 @@ import GaugeChart from "./interview-result-comps/GaugeChart";
 import RadarChart from "./interview-result-comps/RadarChart";
 import CategoryFeedbackBlock from "./interview-result-comps/CategoryFeedbackBlock";
 import QuestionAccordion from "./interview-result-comps/QuestionAccordion";
+import HorizontalBarChart from "./interview-result-comps/HorizontalBarChart";
 import { score, radarScores, totalQuestions, missedQuestions, categoryFeedback } from "../data/interviewScoreData"
 import { mockQuestions } from "../data/interviewMockQuestions";
 import { finalFeedback } from "../data/interviewFinalFeedback";
@@ -42,10 +43,17 @@ export default function InterviewResult() {
                     </div>
                 </section>
 
-                {/* ▷ 카테고리별 평가 (레이더 차트) */}
+                {/* ▷ 카테고리별 평가 (레이더 차트, 수평차트) */}
                 <section className={styles.sectionSpacing}>
                     <h2 className={styles.sectionTitle}>{RESULT_STRINGS.category}</h2>
-                    <RadarChart data={radarScores} />
+                    <div className={styles.chartRow}>
+                        <div className={styles.radarChartWrapper}>
+                            <RadarChart data={radarScores} />
+                        </div>
+                        <div className={styles.barChartWrapper}>
+                            <HorizontalBarChart data={radarScores} />
+                        </div>
+                    </div>
                 </section>
 
                 {/* ▷ 카테고리별 피드백 상세 블럭 */}
