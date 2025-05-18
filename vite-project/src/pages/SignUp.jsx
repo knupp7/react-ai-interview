@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from '../styles/SignUp.module.css';
 import signupStrings from '../constants/signupStrings';
 import validateSignupForm from '../utils/validateSignupForm';
+import ProfileImageUploader from '../pages/interview-comps/ProfileImageUploader';
 
 export default function SignUp() {
     const [form, setForm] = useState({
@@ -17,14 +18,6 @@ export default function SignUp() {
 
     const [profileImage, setProfileImage] = useState(null);
     const [errors, setErrors] = useState({});
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setProfileImage(imageUrl);
-        }
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -47,24 +40,10 @@ export default function SignUp() {
             <div className={styles.formBox}>
                 <h2 className={styles.signupTitle}>{signupStrings.title}</h2>
 
-                <div className={styles.profileImageWrapper}>
-                    <div className={styles.profileImage}>
-                        {profileImage ? (
-                            <img src={profileImage} alt="profile" className={styles.imagePreview} />
-                        ) : (
-                            <span role="img" aria-label="default">🙍‍♂️</span>
-                        )}
-                    </div>
-                    <label className={styles.uploadButton}>
-                        <img src="/ic_camera.svg" alt="카메라" className={styles.cameraIcon} />
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            style={{ display: "none" }}
-                        />
-                    </label>
-                </div>
+                <ProfileImageUploader
+                    profileImage={profileImage}
+                    setProfileImage={setProfileImage}
+                />
 
                 <form className={styles.signupForm} onSubmit={handleSubmit}>
                     {/* 아이디 */}
