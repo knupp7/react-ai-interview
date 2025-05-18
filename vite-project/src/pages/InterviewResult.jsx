@@ -8,16 +8,17 @@ import { score, radarScores, totalQuestions, missedQuestions, categoryFeedback }
 import { mockQuestions } from "../data/interviewMockQuestions";
 import { finalFeedback } from "../data/interviewFinalFeedback";
 import styles from "../styles/InterviewResult.module.css";
+import { RESULT_STRINGS } from "../constants/interviewResultStrings";
 
 export default function InterviewResult() {
     const location = useLocation();
-    const formData = location.state;
+    const formData = location.state; // 사용자 정보 (현재 미사용)
 
     return (
         <div className={styles.wrapper}>
             {/* ▶ 헤더: 상단 날짜 + PDF 버튼 */}
             <div className={styles.header}>
-                <p className={styles.metaTitle}>2025-05-19 네이버 모바일 기술면접</p>
+                <p className={styles.metaTitle}>{RESULT_STRINGS.title}</p>
                 <ExportPDFButton />
             </div>
 
@@ -25,16 +26,16 @@ export default function InterviewResult() {
             <div id="export-target" className={styles.reportBox}>
                 {/* ▷ 분석 요약 섹션: 게이지 + 질문 요약 */}
                 <section>
-                    <h2 className={styles.sectionTitle}>분석 요약</h2>
+                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.summary}</h2>
                     <div className={styles.gaugeRow}>
                         <GaugeChart score={score} />
                         <div className={styles.questionBox}>
                             <div className={styles.questionCard}>
-                                <p className={styles.label}>총 질문 수</p>
+                                <p className={styles.label}>{RESULT_STRINGS.totalQuestions}</p>
                                 <p className={styles.value}>{totalQuestions}</p>
                             </div>
                             <div className={styles.questionCard}>
-                                <p className={styles.label}>놓친 질문 수</p>
+                                <p className={styles.label}>{RESULT_STRINGS.missedQuestions}</p>
                                 <p className={styles.value}>{missedQuestions} / {totalQuestions}</p>
                             </div>
                         </div>
@@ -43,7 +44,7 @@ export default function InterviewResult() {
 
                 {/* ▷ 카테고리별 평가 (레이더 차트) */}
                 <section className={styles.sectionSpacing}>
-                    <h2 className={styles.sectionTitle}>카테고리별 평가</h2>
+                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.category}</h2>
                     <RadarChart data={radarScores} />
                 </section>
 
@@ -54,7 +55,7 @@ export default function InterviewResult() {
 
                 {/* ▷ 질문 상세 분석 (Accordion) */}
                 <section className={styles.sectionSpacing}>
-                    <h2 className={styles.sectionTitle}>질문 상세 분석</h2>
+                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.questions}</h2>
                     {mockQuestions.map((q, idx) => (
                         <QuestionAccordion
                             key={idx}
@@ -68,7 +69,7 @@ export default function InterviewResult() {
 
                 {/* ▷ 최종 총평 영역 */}
                 <section className={styles.sectionSpacing}>
-                    <h2 className={styles.sectionTitle}>최종 피드백 / 총평</h2>
+                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.final}</h2>
                     <div className={styles.finalBox}>
                         {finalFeedback}
                     </div>
