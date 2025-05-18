@@ -11,28 +11,24 @@ export default function InterviewResult() {
     const formData = location.state;
 
     return (
-        <div className={styles.resultContainer} style={{ padding: "20px" }}>
-            <h1>인터뷰 결과</h1>
+        <div className={styles.wrapper}>
+            <h1 className={styles.title}>2025-05-19 네이버 모바일 기술면접</h1>
 
-            {/* PDF로 내보낼 예시 타겟 */}
-            <div id="export-target" style={{
-                backgroundColor: "#fff",
-                padding: "20px",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                marginTop: "20px",
-                marginBottom: "20px"
-            }}>
-                <h2>입력 정보 요약</h2>
-                <pre style={{ whiteSpace: "pre-wrap" }}>
-                    {JSON.stringify(formData, null, 2)}
-                </pre>
-
-                {/* 게이지 차트 삽입 */}
-                <div style={{ marginTop: "2rem", marginBottom: "2rem" }}>
-                    <h3>최종 점수 시각화</h3>
+            <div id="export-target" className={styles.reportBox}>
+                <section className={styles.summary}>
+                    <h2>분석 요약</h2>
                     <GaugeChart score={score} />
-                </div>
+                    <div className={styles.questionBox}>
+                        <div className={styles.questionCard}>
+                            <p className={styles.label}>총 질문 수</p>
+                            <p className={styles.value}>{totalQuestions}</p>
+                        </div>
+                        <div className={styles.questionCard}>
+                            <p className={styles.label}>놓친 질문 수</p>
+                            <p className={styles.value}>{missedQuestions} / {totalQuestions}</p>
+                        </div>
+                    </div>
+                </section>
 
                 <section className={styles.radar}>
                     <h2>카테고리별 평가</h2>
@@ -44,7 +40,6 @@ export default function InterviewResult() {
                 ))}
             </div>
 
-            {/* PDF 내보내기 버튼 */}
             <ExportPDFButton />
         </div>
     );

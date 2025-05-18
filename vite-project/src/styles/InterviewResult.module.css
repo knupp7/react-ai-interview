@@ -1,8 +1,51 @@
-.resultContainer {
-    max-width: 80%;
+.wrapper {
+    max-width: 70%;
     margin: 60px auto;
     margin-top: 100px;
     padding: 0 20px;
+}
+
+.title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.reportBox {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+}
+
+.summary {
+    text-align: center;
+}
+
+.questionBox {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.questionCard {
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    min-width: 120px;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.value {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #111827;
 }
 
 .radar {
