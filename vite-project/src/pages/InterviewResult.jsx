@@ -38,7 +38,7 @@ export default function InterviewResult() {
                     </div>
                 </section>
 
-                <section className={styles.radar}>
+                <section className={styles.sectionSpacing}>
                     <h2 className={styles.sectionTitle}>카테고리별 평가</h2>
                     <RadarChart data={radarScores} />
                 </section>
@@ -47,7 +47,7 @@ export default function InterviewResult() {
                     <CategoryFeedbackBlock key={index} {...item} />
                 ))}
 
-                <section style={{ marginTop: "2rem" }}>
+                <section className={styles.sectionSpacing}>
                     <h2 className={styles.sectionTitle}>질문 상세 분석</h2>
                     {mockQuestions.map((q, idx) => (
                         <QuestionAccordion
@@ -60,7 +60,7 @@ export default function InterviewResult() {
                     ))}
                 </section>
 
-                <section className={styles.finalSection}>
+                <section className={styles.sectionSpacing}>
                     <h2 className={styles.sectionTitle}>최종 피드백 / 총평</h2>
                     <div className={styles.finalBox}>
                         {finalFeedback}

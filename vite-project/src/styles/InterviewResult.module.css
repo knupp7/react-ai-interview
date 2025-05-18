@@ -67,12 +67,8 @@
     color: #111827;
 }
 
-.radar {
-    margin-top: 3rem;
-}
-
-.finalSection {
-    margin-top: 3rem;
+.sectionSpacing {
+  margin-top: 3rem;
 }
 
 .finalBox {
