@@ -36,7 +36,7 @@ export default function validateSignupForm(form, gender) {
         newErrors.age = '나이는 1살 이상 100살 이하로 입력해주세요.';
     }
 
-    if (!gender) {
+    if (!form.gender) {
         newErrors.gender = '성별을 선택해주세요.';
     }
 

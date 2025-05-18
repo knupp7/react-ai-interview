@@ -11,16 +11,16 @@ body {
     color: black;
 }
 
-.signup-container {
+.signupContainer {
     max-width: 700px;
     min-height: 100vh;
-    margin: 0px auto;
+    margin: 0 auto;
     padding: 20px;
     font-family: sans-serif;
     background-color: #eee;
 }
 
-.signup-title {
+.signupTitle {
     font-size: 24px;
     margin-top: 100px;
     margin-bottom: 20px;
@@ -28,24 +28,23 @@ body {
     align-self: flex-start;
 }
 
-.form-box {
+.formBox {
     display: flex;
     flex-direction: column;
-    align-items: center;
     align-items: flex-start;
     gap: 30px;
     padding: 30px;
     border-radius: 10px;
 }
 
-.profile-image-wrapper {
+.profileImageWrapper {
     position: relative;
     width: 200px;
     height: 200px;
     align-self: flex-start;
 }
 
-.profile-image {
+.profileImage {
     width: 100%;
     height: 100%;
     background-color: #ddd;
@@ -57,14 +56,14 @@ body {
     overflow: hidden;
 }
 
-.image-preview {
+.imagePreview {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 8px;
 }
 
-.upload-button {
+.uploadButton {
     position: absolute;
     bottom: -6px;
     right: -6px;
@@ -81,36 +80,36 @@ body {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
-.upload-button:hover {
+.uploadButton:hover {
     background-color: black;
 }
 
-.camera-icon {
+.cameraIcon {
     width: 20px;
     height: 20px;
     color: white;
 }
 
-.signup-form {
+.signupForm {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 22px;
 }
 
-.form-row {
+.formRow {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.form-row label {
+.formRow label {
     width: 150px;
     font-weight: bold;
     text-align: left;
 }
 
-.form-row input {
+.formRow input {
     flex: 1;
     padding: 8px;
     border: 1px solid #ccc;
@@ -118,36 +117,36 @@ body {
     max-width: 200px;
 }
 
-.gender-buttons {
+.genderButtons {
     display: flex;
     gap: 10px;
 }
 
-.gender-buttons button {
+.button {
     padding: 8px 16px;
     border: 1px solid #000;
     background-color: #fff;
     cursor: pointer;
 }
 
-.gender-buttons button.selected {
+.selected {
     background-color: #000;
     color: #fff;
 }
 
-.error-placeholder {
+.errorPlaceholder {
     width: 200px;
     font-size: 10px;
     color: red;
 }
 
-.submit-row {
+.submitRow {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
 
-.submit-btn {
+.submitBtn {
     padding: 10px 30px;
     background-color: black;
     color: white;

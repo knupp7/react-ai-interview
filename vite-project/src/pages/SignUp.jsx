@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/SignUp.module.css';
+import styles from '../styles/SignUp.module.css';
 import signupStrings from '../constants/signupStrings';
 import validateSignupForm from '../utils/validateSignupForm';
 
@@ -10,11 +10,11 @@ export default function SignUp() {
         userpwdCheck: '',
         name: '',
         age: '',
+        gender: '',
         organization: '',
         job: '',
     });
 
-    const [gender, setGender] = useState('');
     const [profileImage, setProfileImage] = useState(null);
     const [errors, setErrors] = useState({});
 
@@ -33,44 +33,42 @@ export default function SignUp() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newErrors = validateSignupForm(form, gender);
+        const newErrors = validateSignupForm(form);
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
             console.log('폼 제출 성공!', form);
-            // API 호출 등 실제 가입 처리
+            // 실제 가입 처리(API 호출 등)
         }
     };
 
     return (
-        <div className="signup-container">
-            <div className="form-box">
-                <h2 className="signup-title">{signupStrings.title}</h2>
-                <div className="profile-section">
-                    {/* ▶ 프로필 이미지 */}
-                    <div className="profile-image-wrapper">
-                        <div className="profile-image">
-                            {profileImage ? (
-                                <img src={profileImage} alt="profile" className="image-preview" />
-                            ) : (
-                                <span role="img" aria-label="default">🙍‍♂️</span>
-                            )}
-                        </div>
-                        <label className="upload-button">
-                            <img src="/ic_camera.svg" alt="카메라" className="camera-icon" />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                style={{ display: "none" }}
-                            />
-                        </label>
+        <div className={styles.signupContainer}>
+            <div className={styles.formBox}>
+                <h2 className={styles.signupTitle}>{signupStrings.title}</h2>
+
+                <div className={styles.profileImageWrapper}>
+                    <div className={styles.profileImage}>
+                        {profileImage ? (
+                            <img src={profileImage} alt="profile" className={styles.imagePreview} />
+                        ) : (
+                            <span role="img" aria-label="default">🙍‍♂️</span>
+                        )}
                     </div>
+                    <label className={styles.uploadButton}>
+                        <img src="/ic_camera.svg" alt="카메라" className={styles.cameraIcon} />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            style={{ display: "none" }}
+                        />
+                    </label>
                 </div>
 
-                <form className="signup-form" onSubmit={handleSubmit}>
+                <form className={styles.signupForm} onSubmit={handleSubmit}>
                     {/* 아이디 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.userid}</label>
                         <input
                             type="text"
@@ -79,11 +77,11 @@ export default function SignUp() {
                             onChange={handleChange}
                             placeholder={signupStrings.fields.userid}
                         />
-                        <span className="error-placeholder">{errors.userid}</span>
+                        <span className={styles.errorPlaceholder}>{errors.userid}</span>
                     </div>
 
                     {/* 비밀번호 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.userpwd}</label>
                         <input
                             type="password"
@@ -92,24 +90,24 @@ export default function SignUp() {
                             onChange={handleChange}
                             placeholder={signupStrings.fields.userpwd}
                         />
-                        <span className="error-placeholder">{errors.userpwd}</span>
+                        <span className={styles.errorPlaceholder}>{errors.userpwd}</span>
                     </div>
 
                     {/* 비밀번호 확인 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.userpwdCheck}</label>
                         <input
                             type="password"
                             name="userpwdCheck"
-                            value={form.userpwdConfirm}
+                            value={form.userpwdCheck}
                             onChange={handleChange}
                             placeholder={signupStrings.fields.userpwdCheck}
                         />
-                        <span className="error-placeholder">{errors.userpwdCheck}</span>
+                        <span className={styles.errorPlaceholder}>{errors.userpwdCheck}</span>
                     </div>
 
                     {/* 이름 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.name}</label>
                         <input
                             type="text"
@@ -118,11 +116,11 @@ export default function SignUp() {
                             onChange={handleChange}
                             placeholder={signupStrings.fields.name}
                         />
-                        <span className="error-placeholder">{errors.name}</span>
+                        <span className={styles.errorPlaceholder}>{errors.name}</span>
                     </div>
 
                     {/* 나이 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.age}</label>
                         <input
                             type="number"
@@ -131,33 +129,33 @@ export default function SignUp() {
                             onChange={handleChange}
                             placeholder={signupStrings.fields.age}
                         />
-                        <span className="error-placeholder">{errors.age}</span>
+                        <span className={styles.errorPlaceholder}>{errors.age}</span>
                     </div>
 
                     {/* 성별 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.gender}</label>
-                        <div className="gender-buttons">
+                        <div className={styles.genderButtons}>
                             <button
                                 type="button"
-                                className={gender === 'male' ? 'selected' : ''}
-                                onClick={() => setGender('male')}
+                                className={`${styles.button} ${form.gender === 'male' ? styles.selected : ''}`}
+                                onClick={() => setForm((prev) => ({ ...prev, gender: 'male' }))}
                             >
                                 {signupStrings.genderOptions.male}
                             </button>
                             <button
                                 type="button"
-                                className={gender === 'female' ? 'selected' : ''}
-                                onClick={() => setGender('female')}
+                                className={`${styles.button} ${form.gender === 'female' ? styles.selected : ''}`}
+                                onClick={() => setForm((prev) => ({ ...prev, gender: 'female' }))}
                             >
                                 {signupStrings.genderOptions.female}
                             </button>
                         </div>
-                        <span className="error-placeholder">{errors.gender}</span>
+                        <span className={styles.errorPlaceholder}>{errors.gender}</span>
                     </div>
 
                     {/* 소속 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.organization}</label>
                         <input
                             type="text"
@@ -166,11 +164,11 @@ export default function SignUp() {
                             onChange={handleChange}
                             placeholder={signupStrings.fields.organization}
                         />
-                        <span className="error-placeholder">{errors.organization}</span>
+                        <span className={styles.errorPlaceholder}>{errors.organization}</span>
                     </div>
 
                     {/* 직급 */}
-                    <div className="form-row">
+                    <div className={styles.formRow}>
                         <label>{signupStrings.fields.job}</label>
                         <input
                             type="text"
@@ -179,12 +177,12 @@ export default function SignUp() {
                             onChange={handleChange}
                             placeholder={signupStrings.fields.job}
                         />
-                        <span className="error-placeholder">{errors.job}</span>
+                        <span className={styles.errorPlaceholder}>{errors.job}</span>
                     </div>
 
                     {/* 제출 버튼 */}
-                    <div className="submit-row">
-                        <button type="submit" className="submit-btn">
+                    <div className={styles.submitRow}>
+                        <button type="submit" className={styles.submitBtn}>
                             {signupStrings.submit}
                         </button>
                     </div>
