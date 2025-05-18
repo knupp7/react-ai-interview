@@ -3,7 +3,9 @@ import ExportPDFButton from "./interview-result-comps/ExportPDFButton";
 import GaugeChart from "./interview-result-comps/GaugeChart";
 import RadarChart from "./interview-result-comps/RadarChart";
 import CategoryFeedbackBlock from "./interview-result-comps/CategoryFeedbackBlock";
+import QuestionAccordion from "./interview-result-comps/QuestionAccordion";
 import { score, radarScores, totalQuestions, missedQuestions, categoryFeedback } from "../data/interviewScoreData"
+import { mockQuestions } from "../data/interviewMockQuestions";
 import styles from "../styles/InterviewResult.module.css";
 
 export default function InterviewResult() {
@@ -38,6 +40,19 @@ export default function InterviewResult() {
                 {categoryFeedback.map((item, index) => (
                     <CategoryFeedbackBlock key={index} {...item} />
                 ))}
+
+                <section style={{ marginTop: "2rem" }}>
+                    <h2>질문 상세 분석</h2>
+                    {mockQuestions.map((q, idx) => (
+                        <QuestionAccordion
+                            key={idx}
+                            index={idx}
+                            question={q.question}
+                            answer={q.answer}
+                            aiFeedback={q.aiFeedback}
+                        />
+                    ))}
+                </section>
             </div>
 
             <ExportPDFButton />
