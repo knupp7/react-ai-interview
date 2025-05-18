@@ -14,26 +14,31 @@ export default function InterviewResult() {
 
     return (
         <div className={styles.wrapper}>
-            <h1 className={styles.title}>2025-05-19 네이버 모바일 기술면접</h1>
+            <div className={styles.header}>
+                <p className={styles.metaTitle}>2025-05-19 네이버 모바일 기술면접</p>
+                <ExportPDFButton />
+            </div>
 
             <div id="export-target" className={styles.reportBox}>
-                <section className={styles.summary}>
-                    <h2>분석 요약</h2>
-                    <GaugeChart score={score} />
-                    <div className={styles.questionBox}>
-                        <div className={styles.questionCard}>
-                            <p className={styles.label}>총 질문 수</p>
-                            <p className={styles.value}>{totalQuestions}</p>
-                        </div>
-                        <div className={styles.questionCard}>
-                            <p className={styles.label}>놓친 질문 수</p>
-                            <p className={styles.value}>{missedQuestions} / {totalQuestions}</p>
+                <section>
+                    <h2 className={styles.sectionTitle}>분석 요약</h2>
+                    <div className={styles.gaugeRow}>
+                        <GaugeChart score={score} />
+                        <div className={styles.questionBox}>
+                            <div className={styles.questionCard}>
+                                <p className={styles.label}>총 질문 수</p>
+                                <p className={styles.value}>{totalQuestions}</p>
+                            </div>
+                            <div className={styles.questionCard}>
+                                <p className={styles.label}>놓친 질문 수</p>
+                                <p className={styles.value}>{missedQuestions} / {totalQuestions}</p>
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 <section className={styles.radar}>
-                    <h2>카테고리별 평가</h2>
+                    <h2 className={styles.sectionTitle}>카테고리별 평가</h2>
                     <RadarChart data={radarScores} />
                 </section>
 
@@ -42,7 +47,7 @@ export default function InterviewResult() {
                 ))}
 
                 <section style={{ marginTop: "2rem" }}>
-                    <h2>질문 상세 분석</h2>
+                    <h2 className={styles.sectionTitle}>질문 상세 분석</h2>
                     {mockQuestions.map((q, idx) => (
                         <QuestionAccordion
                             key={idx}
@@ -54,8 +59,6 @@ export default function InterviewResult() {
                     ))}
                 </section>
             </div>
-
-            <ExportPDFButton />
         </div>
     );
 }
