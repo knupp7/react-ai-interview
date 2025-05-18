@@ -1,7 +1,8 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function InterviewStart() {
   const location = useLocation();
+  const navigate = useNavigate();
   const formData = location.state;
 
   if (!formData) {
@@ -19,6 +20,10 @@ export default function InterviewStart() {
     resume,
     profileImage
   } = formData;
+
+  const handleStartInterviewResult = () => {
+    navigate("/interview/result", { state: formData }); 
+  };
 
   return (
     <div style={{ maxWidth: "800px", margin: "40px auto", padding: "20px" }}>
@@ -78,6 +83,23 @@ export default function InterviewStart() {
           {resume}
         </pre>
       </div>
+
+      {/* 인터뷰 결과 페이지 이동 버튼 */}
+      <button
+        onClick={handleStartInterviewResult}
+        style={{
+          marginTop: "30px",
+          padding: "10px 20px",
+          fontSize: "16px",
+          backgroundColor: "#007bff",
+          color: "white",
+          border: "none",
+          borderRadius: "6px",
+          cursor: "pointer"
+        }}
+      >
+        인터뷰 결과 확인하기
+      </button>
     </div>
   );
 }
