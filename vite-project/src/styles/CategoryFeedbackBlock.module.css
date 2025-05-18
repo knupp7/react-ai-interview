@@ -1,0 +1,25 @@
+.block {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.heading {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.icon {
+    margin-right: 0.5rem;
+}
+
+.feedback {
+    margin-top: 0.5rem;
+    background-color: #f9fafb;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.feedback p {
+    margin: 0.25rem 0;
+}
