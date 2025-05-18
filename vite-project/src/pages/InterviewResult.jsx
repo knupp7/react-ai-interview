@@ -6,6 +6,7 @@ import CategoryFeedbackBlock from "./interview-result-comps/CategoryFeedbackBloc
 import QuestionAccordion from "./interview-result-comps/QuestionAccordion";
 import { score, radarScores, totalQuestions, missedQuestions, categoryFeedback } from "../data/interviewScoreData"
 import { mockQuestions } from "../data/interviewMockQuestions";
+import { finalFeedback } from "../data/interviewFinalFeedback";
 import styles from "../styles/InterviewResult.module.css";
 
 export default function InterviewResult() {
@@ -57,6 +58,13 @@ export default function InterviewResult() {
                             aiFeedback={q.aiFeedback}
                         />
                     ))}
+                </section>
+
+                <section className={styles.finalSection}>
+                    <h2 className={styles.sectionTitle}>최종 피드백 / 총평</h2>
+                    <div className={styles.finalBox}>
+                        {finalFeedback}
+                    </div>
                 </section>
             </div>
         </div>
