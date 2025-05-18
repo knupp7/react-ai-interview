@@ -2,21 +2,11 @@ import { useLocation } from "react-router-dom";
 import ExportPDFButton from "./interview-result-comps/ExportPDFButton";
 import GaugeChart from "./interview-result-comps/GaugeChart";
 import RadarChart from "./interview-result-comps/RadarChart";
+import { score, radarScores } from "../data/interviewScoreData"
 
 export default function InterviewResult() {
   const location = useLocation();
   const formData = location.state;
-
-  const score = 85;
-  const radarScores = {
-    기술이해도: 80,
-    문제해결력: 75,
-    기초지식: 70,
-    코드구현력: 90,
-    의사소통능력: 60,
-    태도: 85,
-};
-
 
   return (
     <div style={{ padding: "20px" }}>
