@@ -8,6 +8,7 @@ import SignUp from './pages/SignUp'
 import './App.css'
 import NavBar from './components/NavBar';
 import { Routes, Route } from 'react-router-dom';
+import InterviewResult from './pages/InterviewResult'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/interview/chat" element={<InterviewChat />} /> 
         <Route path="/login" element={<Login />} /> 
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/interview/result" element={<InterviewResult />} />
       </Routes>
     </div>
   );

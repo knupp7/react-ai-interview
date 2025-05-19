@@ -1,0 +1,16 @@
+.chartContainer {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0;
+}
+
+.scoreText {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #111827;
+}

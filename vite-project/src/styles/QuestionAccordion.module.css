@@ -1,0 +1,29 @@
+.accordion {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    background-color: #f9fafb;
+    text-align: left;
+}
+
+.header {
+    width: 100%;
+    padding: 1rem;
+    background-color: #eeeeee;
+    border: none;
+    text-align: left;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.panel {
+    padding: 1rem;
+    background-color: #ffffff;
+    border-top: 1px solid #d1d5db;
+}
+
+.icon {
+    font-size: 0.85rem;
+}
