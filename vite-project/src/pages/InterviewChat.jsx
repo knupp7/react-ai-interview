@@ -1,105 +1,68 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import styles from "../styles/interviewChat.module.css";
 
 export default function InterviewStart() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const formData = location.state;
 
-  if (!formData) {
-    return <p>입력 정보가 없습니다.</p>;
-  }
+  const messages = [
+    { from: 'ai', text: '안드로이드에서 LiveData와 StateFlow의 차이점을 설명해보시겠어요?' },
+    { from: 'user', text: 'LiveData는 생명주기를 인식하고, XML과 잘 연동돼요.\nStateFlow는 코드로만 기반이고 구조가 더 깔끔하다고 알고 있어요.' },
+    { from: 'ai', text: '“깔끔하다”고 했는데, 어떤 면에서 LiveData보다 StateFlow가 더 낫다고 보시나요?' },
+    { from: 'user', text: 'StateFlow는 값이 항상 존재하고, 일시적인 값 변경이 가능해요. collect를 통해 상태를 알람되게 유지할 수 있고, 테스트가 쉬워요.' },
+    { from: 'ai', text: '최근 레벨업 프로젝트에서 MVVM 패턴을 사용했다고 했는데, 실제 적용 경험이 있으신가요?' },
+    { from: 'user', text: '네, 최근 앱 프로젝트에서 MVVM 패턴을 사용했습니다...' },
+    { from: 'ai', text: '“깔끔하다”고 했는데, 어떤 면에서 LiveData보다 StateFlow가 더 낫다고 보시나요?' },
+    { from: 'user', text: 'StateFlow는 값이 항상 존재하고, 일시적인 값 변경이 가능해요. collect를 통해 상태를 알람되게 유지할 수 있고, 테스트가 쉬워요.' },
+    { from: 'ai', text: '최근 레벨업 프로젝트에서 MVVM 패턴을 사용했다고 했는데, 실제 적용 경험이 있으신가요?' },
+    { from: 'user', text: '네, 최근 앱 프로젝트에서 MVVM 패턴을 사용했습니다...' },
+    { from: 'ai', text: '“깔끔하다”고 했는데, 어떤 면에서 LiveData보다 StateFlow가 더 낫다고 보시나요?' },
+    { from: 'user', text: 'StateFlow는 값이 항상 존재하고, 일시적인 값 변경이 가능해요. collect를 통해 상태를 알람되게 유지할 수 있고, 테스트가 쉬워요.' },
+    { from: 'ai', text: '최근 레벨업 프로젝트에서 MVVM 패턴을 사용했다고 했는데, 실제 적용 경험이 있으신가요?' },
+    { from: 'user', text: '네, 최근 앱 프로젝트에서 MVVM 패턴을 사용했습니다...' },
+  ];
 
-  const {
-    name,
-    age,
-    gender,
-    organization,
-    position,
-    selectedCompany,
-    selectedRole,
-    resume,
-    profileImage
-  } = formData;
+  const interviewerProfile = {
+    interviewerName: "김도윤",
+    department: "네이버 모바일 개발팀",
+    interviewerProfileImage: "/bot_avatar.png"
+  };
 
   const handleStartInterviewResult = () => {
-    navigate("/interview/result", { state: formData }); 
+    navigate("/interview/result", { state: formData });
   };
 
   return (
-    <div style={{ maxWidth: "800px", margin: "40px auto", padding: "20px" }}>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>
-        인터뷰 정보 확인
-      </h1>
+    <div className={styles.interviewContainer}>
+      <header className={styles.header}>
+        <div className={styles.interviwerAgentContainer}>
+          <img src={interviewerProfile.interviewerProfileImage} alt="bot" />
+          <div className={styles.interviwerAgentProfile}>
+            <h2>{interviewerProfile.interviewerName} [{interviewerProfile.department}]</h2>
+            <p>Virtual Interview Assistant</p>
+          </div>
+        </div>
+        <button onClick={handleStartInterviewResult}>면접종료</button>
+      </header>
 
-      {/* 프로필 이미지 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h2>프로필 이미지</h2>
-        {profileImage ? (
-          <img
-            src={profileImage}
-            alt="업로드된 프로필"
-            style={{
-              width: "120px",
-              height: "120px",
-              objectFit: "cover",
-              borderRadius: "8px",
-              border: "1px solid #ccc"
-            }}
-          />
-        ) : (
-          <p>이미지가 없습니다.</p>
-        )}
+      {/* 채팅 영역 */}
+      <main className={styles.chatContainer}>
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className={msg.from === 'ai' ? styles.messageBot : styles.messageUser}
+          >
+            {msg.from === 'ai' && <img src="/bot_avatar.png" alt="bot" />}
+            <div className={styles.bubble}>{msg.text}</div>
+            {msg.from === 'user' && <img src={interviewerProfile.profileImage} alt="you" />}
+          </div>
+        ))}
+      </main>
+
+      {/* 입력창 */}
+      <div className={styles.inputBox}>
+        <input type="text" placeholder="답변을 입력해주세요..." />
+        <button>➤</button>
       </div>
-
-      {/* 기본 정보 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h2>기본 정보</h2>
-        <p><strong>이름:</strong> {name}</p>
-        <p><strong>나이:</strong> {age}</p>
-        <p><strong>성별:</strong> {gender === "male" ? "남자" : "여자"}</p>
-        <p><strong>소속:</strong> {organization}</p>
-        <p><strong>직급/직업:</strong> {position}</p>
-      </div>
-
-      {/* 선택 항목 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h2>선택 항목</h2>
-        <p><strong>지원 기업:</strong> {selectedCompany}</p>
-        <p><strong>지원 직군:</strong> {selectedRole}</p>
-      </div>
-
-      {/* 자소서 */}
-      <div>
-        <h2>자기소개서</h2>
-        <pre
-          style={{
-            whiteSpace: "pre-wrap",
-            backgroundColor: "#f9f9f9",
-            padding: "12px",
-            borderRadius: "6px",
-            border: "1px solid #ddd"
-          }}
-        >
-          {resume}
-        </pre>
-      </div>
-
-      {/* 인터뷰 결과 페이지 이동 버튼 */}
-      <button
-        onClick={handleStartInterviewResult}
-        style={{
-          marginTop: "30px",
-          padding: "10px 20px",
-          fontSize: "16px",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
-        }}
-      >
-        인터뷰 결과 확인하기
-      </button>
     </div>
   );
 }
