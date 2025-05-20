@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.interviewContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 5% 20% 0 20%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: #f5f5f5;
+}
+
+.interviwerAgentContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.interviwerAgentContainer > img {
+    display: block;
+    width: 5rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: gray;
+}
+
+.chatContainer {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+.messageBot, .messageUser {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+
+.messageBot img, .messageUser img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.messageBot {
+  flex-direction: row;
+}
+
+.messageBot .bubble {
+  background: #eee;
+  margin-left: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.messageUser {
+  flex-direction: row-reverse;
+}
+
+.messageUser .bubble {
+  background: #d9eaff;
+  margin-right: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.inputBox {
+  display: flex;
+  padding: 1rem 2rem;
+  border-top: 1px solid #ddd;
+  background: white;
+}
+
+.inputBox input {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 1rem;
+}
+
+.inputBox button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0 1.2rem;
+  border-radius: 5px;
+  font-size: 1.2rem;
+}
