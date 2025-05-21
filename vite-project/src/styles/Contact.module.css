@@ -1,14 +1,43 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
+.contactContainer {
+    padding: 2rem;
+    text-align: center;
     font-family: sans-serif;
-    color: black;
 }
 
-.contact_container {
-    width: 100%;
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin-top: 5%;
+    padding: 0 20%;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.avatar {
+    display: block;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 1rem auto;
+    background-color: lightgray;
+}
+
+.department {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.email {
+    display: block;
+    margin-top: 0.5rem;
+    color: #3498db;
+    text-decoration: none;
 }
