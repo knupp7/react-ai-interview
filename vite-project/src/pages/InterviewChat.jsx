@@ -13,20 +13,26 @@ export default function InterviewStart() {
   ]);
 
   const interviewerProfile = {
-    interviewerName: "김도윤",
+    name: "김도윤",
     department: "네이버 모바일 개발팀",
-    interviewerProfileImage: "/bot_avatar.png"
+    profileImage: "/bot_avatar.png"
   };
 
   const userProfile = {
-    interviewerName: "김도윤",
-    department: "네이버 모바일 개발팀",
-    interviewerProfileImage: "/bot_avatar.png"
+    name: "나졸업",
+    profileImage: "/bot_avatar.png"
   };
 
   const handleStartInterviewResult = () => {
     navigate("/interview/result", { state: formData });
   };
+
+  const handleSend = (text) => {
+    // server POST - 답변 입력
+    setMsg([...msg, { from: 'user', text }]);
+    // server Get - 질문 받아옴
+    // setMsg, from AI
+  }
 
   return (
     <div className={styles.interviewContainer}>
@@ -41,7 +47,7 @@ export default function InterviewStart() {
        * interviewee: 면접자(유저) 프로필
        */}
       <ChattingArea messages={msg} interviewer={interviewerProfile} interviewee={userProfile} />
-      <InputBox onSend={(text) => { setMsg([...msg, { from: 'user', text }]) }} />
+      <InputBox onSend={handleSend} />
     </div>
   );
 }
