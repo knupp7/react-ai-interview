@@ -10,7 +10,8 @@ const InputBox = ({ onSend }) => {
     setInput("");
   };
 
-  const handleSubmit = (e) => {
+  // Enter 시 Submit
+  const handleKeyDown = (e) => {
     if (e.key === "Enter") handleSend();
   };
 
@@ -21,7 +22,7 @@ const InputBox = ({ onSend }) => {
         placeholder="답변을 입력해주세요"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleSubmit}
+        onKeyDown={handleKeyDown}
       />
       <button onClick={handleSend}>➤</button>
     </div>
