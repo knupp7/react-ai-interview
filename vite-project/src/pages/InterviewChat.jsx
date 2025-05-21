@@ -1,5 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "../styles/interviewChat.module.css";
+import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
+import ChattingArea from "./interviewChat-comps/ChattingArea";
+import InputBox from "./interviewChat-comps/InputBox";
 
 export default function InterviewStart() {
   const navigate = useNavigate();
@@ -27,42 +30,30 @@ export default function InterviewStart() {
     interviewerProfileImage: "/bot_avatar.png"
   };
 
+  const userProfile = {
+    interviewerName: "김도윤",
+    department: "네이버 모바일 개발팀",
+    interviewerProfileImage: "/bot_avatar.png"
+  };
+
   const handleStartInterviewResult = () => {
     navigate("/interview/result", { state: formData });
   };
 
   return (
     <div className={styles.interviewContainer}>
-      <header className={styles.header}>
-        <div className={styles.interviwerAgentContainer}>
-          <img src={interviewerProfile.interviewerProfileImage} alt="bot" />
-          <div className={styles.interviwerAgentProfile}>
-            <h2>{interviewerProfile.interviewerName} [{interviewerProfile.department}]</h2>
-            <p>Virtual Interview Assistant</p>
-          </div>
-        </div>
+      <div className={styles.header}>
+        <InterviewerAgent profile={interviewerProfile} />
         <button onClick={handleStartInterviewResult}>면접종료</button>
-      </header>
-
-      {/* 채팅 영역 */}
-      <main className={styles.chatContainer}>
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={msg.from === 'ai' ? styles.messageBot : styles.messageUser}
-          >
-            {msg.from === 'ai' && <img src="/bot_avatar.png" alt="bot" />}
-            <div className={styles.bubble}>{msg.text}</div>
-            {msg.from === 'user' && <img src={interviewerProfile.profileImage} alt="you" />}
-          </div>
-        ))}
-      </main>
-
-      {/* 입력창 */}
-      <div className={styles.inputBox}>
-        <input type="text" placeholder="답변을 입력해주세요..." />
-        <button>➤</button>
       </div>
+
+      {/**
+       * messeges: 대화 데이터
+       * interviewer: 면접관 프로필
+       * interviewee: 면접자(유저) 프로필
+       */}
+      <ChattingArea messages={messages} interviewer={interviewerProfile} interviewee={userProfile}/>
+      <InputBox /> {/* 입력창 */}
     </div>
   );
 }
