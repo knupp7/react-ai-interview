@@ -8,7 +8,7 @@ const ChattingArea = ({ messages, interviewer, interviewee }) => {
           key={idx}
           className={msg.from === 'ai' ? styles.messageBot : styles.messageUser}
         >
-          {msg.from === 'ai' && <img src={interviewee.profileImage} alt="bot" />}
+          {msg.from === 'ai' && <img src={interviewer.profileImage} alt="bot" />}
           <div className={styles.bubble}>{msg.text}</div>
           {msg.from === 'user' && <img src={interviewee.profileImage} alt="you" />}
         </div>
