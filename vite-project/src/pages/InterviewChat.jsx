@@ -1,105 +1,53 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "../styles/interviewChat.module.css";
+import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
+import ChattingArea from "./interviewChat-comps/ChattingArea";
+import InputBox from "./interviewChat-comps/InputBox";
 
 export default function InterviewStart() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const formData = location.state;
+  const [msg, setMsg] = useState([
+    { from: 'ai', text: '안드로이드에서 LiveData와 StateFlow의 차이점을 설명해보시겠어요?' },
+    { from: 'user', text: 'LiveData는 생명주기를 인식하고, XML과 잘 연동돼요.\nStateFlow는 코드로만 기반이고 구조가 더 깔끔하다고 알고 있어요.' },
+  ]);
 
-  if (!formData) {
-    return <p>입력 정보가 없습니다.</p>;
-  }
-
-  const {
-    name,
-    age,
-    gender,
-    organization,
-    position,
-    selectedCompany,
-    selectedRole,
-    resume,
-    profileImage
-  } = formData;
-
-  const handleStartInterviewResult = () => {
-    navigate("/interview/result", { state: formData }); 
+  const interviewerProfile = {
+    name: "김도윤",
+    department: "네이버 모바일 개발팀",
+    profileImage: "/bot_avatar.png"
   };
 
+  const userProfile = {
+    name: "나졸업",
+    profileImage: "/bot_avatar.png"
+  };
+
+  const handleStartInterviewResult = () => {
+    navigate("/interview/result", { state: formData });
+  };
+
+  const handleSend = (text) => {
+    // server POST - 답변 입력
+    setMsg([...msg, { from: 'user', text }]);
+    // server Get - 질문 받아옴
+    // setMsg, from AI
+  }
+
   return (
-    <div style={{ maxWidth: "800px", margin: "40px auto", padding: "20px" }}>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>
-        인터뷰 정보 확인
-      </h1>
-
-      {/* 프로필 이미지 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h2>프로필 이미지</h2>
-        {profileImage ? (
-          <img
-            src={profileImage}
-            alt="업로드된 프로필"
-            style={{
-              width: "120px",
-              height: "120px",
-              objectFit: "cover",
-              borderRadius: "8px",
-              border: "1px solid #ccc"
-            }}
-          />
-        ) : (
-          <p>이미지가 없습니다.</p>
-        )}
+    <div className={styles.interviewContainer}>
+      <div className={styles.header}>
+        <InterviewerAgent profile={interviewerProfile} />
+        <button onClick={handleStartInterviewResult}>면접종료</button>
       </div>
 
-      {/* 기본 정보 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h2>기본 정보</h2>
-        <p><strong>이름:</strong> {name}</p>
-        <p><strong>나이:</strong> {age}</p>
-        <p><strong>성별:</strong> {gender === "male" ? "남자" : "여자"}</p>
-        <p><strong>소속:</strong> {organization}</p>
-        <p><strong>직급/직업:</strong> {position}</p>
-      </div>
-
-      {/* 선택 항목 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h2>선택 항목</h2>
-        <p><strong>지원 기업:</strong> {selectedCompany}</p>
-        <p><strong>지원 직군:</strong> {selectedRole}</p>
-      </div>
-
-      {/* 자소서 */}
-      <div>
-        <h2>자기소개서</h2>
-        <pre
-          style={{
-            whiteSpace: "pre-wrap",
-            backgroundColor: "#f9f9f9",
-            padding: "12px",
-            borderRadius: "6px",
-            border: "1px solid #ddd"
-          }}
-        >
-          {resume}
-        </pre>
-      </div>
-
-      {/* 인터뷰 결과 페이지 이동 버튼 */}
-      <button
-        onClick={handleStartInterviewResult}
-        style={{
-          marginTop: "30px",
-          padding: "10px 20px",
-          fontSize: "16px",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
-        }}
-      >
-        인터뷰 결과 확인하기
-      </button>
+      {/**
+       * messeges: 대화 데이터
+       * interviewer: 면접관 프로필
+       * interviewee: 면접자(유저) 프로필
+       */}
+      <ChattingArea messages={msg} interviewer={interviewerProfile} interviewee={userProfile} />
+      <InputBox onSend={handleSend} />
     </div>
   );
 }
