@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from '../styles/interview.module.css';
 import { INTERVIEW_LABELS, GENDER } from "../constants/interviewFormStrings";
 import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../data/interviewSelectOptions";
@@ -6,18 +6,23 @@ import { useNavigate } from "react-router-dom";
 import ProfileSection from "./interview-comps/ProfileSection";
 import CompanySection from "./interview-comps/CompanySection";
 
+const FORM_CACHE_KEY = "interviewFormData";
+
 export default function Interview() {
-  const [gender, setGender] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [position, setPosition] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState(DEFAULT_COMPANIES[0]);
-  const [selectedRole, setSelectedRole] = useState(DEFAULT_ROLES[0]);
-  const [resume, setResume] = useState("");
+  // 캐시에서 초기값 불러오기
+  const cachedData = JSON.parse(localStorage.getItem(FORM_CACHE_KEY) || "{}");
+
+  const [gender, setGender] = useState(cachedData.gender || null);
+  const [profileImage, setProfileImage] = useState(cachedData.profileImage || null);
+  const [name, setName] = useState(cachedData.name || "");
+  const [age, setAge] = useState(cachedData.age || "");
+  const [organization, setOrganization] = useState(cachedData.organization || "");
+  const [position, setPosition] = useState(cachedData.position || "");
+  const [selectedCompany, setSelectedCompany] = useState(cachedData.selectedCompany || DEFAULT_COMPANIES[0]);
+  const [selectedRole, setSelectedRole] = useState(cachedData.selectedRole || DEFAULT_ROLES[0]);
+  const [resume, setResume] = useState(cachedData.resume || "");
   const [errors, setErrors] = useState({
     name: "",
     age: "",
@@ -79,6 +84,22 @@ export default function Interview() {
     // 에러가 하나라도 있으면 false 반환
     return !Object.values(newErrors).some((msg) => msg);
   };
+
+  // 상태 변경될 때마다 캐시에 저장
+  useEffect(() => {
+    const formData = {
+      name,
+      age,
+      gender,
+      organization,
+      position,
+      selectedCompany,
+      selectedRole,
+      resume,
+      profileImage,
+    };
+    localStorage.setItem(FORM_CACHE_KEY, JSON.stringify(formData));
+  }, [name, age, gender, organization, position, selectedCompany, selectedRole, resume, profileImage]);
 
   return (
     <div className={styles.interview_container}>
