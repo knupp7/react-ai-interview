@@ -13,6 +13,7 @@ export const INTERVIEW_LABELS = {
     resume: "자소서 입력",
     resumePlaceholder: "자기소개서를 입력하세요.",
     submit: "인터뷰 시작",
+    reset: "초기화",
     required: "*"
   };
   
