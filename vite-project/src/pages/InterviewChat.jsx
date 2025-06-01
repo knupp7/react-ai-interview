@@ -38,7 +38,7 @@ export default function InterviewStart() {
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
         <InterviewerAgent profile={interviewerProfile} />
-        <button onClick={handleStartInterviewResult}>면접종료</button>
+        <button className={styles.endInterviewBtn}onClick={handleStartInterviewResult}>면접종료</button>
       </div>
 
       {/**
@@ -46,8 +46,10 @@ export default function InterviewStart() {
        * interviewer: 면접관 프로필
        * interviewee: 면접자(유저) 프로필
        */}
-      <ChattingArea messages={msg} interviewer={interviewerProfile} interviewee={userProfile} />
-      <InputBox onSend={handleSend} />
+      <div className={styles.chatWrapper}>
+        <ChattingArea messages={msg} interviewer={interviewerProfile} interviewee={userProfile} />
+        <InputBox onSend={handleSend} />
+      </div>
     </div>
   );
 }
