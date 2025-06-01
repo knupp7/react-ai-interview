@@ -16,15 +16,16 @@ const InputBox = ({ onSend }) => {
   };
 
   return (
-    <div className={styles.inputBox}>
-      <input
+    <div className={styles.inputWrapper}>
+      <textarea
+        className={styles.inputArea}
         type="text"
         placeholder="답변을 입력해주세요"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
       />
-      <button onClick={handleSend}>➤</button>
+      <button className={styles.sendBtn} onClick={handleSend}>➤</button>
     </div>
   );
 }
