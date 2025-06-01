@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/interviewChat.module.css";
 import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
 import ChattingArea from "./interviewChat-comps/ChattingArea";
 import InputBox from "./interviewChat-comps/InputBox";
 
 export default function InterviewStart() {
+  const location = useLocation();
+  const formData = location.state;
   const navigate = useNavigate();
   const [msg, setMsg] = useState([
     { from: 'ai', text: '안드로이드에서 LiveData와 StateFlow의 차이점을 설명해보시겠어요?' },
@@ -19,8 +21,8 @@ export default function InterviewStart() {
   };
 
   const userProfile = {
-    name: "나졸업",
-    profileImage: "/bot_avatar.png"
+    name: formData.name || "나졸업",
+    profileImage: formData.profileImage || "/duri.png"
   };
 
   const handleStartInterviewResult = () => {
