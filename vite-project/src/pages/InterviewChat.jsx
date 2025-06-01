@@ -40,7 +40,7 @@ export default function InterviewStart() {
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
         <InterviewerAgent profile={interviewerProfile} />
-        <button className={styles.endInterviewBtn}onClick={handleStartInterviewResult}>면접종료</button>
+        <button className={styles.endInterviewBtn} onClick={handleStartInterviewResult}>면접종료</button>
       </div>
 
       {/**
