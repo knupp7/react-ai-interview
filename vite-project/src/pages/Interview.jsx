@@ -30,7 +30,7 @@ export default function Interview() {
     resume: "",
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return; // 유효성 검사 통과하지 않으면 리턴
 
     const formData = {
@@ -44,7 +44,17 @@ export default function Interview() {
       resume,
       profileImage,
     };
-    navigate("/interview/chat", { state: formData });
+
+    try {
+      const res = await postInterviewForm(formData);
+      const data = res.data;
+
+      // 성공 시 채팅 페이지로 이동
+      navigate("/interview/chat", { state: { ...formData, sessionId: data.sessionId } });
+    } catch (err) {
+      console.error("서버 요청 실패:", err);
+      alert("서버와의 연결에 실패했습니다.");
+    }
   };
 
   const validateForm = () => {
@@ -117,7 +127,7 @@ export default function Interview() {
     setSelectedRole(DEFAULT_ROLES[0]);
     setResume("");
     setProfileImage(null);
-  
+
     // 에러 메시지 초기화
     setErrors({
       name: "",
@@ -125,11 +135,11 @@ export default function Interview() {
       gender: "",
       resume: "",
     });
-  
+
     // 캐시 삭제
     localStorage.removeItem(FORM_CACHE_KEY);
   };
-  
+
 
   return (
     <div className={styles.interview_container}>
@@ -144,8 +154,8 @@ export default function Interview() {
 
       <hr />
 
-      <CompanySection 
-        selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany} 
+      <CompanySection
+        selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany}
         selectedRole={selectedRole} setSelectedRole={setSelectedRole}
         resume={resume} setResume={setResume}
         errors={errors} />
