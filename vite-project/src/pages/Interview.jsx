@@ -5,6 +5,7 @@ import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../data/interviewSelectOptions
 import { useNavigate } from "react-router-dom";
 import ProfileSection from "./interview-comps/ProfileSection";
 import CompanySection from "./interview-comps/CompanySection";
+import { postProfileInfo, postInterviewInfo } from "../api/interview";
 
 const FORM_CACHE_KEY = "interviewFormData";
 
@@ -30,32 +31,56 @@ export default function Interview() {
     resume: "",
   });
 
-  const handleSubmit = async () => {
-    if (!validateForm()) return; // 유효성 검사 통과하지 않으면 리턴
+  useEffect(() => {
+    const sessionToken = localStorage.getItem('sessionToken');
+    if (!sessionToken) {
+      alert('로그인 후 이용해주세요.');
+      navigate('/login');
+    }
+  }, []);
 
-    const formData = {
-      name,
-      age,
-      gender,
-      organization,
-      position,
-      selectedCompany,
-      selectedRole,
-      resume,
-      profileImage,
-    };
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    const sessionCode = localStorage.getItem("sessionCode");
+    if (!sessionCode) {
+      alert("세션 코드가 없습니다. 로그인 상태를 확인해주세요.");
+      return;
+    }
 
     try {
-      const res = await postInterviewForm(formData);
-      const data = res.data;
+      await postProfileInfo(sessionCode, {
+        name,
+        age,
+        gender,
+        education: {
+          school: organization, // 상태에서 입력 받도록 수정
+          major: position,  // 상태에서 입력 받도록 수정
+          gradYear: 2024, // 상태에서 입력 받도록 수정
+        },
+        email: "keshicool9123@gmail.com", // 상태에서 입력 받도록 수정
+      });
 
-      // 성공 시 채팅 페이지로 이동
-      navigate("/interview/chat", { state: { ...formData, sessionId: data.sessionId } });
+      await postInterviewInfo(sessionCode, {
+        company: selectedCompany,
+        position: selectedRole,
+        self_intro: resume,
+      });
+
+      navigate("/interview/chat", {
+        state: {
+          name,
+          selectedCompany,
+          selectedRole,
+          resume,
+        },
+      });
     } catch (err) {
-      console.error("서버 요청 실패:", err);
-      alert("서버와의 연결에 실패했습니다.");
+      console.error("면접 시작 실패:", err);
+      alert("면접 정보를 저장하는 데 실패했습니다.");
     }
   };
+
 
   const validateForm = () => {
     const newErrors = {
