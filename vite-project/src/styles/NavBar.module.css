@@ -41,12 +41,14 @@
     cursor: pointer;
 }
 
-.login {
+.login,
+.logout {
     background: var(--primary-color);
     color: white;
 }
 
-.login:hover {
+.login:hover,
+.logout:hover {
     transform: scale(0.98);
 }
 
