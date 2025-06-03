@@ -5,7 +5,7 @@ import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../data/interviewSelectOptions
 import { useNavigate } from "react-router-dom";
 import ProfileSection from "./interview-comps/ProfileSection";
 import CompanySection from "./interview-comps/CompanySection";
-import { postProfileInfo, postInterviewInfo } from "../api/interview";
+import { postProfileInfo, postInterviewInfo, postPersona, postQuestions, getPersona } from "../api/interview";
 
 const FORM_CACHE_KEY = "interviewFormData";
 
@@ -67,9 +67,24 @@ export default function Interview() {
         self_intro: resume,
       });
 
+      await postPersona(sessionCode)
+      const personaRes = await getPersona(sessionCode);
+      if (personaRes) {
+        const enrichedPersona = {
+          name: personaRes.persona_name,
+          department: personaRes.department,
+          profileImage: "/bot_avatar.png"
+        };
+        localStorage.setItem("persona", JSON.stringify(enrichedPersona));
+      }
+
+      await postQuestions(sessionCode, { num_questions: 5 });
+      console.log(personaRes);
+
       navigate("/interview/chat", {
         state: {
           name,
+          profileImage,
           selectedCompany,
           selectedRole,
           resume,
@@ -80,7 +95,6 @@ export default function Interview() {
       alert("면접 정보를 저장하는 데 실패했습니다.");
     }
   };
-
 
   const validateForm = () => {
     const newErrors = {
