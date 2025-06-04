@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileSection from "./interview-comps/ProfileSection";
 import CompanySection from "./interview-comps/CompanySection";
 import { postProfileInfo, postInterviewInfo, postPersona, postQuestions, getPersona } from "../api/interview";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const FORM_CACHE_KEY = "interviewFormData";
 
@@ -24,12 +25,14 @@ export default function Interview() {
   const [selectedCompany, setSelectedCompany] = useState(cachedData.selectedCompany || DEFAULT_COMPANIES[0]);
   const [selectedRole, setSelectedRole] = useState(cachedData.selectedRole || DEFAULT_ROLES[0]);
   const [resume, setResume] = useState(cachedData.resume || "");
+
   const [errors, setErrors] = useState({
     name: "",
     age: "",
     gender: "",
     resume: "",
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const sessionToken = localStorage.getItem('sessionToken');
@@ -49,6 +52,7 @@ export default function Interview() {
     }
 
     try {
+      setLoading(true);
       await postProfileInfo(sessionCode, {
         name,
         age,
@@ -81,6 +85,7 @@ export default function Interview() {
       await postQuestions(sessionCode, { num_questions: 5 });
       console.log(personaRes);
 
+      setLoading(false);
       navigate("/interview/chat", {
         state: {
           name,
@@ -199,10 +204,15 @@ export default function Interview() {
         resume={resume} setResume={setResume}
         errors={errors} />
 
-      <div className={styles.interviewStart_btn}>
-        <button className={styles.resetButton} onClick={handleReset}>{INTERVIEW_LABELS.reset}</button>
-        <button className={styles.submitButton} onClick={handleSubmit}>{INTERVIEW_LABELS.submit}</button>
-      </div>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <div className={styles.interviewStart_btn}>
+          <button className={styles.resetButton} onClick={handleReset}>{INTERVIEW_LABELS.reset}</button>
+          <button className={styles.submitButton} onClick={handleSubmit}>{INTERVIEW_LABELS.submit}</button>
+        </div>
+      )}
+
     </div>
   );
 }
