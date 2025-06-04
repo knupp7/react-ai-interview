@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/QuestionAccordion.module.css";
 
 const categories = [
@@ -10,8 +10,12 @@ const categories = [
   "태도 및 자기 인식"
 ];
 
-export default function QuestionAccordion({ question, answer, scores, feedbacks, index }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function QuestionAccordion({ question, answer, scores, feedbacks, index, forceOpen = false }) {
+  const [isOpen, setIsOpen] = useState(forceOpen);
+
+  useEffect(() => {
+    setIsOpen(forceOpen);
+  }, [forceOpen]);
 
   return (
     <div className={styles.accordion}>

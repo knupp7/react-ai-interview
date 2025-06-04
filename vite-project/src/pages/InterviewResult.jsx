@@ -7,12 +7,16 @@ import QuestionAccordion from "./interview-result-comps/QuestionAccordion";
 import HorizontalBarChart from "./interview-result-comps/HorizontalBarChart";
 import styles from "../styles/InterviewResult.module.css";
 import { RESULT_STRINGS } from "../constants/interviewResultStrings";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getFinalEvaluation } from "../api/eval";
+import html2pdf from 'html2pdf.js';
 
 export default function InterviewResult() {
     const location = useLocation();
     const formData = location.state; // 사용자 정보 (현재 미사용)
+
+    const [isExporting, setIsExporting] = useState(false);
+    const exportRef = useRef(false);    // 배포용 ref
 
     const [evalData, setEvalData] = useState(null);
     const [score, setScore] = useState(0);
@@ -36,7 +40,35 @@ export default function InterviewResult() {
     const [questions, setQuestions] = useState(null);
     const [finalFeedback, setFinalFeedback] = useState('');
 
+    const handleExportPDF = () => {
+        if (exportRef.current) return;
+        exportRef.current = true;
+        setIsExporting(true);
+    };
 
+    useEffect(() => {
+        if (isExporting) {
+            const timer = setTimeout(() => {
+                const element = document.getElementById('export-target');
+                html2pdf()
+                    .set({
+                        margin: 0.5,
+                        filename: 'interview-analysis.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+                    })
+                    .from(element)
+                    .save()
+                    .then(() => {
+                        setIsExporting(false);
+                        exportRef.current = false;
+                    });
+            }, 100); // 한 프레임 쉬기
+
+            return () => clearTimeout(timer);
+        }
+    }, [isExporting]);
 
     useEffect(() => {
         const fetchEval = async () => {
@@ -84,7 +116,7 @@ export default function InterviewResult() {
             {/* ▶ 헤더: 상단 날짜 + PDF 버튼 */}
             <div className={styles.header}>
                 <p className={styles.metaTitle}>{RESULT_STRINGS.title}</p>
-                <ExportPDFButton />
+                <ExportPDFButton onExport={handleExportPDF} />
             </div>
 
             {/* ▶ PDF로 내보낼 전체 영역 */}
@@ -142,6 +174,7 @@ export default function InterviewResult() {
                             answer={q.answer}
                             scores={q.scores}
                             feedbacks={q.feedbacks}
+                            forceOpen={isExporting}
                         />
                     ))}
                 </section>
