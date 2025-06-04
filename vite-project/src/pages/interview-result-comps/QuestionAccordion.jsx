@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import styles from "../../styles/QuestionAccordion.module.css";
 
-export default function QuestionAccordion({ question, answer, aiFeedback, index }) {
+const categories = [
+  "기술 이해도",
+  "문제 해결력",
+  "기초 지식 응용력",
+  "코드 구현력",
+  "의사소통 능력",
+  "태도 및 자기 인식"
+];
+
+export default function QuestionAccordion({ question, answer, scores, feedbacks, index }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -15,7 +24,15 @@ export default function QuestionAccordion({ question, answer, aiFeedback, index 
         <div className={styles.panel}>
           <p><strong>질문 내용:</strong> {question}</p>
           <p><strong>내 답변:</strong> {answer}</p>
-          <p><strong>AI 피드백:</strong> {aiFeedback}</p>
+          <div className={styles.feedbackBlock}>
+            <p><strong>AI 피드백:</strong></p>
+            {feedbacks.map((fb, i) => (
+              <div key={i} className={styles.feedbackItem}>
+                <p><strong>{categories[i]}</strong> (점수: {scores[i]})</p>
+                <p>{fb}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
