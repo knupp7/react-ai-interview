@@ -13,6 +13,7 @@
 }
 
 .logo {
+    font-size: medium;
     font-weight: bold;
 }
 
@@ -33,11 +34,15 @@
     color: var(--primary-color);
     font-weight: bold;
 }
-
+.authButtons {
+    width: 15%;
+}
 .authButtons button {
+    width: 40%;
     margin-left: 0.5rem;
     padding: 0.4rem 0.8rem;
-    border: 1px solid #444;
+    /* border: 0.5px solid #444; */
+    font-size: medium;
     cursor: pointer;
 }
 
@@ -49,14 +54,15 @@
 
 .login:hover,
 .logout:hover {
-    transform: scale(0.98);
+    transform: scale(1.05);
 }
 
 .signup {
     background: white;
-    color: black;
+    color: #141414;
+    border: 0.5px solid #141414aa;
 }
 
 .signup:hover {
-    transform: scale(0.98);
+    transform: scale(1.05);
 }
