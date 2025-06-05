@@ -9,8 +9,7 @@
 ## 📍 프로젝트 소개
 **Duri-Intern**은 지원자가 입력한 직무, 기업, 자소서 내용을 기반으로, <br />
 실제 면접처럼 질문하고 답변을 평가하는 **기술면접 특화 AI 시뮬레이터**입니다. <br/> 
-기존 AI 면접 서비스가 제공하는 포괄적이고 추상적인 질문을 넘어,
-사용자 맞춤형 질문 생성, 꼬리질문 흐름, 정량·정성 평가, 리포트 자동화까지 지원하여, <br />
+사용자 맞춤형 질문 생성, 꼬리질문, 정량·정성 평가, 리포트 자동화까지 지원하여,
 **기술면접에 필요한 실질적인 준비를 돕는 차별화된 AI 플랫폼**입니다.
 
 ## 🚀 주요 기능
@@ -43,24 +42,28 @@
 | 프론트엔드     | Vite + React |
 | 백엔드         | FastAPI, Gemini API, LangChain |
 | 데이터 처리     | Python 크롤링 (Velog, Tistory, 사람인) |
-| 배포/스토리지   | Vercel (프론트), Firebase (선택 저장용) |
 <br/>
 
 ## 📌 페이지별 기능 소개
-⚠️개발중⚠️
+| 홈 화면 | 인터뷰 입력 화면 | 
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/0329d8b7-0301-42cd-9854-20b7e94dd447" width="600px"> | <img src="https://github.com/user-attachments/assets/4125b9ce-2871-42b3-afc5-861e83e49f86" width="600px"> |
+| 서비스 소개 및 주요 기능을 <br /> 한눈에 보여주는 랜딩 페이지 | 	지원 기업, 직무, 자소서를 입력해 <br/>맞춤형 면접을 시작하는 단계 |
+
+| 인터뷰 진행 화면 | 인터뷰 결과 화면 |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/9b8f39c8-594a-45a5-ad22-3b5c6aa9c2ed" width="600px"> | <img src="https://github.com/user-attachments/assets/8e8bb33e-ad59-4f29-b0c1-0a4e5305e507" width="600px"> |
+| 가상의 면접관과 실시간으로 <br/>기술면접을 진행하는 시뮬레이터 | 면접 평가 결과를 점수 및 피드백 형태로 제공하며, <br/> PDF 저장 가능 |
 
 <br/>
 
 ## 🔍 프로젝트 정보
 ### 개발 기간
 - 2025.04 ~ 2025.06 (2개월)
-
-### 서비스 링크
-- **API 서버**: 
   
 ### 프로젝트 관리
 - **[Fronted Repository](https://github.com/knupp7/react-ai-interview)**
-- **[Backend Repository](https://github.com/knupp7)**
+- **[Backend Repository](https://github.com/knupp7/backend-ai-interview)**
 
 <br/>
 
