@@ -205,7 +205,7 @@ export default function Interview() {
         errors={errors} />
 
       {loading ? (
-        <LoadingSpinner />
+        <LoadingSpinner isActive={loading} />
       ) : (
         <div className={styles.interviewStart_btn}>
           <button className={styles.resetButton} onClick={handleReset}>{INTERVIEW_LABELS.reset}</button>
