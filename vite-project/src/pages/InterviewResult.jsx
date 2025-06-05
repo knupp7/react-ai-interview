@@ -5,22 +5,118 @@ import RadarChart from "./interview-result-comps/RadarChart";
 import CategoryFeedbackBlock from "./interview-result-comps/CategoryFeedbackBlock";
 import QuestionAccordion from "./interview-result-comps/QuestionAccordion";
 import HorizontalBarChart from "./interview-result-comps/HorizontalBarChart";
-import { score, radarScores, totalQuestions, missedQuestions, categoryFeedback } from "../data/interviewScoreData"
-import { mockQuestions } from "../data/interviewMockQuestions";
-import { finalFeedback } from "../data/interviewFinalFeedback";
 import styles from "../styles/InterviewResult.module.css";
 import { RESULT_STRINGS } from "../constants/interviewResultStrings";
+import { useEffect, useRef, useState } from "react";
+import { getFinalEvaluation } from "../api/eval";
+import html2pdf from 'html2pdf.js';
 
 export default function InterviewResult() {
     const location = useLocation();
     const formData = location.state; // 사용자 정보 (현재 미사용)
+
+    const [isExporting, setIsExporting] = useState(false);
+    const exportRef = useRef(false);    // 배포용 ref
+
+    const [evalData, setEvalData] = useState(null);
+    const [score, setScore] = useState(0);
+    const [totalQuestions, setTotalQuestions] = useState(0);
+    const [radarScores, setRadarScores] = useState({
+        "기술 이해도": 0,
+        "문제 해결력": 0,
+        "기초 지식 응용력": 0,
+        "코드 구현력": 0,
+        "의사소통 능력": 0,
+        "태도 및 자기 인식": 0
+    });
+    const [categoryFeedback, setCategoryFeedback] = useState({
+        "기술 이해도": "",
+        "문제 해결력": "",
+        "기초 지식 응용력": "",
+        "코드 구현력": "",
+        "의사소통 능력": "",
+        "태도 및 자기 인식": ""
+    });
+    const [questions, setQuestions] = useState(null);
+    const [finalFeedback, setFinalFeedback] = useState('');
+
+    const handleExportPDF = () => {
+        if (exportRef.current) return;
+        exportRef.current = true;
+        setIsExporting(true);
+    };
+
+    useEffect(() => {
+        if (isExporting) {
+            const timer = setTimeout(() => {
+                const element = document.getElementById('export-target');
+                html2pdf()
+                    .set({
+                        margin: 0.5,
+                        filename: 'interview-analysis.pdf',
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+                    })
+                    .from(element)
+                    .save()
+                    .then(() => {
+                        setIsExporting(false);
+                        exportRef.current = false;
+                    });
+            }, 100); // 한 프레임 쉬기
+
+            return () => clearTimeout(timer);
+        }
+    }, [isExporting]);
+
+    useEffect(() => {
+        const fetchEval = async () => {
+            const sessionCode = localStorage.getItem("sessionCode");
+            if (!sessionCode) return;
+            try {
+                /**
+                 * total_score: int
+                 * questions: list
+                 * question_count: int
+                 * final_feedback: str
+                 * category_scores: list
+                 * category_feedbacks: list
+                 */
+                const res = await getFinalEvaluation(sessionCode);
+                setEvalData(res);
+                console.log("평가 결과:", res);
+
+                // report data
+                setScore((res.total_score) * 20);
+                setTotalQuestions(res.question_count);
+
+                const scaledScores = {};
+                for (const [key, value] of Object.entries(res.category_scores)) {
+                    scaledScores[key] = Math.round(value * 20);
+                }
+                setRadarScores(scaledScores);
+                setCategoryFeedback(res.category_feedbacks);
+
+                setQuestions(res.questions)
+
+                setFinalFeedback(res.final_feedback)
+            } catch (err) {
+                console.error("최종 평가 가져오기 실패:", err);
+            }
+        };
+
+        fetchEval();
+    }, []);
+
+    if (!evalData) return <div>결과를 불러오는 중입니다...</div>;
 
     return (
         <div className={styles.wrapper}>
             {/* ▶ 헤더: 상단 날짜 + PDF 버튼 */}
             <div className={styles.header}>
                 <p className={styles.metaTitle}>{RESULT_STRINGS.title}</p>
-                <ExportPDFButton />
+                <ExportPDFButton onExport={handleExportPDF} />
             </div>
 
             {/* ▶ PDF로 내보낼 전체 영역 */}
@@ -29,16 +125,19 @@ export default function InterviewResult() {
                 <section>
                     <h2 className={styles.sectionTitle}>{RESULT_STRINGS.summary}</h2>
                     <div className={styles.gaugeRow}>
+                        {/* total score */}
                         <GaugeChart score={score} />
                         <div className={styles.questionBox}>
+                            {/* total_q */}
                             <div className={styles.questionCard}>
                                 <p className={styles.label}>{RESULT_STRINGS.totalQuestions}</p>
                                 <p className={styles.value}>{totalQuestions}</p>
                             </div>
-                            <div className={styles.questionCard}>
+                            {/* deprecated - missed question */}
+                            {/* <div className={styles.questionCard}>
                                 <p className={styles.label}>{RESULT_STRINGS.missedQuestions}</p>
                                 <p className={styles.value}>{missedQuestions} / {totalQuestions}</p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </section>
@@ -57,20 +156,25 @@ export default function InterviewResult() {
                 </section>
 
                 {/* ▷ 카테고리별 피드백 상세 블럭 */}
-                {categoryFeedback.map((item, index) => (
-                    <CategoryFeedbackBlock key={index} {...item} />
+                {categoryFeedback && Object.entries(categoryFeedback).map(([key, value], index) => (
+                    <CategoryFeedbackBlock
+                        key={index}
+                        feedback={{ key, text: value }}
+                    />
                 ))}
 
                 {/* ▷ 질문 상세 분석 (Accordion) */}
                 <section className={styles.sectionSpacing}>
                     <h2 className={styles.sectionTitle}>{RESULT_STRINGS.questions}</h2>
-                    {mockQuestions.map((q, idx) => (
+                    {questions && questions.map((q, idx) => (
                         <QuestionAccordion
                             key={idx}
                             index={idx}
                             question={q.question}
                             answer={q.answer}
-                            aiFeedback={q.aiFeedback}
+                            scores={q.scores}
+                            feedbacks={q.feedbacks}
+                            forceOpen={isExporting}
                         />
                     ))}
                 </section>

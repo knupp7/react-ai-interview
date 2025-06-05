@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/interviewChat.module.css";
 import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
@@ -9,37 +9,80 @@ export default function InterviewStart() {
   const location = useLocation();
   const formData = location.state;
   const navigate = useNavigate();
-  const [msg, setMsg] = useState([
-    { from: 'ai', text: '안드로이드에서 LiveData와 StateFlow의 차이점을 설명해보시겠어요?' },
-    { from: 'user', text: 'LiveData는 생명주기를 인식하고, XML과 잘 연동돼요.\nStateFlow는 코드로만 기반이고 구조가 더 깔끔하다고 알고 있어요.' },
-  ]);
 
-  const interviewerProfile = {
-    name: "김도윤",
-    department: "네이버 모바일 개발팀",
+  const [persona, setPersona] = useState({
+    name: "면접관",
+    department: "AI Assistant",
     profileImage: "/bot_avatar.png"
-  };
+  });
+  const [msg, setMsg] = useState([]);
+  const socketRef = useRef(null);
+  const sessionCode = localStorage.getItem("sessionCode");
 
   const userProfile = {
     name: formData.name || "나졸업",
-    profileImage: formData.profileImage || "/duri.png"
+    profileImage: formData.name || "/duri.png"
   };
+
+  useEffect(() => {
+  const savedPersona = localStorage.getItem("persona");
+  if (savedPersona) {
+    try {
+      setPersona(JSON.parse(savedPersona));
+    } catch (e) {
+      console.error("persona 파싱 실패:", e);
+    }
+  } else {
+    console.warn("페르소나가 저장되어 있지 않습니다.");
+  }
+}, []);
+
+  useEffect(() => {
+    if (!sessionCode || !persona) return;
+
+    const socket = new WebSocket(`ws://localhost:8000/sessions/${sessionCode}/ws/chat`);
+    socketRef.current = socket;
+
+    socket.onopen = () => {
+      console.log("✅ WebSocket 연결됨");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.question) {
+        setMsg((prev) => [...prev, { from: 'ai', text: data.question }]);
+      } else if (data.event === "면접 종료") {
+        alert(data.message);
+        navigate("/interview/result", { state: formData });
+      }
+    };
+
+    socket.onclose = (event) => {
+      console.log("WebSocket closed:", event.code, event.reason);
+    };
+
+    socket.onerror = (err) => {
+      console.error("WebSocket Error:", err);
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [sessionCode, persona, navigate, formData]);
 
   const handleStartInterviewResult = () => {
     navigate("/interview/result", { state: formData });
   };
 
   const handleSend = (text) => {
-    // server POST - 답변 입력
-    setMsg([...msg, { from: 'user', text }]);
-    // server Get - 질문 받아옴
-    // setMsg, from AI
-  }
+    setMsg((prev) => [...prev, { from: 'user', text }]);
+    socketRef.current?.send(text);
+  };
 
   return (
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
-        <InterviewerAgent profile={interviewerProfile} />
+        <InterviewerAgent profile={persona} />
         <button className={styles.endInterviewBtn} onClick={handleStartInterviewResult}>면접종료</button>
       </div>
 
@@ -49,7 +92,7 @@ export default function InterviewStart() {
        * interviewee: 면접자(유저) 프로필
        */}
       <div className={styles.chatWrapper}>
-        <ChattingArea messages={msg} interviewer={interviewerProfile} interviewee={userProfile} />
+        <ChattingArea messages={msg} interviewer={persona} interviewee={userProfile} />
         <InputBox onSend={handleSend} />
       </div>
     </div>

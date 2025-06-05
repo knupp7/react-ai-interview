@@ -7,6 +7,7 @@ const APP_STRINGS = {
         CONTACT: 'Contact', // 문의 메뉴 텍스트
         SIGNUP: '회원가입', // 회원가입 버튼 텍스트
         LOGIN: '로그인', // 로그인 버튼 텍스트
+        LOGOUT: '로그아웃', //로그아웃 버튼 텍스트
       }
 }
 

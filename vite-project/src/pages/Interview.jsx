@@ -5,6 +5,7 @@ import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../data/interviewSelectOptions
 import { useNavigate } from "react-router-dom";
 import ProfileSection from "./interview-comps/ProfileSection";
 import CompanySection from "./interview-comps/CompanySection";
+import { postProfileInfo, postInterviewInfo, postPersona, postQuestions, getPersona } from "../api/interview";
 
 const FORM_CACHE_KEY = "interviewFormData";
 
@@ -30,21 +31,69 @@ export default function Interview() {
     resume: "",
   });
 
-  const handleSubmit = () => {
-    if (!validateForm()) return; // 유효성 검사 통과하지 않으면 리턴
+  useEffect(() => {
+    const sessionToken = localStorage.getItem('sessionToken');
+    if (!sessionToken) {
+      alert('로그인 후 이용해주세요.');
+      navigate('/login');
+    }
+  }, []);
 
-    const formData = {
-      name,
-      age,
-      gender,
-      organization,
-      position,
-      selectedCompany,
-      selectedRole,
-      resume,
-      profileImage,
-    };
-    navigate("/interview/chat", { state: formData });
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    const sessionCode = localStorage.getItem("sessionCode");
+    if (!sessionCode) {
+      alert("세션 코드가 없습니다. 로그인 상태를 확인해주세요.");
+      return;
+    }
+
+    try {
+      await postProfileInfo(sessionCode, {
+        name,
+        age,
+        gender,
+        education: {
+          school: organization, // 상태에서 입력 받도록 수정
+          major: position,  // 상태에서 입력 받도록 수정
+          gradYear: 2024, // 상태에서 입력 받도록 수정
+        },
+        email: "keshicool9123@gmail.com", // 상태에서 입력 받도록 수정
+      });
+
+      await postInterviewInfo(sessionCode, {
+        company: selectedCompany,
+        position: selectedRole,
+        self_intro: resume,
+      });
+
+      await postPersona(sessionCode)
+      const personaRes = await getPersona(sessionCode);
+      if (personaRes) {
+        const enrichedPersona = {
+          name: personaRes.persona_name,
+          department: personaRes.department,
+          profileImage: "/bot_avatar.png"
+        };
+        localStorage.setItem("persona", JSON.stringify(enrichedPersona));
+      }
+
+      await postQuestions(sessionCode, { num_questions: 5 });
+      console.log(personaRes);
+
+      navigate("/interview/chat", {
+        state: {
+          name,
+          profileImage,
+          selectedCompany,
+          selectedRole,
+          resume,
+        },
+      });
+    } catch (err) {
+      console.error("면접 시작 실패:", err);
+      alert("면접 정보를 저장하는 데 실패했습니다.");
+    }
   };
 
   const validateForm = () => {
@@ -117,7 +166,7 @@ export default function Interview() {
     setSelectedRole(DEFAULT_ROLES[0]);
     setResume("");
     setProfileImage(null);
-  
+
     // 에러 메시지 초기화
     setErrors({
       name: "",
@@ -125,11 +174,11 @@ export default function Interview() {
       gender: "",
       resume: "",
     });
-  
+
     // 캐시 삭제
     localStorage.removeItem(FORM_CACHE_KEY);
   };
-  
+
 
   return (
     <div className={styles.interview_container}>
@@ -144,8 +193,8 @@ export default function Interview() {
 
       <hr />
 
-      <CompanySection 
-        selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany} 
+      <CompanySection
+        selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany}
         selectedRole={selectedRole} setSelectedRole={setSelectedRole}
         resume={resume} setResume={setResume}
         errors={errors} />

@@ -3,6 +3,8 @@ import styles from '../styles/SignUp.module.css';
 import signupStrings from '../constants/signupStrings';
 import validateSignupForm from '../utils/validateSignupForm';
 import ProfileImageUploader from '../pages/interview-comps/ProfileImageUploader';
+import { createSession, joinSession } from '../api/session';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
     const [form, setForm] = useState({
@@ -18,20 +20,33 @@ export default function SignUp() {
 
     const [profileImage, setProfileImage] = useState(null);
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const newErrors = validateSignupForm(form);
         setErrors(newErrors);
 
-        if (Object.keys(newErrors).length === 0) {
-            console.log('폼 제출 성공!', form);
-            // 실제 가입 처리(API 호출 등)
+        if (Object.keys(newErrors).length > 0) return;
+
+        try {
+            const { code } = await createSession(form.userid, form.userpwd);
+            const { sessionId } = await joinSession(code, form.userid, form.userpwd);
+
+            // 세션 저장
+            localStorage.setItem('sessionToken', sessionId);
+            localStorage.setItem('sessionCode', code);
+
+            // 페이지 이동
+            navigate('/interview');
+        } catch (err) {
+            console.error('회원가입 중 오류:', err);
+            alert('회원가입 중 문제가 발생했습니다.');
         }
     };
 
