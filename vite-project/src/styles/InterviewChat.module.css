@@ -52,7 +52,7 @@
 
 .chatContainer {
   flex: 1;
-  padding: 50px 4rem 120px;
+  padding: 50px 4rem calc(3rem + 100px);;
   overflow-y: auto;
   box-sizing: border-box;
 }
