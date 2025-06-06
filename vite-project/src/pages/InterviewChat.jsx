@@ -21,7 +21,7 @@ export default function InterviewStart() {
 
   const userProfile = {
     name: formData.name || "나졸업",
-    profileImage: formData.name || "/duri.png"
+    profileImage: "/duri.png"
   };
 
   useEffect(() => {

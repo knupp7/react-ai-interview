@@ -6,8 +6,7 @@ const HomeBanner = () => {
   return (
     <div className={styles.hero}>
       <div className={styles.hero_center}>
-        <h1>{HOME_STRINGS.HERO.TITLE}</h1>
-        <h2>{HOME_STRINGS.HERO.SUBTITLE}</h2>
+        <h1><span>{HOME_STRINGS.HERO.TITLE}</span> {HOME_STRINGS.HERO.SUBTITLE}</h1>
 
         <div className={styles.avatar_wrapper}>
           <span className={`${styles.hero_tag} ${styles.left}`}>{HOME_STRINGS.HERO.TAG_LEFT}</span>

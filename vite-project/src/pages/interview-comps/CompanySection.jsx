@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { INTERVIEW_LABELS } from "../../constants/interviewFormStrings";
 import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../../data/interviewSelectOptions";
 import styles from "../../styles/interview.module.css";
@@ -11,6 +12,25 @@ const CompanySection = ({
   setResume,
   errors
 }) => {
+
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    handleResize();
+  }, []);
+
+  // 자소서 입력하는 만큼 창 늘려주기
+  const handleResize = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      const scrollY = window.scrollY;
+
+      textarea.style.height = "auto";
+      textarea.style.height = Math.max(textarea.scrollHeight + 3, 160) + "px"; // 내용 높이만큼 증가, 3px는 기본 margin
+
+      window.scrollTo({ top: scrollY });
+    }
+  };
 
   return (
     <>
@@ -57,8 +77,13 @@ const CompanySection = ({
         </label>
         <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
           <textarea
+            ref={textareaRef}
+            spellCheck={false}
             value={resume}
-            onChange={(e) => setResume(e.target.value)}
+            onChange={(e) => {
+              setResume(e.target.value)
+              handleResize();
+            }}
             placeholder={INTERVIEW_LABELS.resumePlaceholder} />
           {errors.resume && (
             <span className={`${styles.error_msg} ${styles.resume_error}`}>
