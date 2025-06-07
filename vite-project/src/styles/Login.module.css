@@ -6,7 +6,8 @@
 
 .loginContainer {
     max-width: 400px;
-    margin: 40px auto;
+    height: 50vh;
+    margin: 20vh auto;
     text-align: center;
 }
 
