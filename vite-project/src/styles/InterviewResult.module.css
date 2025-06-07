@@ -49,22 +49,22 @@
 }
 
 .questionCard {
-    background-color: #f9fafb;
-    border: 1px solid rgb(181, 181, 181);
+    /* background-color: #f9fafb; */
+    /* border: 1px solid rgb(181, 181, 181); */
     padding: 1rem;
-    border-radius: 0.5rem;
+    /* border-radius: 0.5rem; */
     min-width: 120px;
 }
 
 .label {
-    font-size: 0.9rem;
+    font-size: 1.5rem;
     color: #6b7280;
 }
 
 .value {
-    font-size: 1.25rem;
+    font-size: 5rem;
     font-weight: bold;
-    color: #111827;
+    color: #141414;
 }
 
 .sectionSpacing {

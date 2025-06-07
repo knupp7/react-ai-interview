@@ -1,6 +1,14 @@
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // 0-based
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // 면접 결과분석 페이지에서 사용하는 문자열 모음
 export const RESULT_STRINGS = {
-    title: "2025-05-19 네이버 모바일 기술면접",
+    title: getTodayDate()+" 기술면접",
     summary: "분석 요약",
     totalQuestions: "총 질문 수",
     missedQuestions: "놓친 질문 수",

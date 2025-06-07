@@ -42,6 +42,13 @@ export default function Interview() {
     }
   }, []);
 
+  useEffect(() => {
+    const isFinished = localStorage.getItem("interviewFinished") === "true";
+    if (isFinished) {
+      navigate("/interview/result");
+    }
+  }, []);
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 

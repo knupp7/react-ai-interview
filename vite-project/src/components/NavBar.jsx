@@ -20,6 +20,9 @@ export default function NavBar() {
     localStorage.removeItem('sessionToken');
     localStorage.removeItem('sessionCode');
     localStorage.removeItem('sessionCreatedAt');
+    localStorage.removeItem("persona");
+    localStorage.removeItem("interviewFinished");
+    localStorage.removeItem("interviewFormData");
     navigate('/'); // 로그아웃 후 홈으로
   };
 
@@ -37,7 +40,7 @@ export default function NavBar() {
             <button className={styles.signup} onClick={handleSignUpClick}>{APP_STRINGS.NAV.SIGNUP}</button>
             <button className={styles.login} onClick={handleLoginClick}>{APP_STRINGS.NAV.LOGIN}</button>
           </>
-        ):(
+        ) : (
           <button className={styles.logout} onClick={handleLogoutClick}>{APP_STRINGS.NAV.LOGOUT}</button>
         )}
       </div>

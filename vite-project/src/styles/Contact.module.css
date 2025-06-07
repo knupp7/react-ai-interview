@@ -2,6 +2,8 @@
     padding: 2rem;
     text-align: center;
     font-family: sans-serif;
+    background-color: #eaeaef;
+    height: 90vh;
 }
 
 .cardGrid {
@@ -9,7 +11,7 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 2rem;
     margin-top: 5%;
-    padding: 0 20%;
+    padding: 0 15%;
 }
 
 .card {

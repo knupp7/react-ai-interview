@@ -27,6 +27,9 @@ const GaugeChart = ({ score }) => {
     rotation: 270,
     plugins: {
       legend: { display: false },
+      tooltip: {
+        enabled: false,
+      },
     },
   };
 

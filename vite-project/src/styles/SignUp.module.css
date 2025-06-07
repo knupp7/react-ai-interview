@@ -13,7 +13,7 @@ body {
 
 .signupContainer {
     max-width: 700px;
-    min-height: 100vh;
+    min-height: 90vh;
     margin: 0 auto;
     padding: 20px;
     font-family: sans-serif;
@@ -22,7 +22,6 @@ body {
 
 .signupTitle {
     font-size: 24px;
-    margin-top: 100px;
     margin-bottom: 20px;
     text-align: left;
     align-self: flex-start;

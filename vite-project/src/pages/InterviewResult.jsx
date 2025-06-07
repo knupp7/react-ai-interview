@@ -10,6 +10,7 @@ import { RESULT_STRINGS } from "../constants/interviewResultStrings";
 import { useEffect, useRef, useState } from "react";
 import { getFinalEvaluation } from "../api/eval";
 import html2pdf from 'html2pdf.js';
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function InterviewResult() {
     const location = useLocation();
@@ -88,7 +89,7 @@ export default function InterviewResult() {
                 console.log("평가 결과:", res);
 
                 // report data
-                setScore((res.total_score) * 20);
+                setScore(Math.round((res.total_score) * 20));
                 setTotalQuestions(res.question_count);
 
                 const scaledScores = {};
@@ -109,7 +110,7 @@ export default function InterviewResult() {
         fetchEval();
     }, []);
 
-    if (!evalData) return <div>결과를 불러오는 중입니다...</div>;
+    if (!evalData) return <LoadingSpinner />;
 
     return (
         <div className={styles.wrapper}>
@@ -131,7 +132,7 @@ export default function InterviewResult() {
                             {/* total_q */}
                             <div className={styles.questionCard}>
                                 <p className={styles.label}>{RESULT_STRINGS.totalQuestions}</p>
-                                <p className={styles.value}>{totalQuestions}</p>
+                                <span className={styles.value}>{totalQuestions}</span>
                             </div>
                             {/* deprecated - missed question */}
                             {/* <div className={styles.questionCard}>

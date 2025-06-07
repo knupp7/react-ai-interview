@@ -10,9 +10,11 @@ const InputBox = ({ onSend }) => {
     setInput("");
   };
 
-  // Enter 시 Submit
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSend();
+    if (e.key === "Enter" && !e.shiftKey) { //shift+Enter는 엔터 기능 유지
+      e.preventDefault(); // 줄바꿈 방지
+      handleSend();
+    }
   };
 
   return (
