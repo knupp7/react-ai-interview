@@ -24,18 +24,20 @@ export default function InterviewStart() {
     profileImage: "/duri.png"
   };
 
+  const [isInterviewFinished, setIsInterviewFinished] = useState(false);
+
   useEffect(() => {
-  const savedPersona = localStorage.getItem("persona");
-  if (savedPersona) {
-    try {
-      setPersona(JSON.parse(savedPersona));
-    } catch (e) {
-      console.error("persona 파싱 실패:", e);
+    const savedPersona = localStorage.getItem("persona");
+    if (savedPersona) {
+      try {
+        setPersona(JSON.parse(savedPersona));
+      } catch (e) {
+        console.error("persona 파싱 실패:", e);
+      }
+    } else {
+      console.warn("페르소나가 저장되어 있지 않습니다.");
     }
-  } else {
-    console.warn("페르소나가 저장되어 있지 않습니다.");
-  }
-}, []);
+  }, []);
 
   useEffect(() => {
     if (!sessionCode || !persona) return;
@@ -49,11 +51,12 @@ export default function InterviewStart() {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
+
       if (data.question) {
         setMsg((prev) => [...prev, { from: 'ai', text: data.question }]);
       } else if (data.event === "면접 종료") {
-        alert(data.message);
-        navigate("/interview/result", { state: formData });
+        alert("면접이 종료되었습니다. 면접 종료 버튼을 눌러주세요.");
+        setIsInterviewFinished(true);
       }
     };
 
@@ -83,7 +86,13 @@ export default function InterviewStart() {
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
         <InterviewerAgent profile={persona} />
-        <button className={styles.endInterviewBtn} onClick={handleStartInterviewResult}>면접종료</button>
+        <button
+          className={styles.endInterviewBtn}
+          onClick={handleStartInterviewResult}
+          disabled={!isInterviewFinished}
+        >
+          면접 종료
+        </button>
       </div>
 
       {/**
