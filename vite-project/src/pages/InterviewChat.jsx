@@ -27,6 +27,13 @@ export default function InterviewStart() {
   const [isInterviewFinished, setIsInterviewFinished] = useState(false);
 
   useEffect(() => {
+    const isFinished = localStorage.getItem("interviewFinished") === "true";
+    if (isFinished) {
+      navigate("/interview/result");
+    }
+  }, []);
+
+  useEffect(() => {
     const savedPersona = localStorage.getItem("persona");
     if (savedPersona) {
       try {
@@ -55,6 +62,7 @@ export default function InterviewStart() {
       if (data.question) {
         setMsg((prev) => [...prev, { from: 'ai', text: data.question }]);
       } else if (data.event === "면접 종료") {
+        localStorage.setItem("interviewFinished", "true");
         alert("면접이 종료되었습니다. 면접 종료 버튼을 눌러주세요.");
         setIsInterviewFinished(true);
       }
