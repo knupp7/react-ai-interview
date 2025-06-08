@@ -7,7 +7,7 @@ const teamMembers = [
     department: 'Front-end',
     email: 'geonwoo.choi@kangwon.ac.kr',
     github: 'rjsdn031',
-    image: '/images/gw.jpg',
+    image: '/gw.jpg',
   },
   {
     name: '이상엽',
@@ -15,7 +15,7 @@ const teamMembers = [
     department: 'Back-end',
     email: 'tkdduqdlchlr@kangwon.ac.kr',
     github: 'Potass5ium',
-    image: '/images/sy.jpg',
+    image: '/sy.png',
   },
   {
     name: '이아림',
@@ -23,7 +23,7 @@ const teamMembers = [
     department: 'Front-end',
     email: 'lar713@kangwon.ac.kr',
     github: 'arieum',
-    image: '/images/ar.jpg',
+    image: '/ar.png',
   },
   {
     name: '이호준',
@@ -31,7 +31,7 @@ const teamMembers = [
     department: 'Back-end',
     email: 'hojuna123@kangwon.ac.kr',
     github: 'hojuna',
-    image: '/images/hj.jpg',
+    image: '/hj.jpg',
   },
 ];
 
