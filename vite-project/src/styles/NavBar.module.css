@@ -11,25 +11,31 @@
     align-items: center;
     padding: 0 2rem;
     border-bottom: 1px solid #ddd;
+    gap: 2rem;
 }
 
 .logo {
-    height: 50%;
-    padding: 0.5rem;
-    font-size: medium;
+    flex: 0 0 auto;
+    font-size: large;
     font-weight: bold;
+    padding: 0.5rem;
+    align-items: center;
+    
 }
 
 .navLinks {
-    height: 50%;
+    flex: 1 1 auto;
     display: flex;
-    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
     list-style: none;
 }
 
 .navLinks li {
+    font-size: large;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: auto;
     transition: 0.3s;
 }
 
@@ -38,16 +44,20 @@
     color: var(--primary-color);
     font-weight: bold;
 }
+
 .authButtons {
-    width: 15%;
+    flex: 0 0 auto;
+    display: flex;
+    gap: 0.5rem;
 }
+
 .authButtons button {
-    width: 40%;
-    margin-left: 0.5rem;
-    padding: 0.4rem 0.8rem;
+    width: 6rem;
+    padding: 0.5rem 0.8rem;
     /* border: 0.5px solid #444; */
     font-size: medium;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .login,
@@ -69,4 +79,40 @@
 
 .signup:hover {
     transform: scale(1.05);
+}
+
+@media (max-width: 1024px) {
+  .navLinks {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navLinks {
+    gap: 1rem;
+  }
+  .navbar {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .logo {
+    display: none;
+  }
+
+  .navbar {
+    padding: 0 1rem;
+  }
+
+  .navLinks {
+    gap: 1rem;
+  }
+
+  .authButtons button {
+    font-size: 0.9rem;
+    width: 5.4rem;
+    padding: 0.3rem 0.6rem;
+  }
 }
