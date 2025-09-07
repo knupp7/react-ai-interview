@@ -1,4 +1,5 @@
 import React from 'react'
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from './pages/Home'
 import Interview from './pages/Interview'
 import Contact from './pages/Contact'
@@ -7,13 +8,15 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import './App.css'
 import NavBar from './components/NavBar';
-import { Routes, Route } from 'react-router-dom';
 import InterviewResult from './pages/InterviewResult'
 
 function App() {
+  const location = useLocation();
+  const showNav = location.pathname !== "/";
+
   return (
     <div className="App">
-      <NavBar />
+      {showNav && <NavBar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/interview" element={<Interview />} />

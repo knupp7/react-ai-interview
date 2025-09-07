@@ -4,6 +4,7 @@
     left: 0;
     width: 100%;
     height: 10%;
+    max-height: 75px;
     z-index: 1000;
     background-color: white;
     display: flex;
