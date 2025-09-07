@@ -7,7 +7,7 @@
     --card-border: #e5e7eb;
     --title-color: #1f1f1f;
     --desc-color: #6a6283;
-    
+
 }
 
 .snap_section {
@@ -41,7 +41,6 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    width: 100%;
 
     padding: 1rem;
     border-radius: 9999px 0 0 9999px;
@@ -54,13 +53,21 @@
 }
 
 .wrapper .content:nth-child(1) {
-  margin-left: 0vw;   /* 첫 번째 카드 */
+    /* 첫 번째 카드 */
+    margin-left: 0vw;
+    width: 100%;
 }
+
 .wrapper .content:nth-child(2) {
-  margin-left: 6vw;   /* 두 번째 카드 */
+    /* 두 번째 카드 */
+    margin-left: 6vw;
+    width: calc(100%-6vw);
 }
+
 .wrapper .content:nth-child(3) {
-  margin-left: 12vw;  /* 세 번째 카드 */
+    /* 세 번째 카드 */
+    margin-left: 12vw;
+    width: calc(100%-12vw);
 }
 
 .marker {
@@ -83,15 +90,19 @@
 }
 
 
-.step_title { margin: 0; }
-.step_label {
-  color: var(--title-color);
-  font-weight: 800;
-  font-size: clamp(1.05rem, 2.4vw, 1.4rem);
-  line-height: 1.25;
-  word-break: keep-all;
-  white-space: normal;
+.step_title {
+    margin: 0;
 }
+
+.step_label {
+    color: var(--title-color);
+    font-weight: 800;
+    font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+    line-height: 1.25;
+    word-break: keep-all;
+    white-space: normal;
+}
+
 .step_title {
     margin: 0;
     font-weight: bold;
