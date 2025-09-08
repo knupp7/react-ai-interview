@@ -1,10 +1,11 @@
-body {
+/* body {
     background-color: #eaeaef;
-}
+} */
 
 .contactContainer {
     padding: 2rem;
     text-align: center;
+    background-color: #eaeaef;
     font-family: sans-serif;
     height: 100%;
 }

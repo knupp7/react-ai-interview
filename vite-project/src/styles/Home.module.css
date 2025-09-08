@@ -43,7 +43,7 @@ body {
 
 .snap_section:first-child {
     /* background-color: #f8f9fd; */
-    background-color: linear-gradient(180deg, #f8f9fd, 80%, #ffffff, 100%);
+    background-color: linear-gradient(180deg, #f5f9ff, 80%, #ffffff, 100%);
 }
 
 .start_button {
