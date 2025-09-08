@@ -116,4 +116,8 @@
     width: 5.4rem;
     padding: 0.3rem 0.6rem;
   }
+
+  .signup {
+    display: none;
+  }
 }
