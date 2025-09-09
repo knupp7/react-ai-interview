@@ -169,15 +169,15 @@ export default function Interview() {
     if (!confirmed) return;
 
     // 상태 초기화
-    setName("");
-    setAge("");
-    setGender(null);
-    setOrganization("");
-    setPosition("");
+    // setName("");
+    // setAge("");
+    // setGender(null);
+    // setOrganization("");
+    // setPosition("");
     setSelectedCompany(DEFAULT_COMPANIES[0]);
     setSelectedRole(DEFAULT_ROLES[0]);
     setResume("");
-    setProfileImage(null);
+    // setProfileImage(null);
 
     // 에러 메시지 초기화
     setErrors({
