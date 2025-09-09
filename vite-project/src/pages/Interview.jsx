@@ -140,14 +140,19 @@ export default function Interview() {
       newErrors.gender = "성별을 선택해주세요.";
     }
 
-    if (!resume || resume.length < 20) {
-      newErrors.resume = "자기소개서는 20자 이상 입력해주세요.";
+    if (resumeMode === 'text') {
+      if (!resume || resume.length < 20) {
+        newErrors.resume = "자기소개서는 20자 이상 입력해주세요.";
+      }
+    } else {
+      const hasEnoughText = resume && resume.length >= 20;
+      if (!resumeFileSelected && !hasEnoughText) {
+        newErrors.resume = "PDF 업로드 또는 20자 이상 입력이 필요합니다.";
+      }
     }
 
     setErrors(newErrors);
-
-    // 에러가 하나라도 있으면 false 반환
-    return !Object.values(newErrors).some((msg) => msg);
+    return !Object.values(newErrors).some(Boolean);
   };
 
   // 상태 변경될 때마다 캐시에 저장
@@ -200,34 +205,35 @@ export default function Interview() {
 
   return (
     <div className={styles.interview_container}>
-      <ProfileSection
-        name={name} setName={setName}
-        profileImage={profileImage} setProfileImage={setProfileImage}
-        age={age} setAge={setAge}
-        gender={gender} setGender={setGender}
-        organization={organization} setOrganization={setOrganization}
-        position={position} setPosition={setPosition}
-        errors={errors} />
+      <div className={styles.pageCard}>
+        <ProfileSection
+          name={name} setName={setName}
+          profileImage={profileImage} setProfileImage={setProfileImage}
+          age={age} setAge={setAge}
+          gender={gender} setGender={setGender}
+          organization={organization} setOrganization={setOrganization}
+          position={position} setPosition={setPosition}
+          errors={errors} />
 
-      <hr />
+        <hr />
 
-      <CompanySection
-        selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany}
-        selectedRole={selectedRole} setSelectedRole={setSelectedRole}
-        resume={resume} setResume={setResume}
-        resumeMode={resumeMode} setResumeMode={setResumeMode}
-        resumeFileSelected={resumeFileSelected} setResumeFileSelected={setResumeFileSelected}
-        errors={errors} />
+        <CompanySection
+          selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany}
+          selectedRole={selectedRole} setSelectedRole={setSelectedRole}
+          resume={resume} setResume={setResume}
+          resumeMode={resumeMode} setResumeMode={setResumeMode}
+          resumeFileSelected={resumeFileSelected} setResumeFileSelected={setResumeFileSelected}
+          errors={errors} />
 
-      {loading ? (
-        <LoadingSpinner isActive={loading} />
-      ) : (
-        <div className={styles.interviewStart_btn}>
-          <button className={styles.resetButton} onClick={handleReset}>{INTERVIEW_LABELS.reset}</button>
-          <button className={styles.submitButton} onClick={handleSubmit}>{INTERVIEW_LABELS.submit}</button>
-        </div>
-      )}
-
+        {loading ? (
+          <LoadingSpinner isActive={loading} />
+        ) : (
+          <div className={styles.interviewStart_btn}>
+            <button className={styles.resetButton} onClick={handleReset}>{INTERVIEW_LABELS.reset}</button>
+            <button className={styles.submitButton} onClick={handleSubmit}>{INTERVIEW_LABELS.submit}</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
