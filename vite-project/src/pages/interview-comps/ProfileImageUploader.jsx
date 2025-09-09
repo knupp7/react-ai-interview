@@ -6,6 +6,7 @@ const MAX_SIZE_MB = 5;
 export default function ProfileImageUploader({
   profileImage,
   setProfileImage,
+  setProfileImageDataUrl,
   /** 'rounded' | 'circle' */
   shape = "rounded",
   /** px 단위 사이즈 (가로=세로) */
@@ -42,6 +43,11 @@ export default function ProfileImageUploader({
     setError("");
     const imageUrl = URL.createObjectURL(file);
     setProfileImage(imageUrl);
+
+    // dataURL로도 만들어서 지속 저장에 활용
+    const reader = new FileReader();
+    reader.onload = () => setProfileImageDataUrl?.(reader.result);
+    reader.readAsDataURL(file);
   };
 
   const handleImageChange = (e) => {

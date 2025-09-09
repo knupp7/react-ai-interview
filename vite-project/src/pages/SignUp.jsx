@@ -19,6 +19,7 @@ export default function SignUp() {
   });
 
   const [profileImage, setProfileImage] = useState(null);
+  const [profileImageDataUrl, setProfileImageDataUrl] = useState(null);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -47,199 +48,214 @@ export default function SignUp() {
       localStorage.setItem('sessionCode', code);
       if (createdAt) localStorage.setItem('sessionCreatedAt', createdAt);
 
+      // 면접 폼 캐시 키로 기본 프로필 저장 (Interview가 이걸 읽어 초기값으로 사용)
+      localStorage.setItem('interviewFormData', JSON.stringify({
+        name: form.name,
+        age: form.age,
+        gender: form.gender,                // 'male' | 'female'
+        organization: form.organization,    // 회사/학교/소속
+        position: form.job,                 // 직급/직업
+        profileImage: profileImageDataUrl ?? profileImage ?? null, // 있으면 넣고, 없으면 null
+        // 선택: 회사/직무/자소서 초기값도 같이 세팅 가능
+        selectedCompany: null,
+        selectedRole: null,
+        resume: ''
+      }));
+
       // 페이지 이동
       navigate('/interview');
-    } catch (err) {
-      console.error('회원가입 중 오류:', err);
-      alert('회원가입 중 문제가 발생했습니다.');
-    }
-  };
+      } catch (err) {
+        console.error('회원가입 중 오류:', err);
+        alert('회원가입 중 문제가 발생했습니다.');
+      }
+    };
 
-  return (
-    <div className={styles.signupContainer}>
-      <div className={styles.formBox}>
-        <header className={styles.header}>
-          <h2 className={styles.signupTitle}>{signupStrings.title}</h2>
-        </header>
+    return (
+      <div className={styles.signupContainer}>
+        <div className={styles.formBox}>
+          <header className={styles.header}>
+            <h2 className={styles.signupTitle}>{signupStrings.title}</h2>
+          </header>
 
-        <div className={styles.profileSection}>
-          <ProfileImageUploader
-            profileImage={profileImage}
-            setProfileImage={setProfileImage}
-          />
-        </div>
-
-        <form className={styles.signupForm} onSubmit={handleSubmit} noValidate>
-          {/* 아이디 */}
-          <div className={styles.formRow}>
-            <label htmlFor="userid" className={styles.label}>
-              {signupStrings.fields.userid}
-            </label>
-            <input
-              id="userid"
-              type="text"
-              name="userid"
-              value={form.userid}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.userid ? styles.inputError : ''}`}
-              placeholder={signupStrings.fields.userid}
-              autoComplete="username"
-              aria-invalid={!!errors.userid}
+          <div className={styles.profileSection}>
+            <ProfileImageUploader
+              profileImage={profileImage}
+              setProfileImage={setProfileImage}
+              setProfileImageDataUrl={setProfileImageDataUrl}
             />
-            <span className={styles.errorText}>{errors.userid}</span>
           </div>
 
-          {/* 비밀번호 */}
-          <div className={styles.formRow}>
-            <label htmlFor="userpwd" className={styles.label}>
-              {signupStrings.fields.userpwd}
-            </label>
-            <input
-              id="userpwd"
-              type="password"
-              name="userpwd"
-              value={form.userpwd}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.userpwd ? styles.inputError : ''}`}
-              placeholder={signupStrings.fields.userpwd}
-              autoComplete="new-password"
-              aria-invalid={!!errors.userpwd}
-            />
-            <span className={styles.errorText}>{errors.userpwd}</span>
-          </div>
+          <form className={styles.signupForm} onSubmit={handleSubmit} noValidate>
+            {/* 아이디 */}
+            <div className={styles.formRow}>
+              <label htmlFor="userid" className={styles.label}>
+                {signupStrings.fields.userid}
+              </label>
+              <input
+                id="userid"
+                type="text"
+                name="userid"
+                value={form.userid}
+                onChange={handleChange}
+                className={`${styles.input} ${errors.userid ? styles.inputError : ''}`}
+                placeholder={signupStrings.fields.userid}
+                autoComplete="username"
+                aria-invalid={!!errors.userid}
+              />
+              <span className={styles.errorText}>{errors.userid}</span>
+            </div>
 
-          {/* 비밀번호 확인 */}
-          <div className={styles.formRow}>
-            <label htmlFor="userpwdCheck" className={styles.label}>
-              {signupStrings.fields.userpwdCheck}
-            </label>
-            <input
-              id="userpwdCheck"
-              type="password"
-              name="userpwdCheck"
-              value={form.userpwdCheck}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.userpwdCheck ? styles.inputError : ''}`}
-              placeholder={signupStrings.fields.userpwdCheck}
-              autoComplete="new-password"
-              aria-invalid={!!errors.userpwdCheck}
-            />
-            <span className={styles.errorText}>{errors.userpwdCheck}</span>
-          </div>
+            {/* 비밀번호 */}
+            <div className={styles.formRow}>
+              <label htmlFor="userpwd" className={styles.label}>
+                {signupStrings.fields.userpwd}
+              </label>
+              <input
+                id="userpwd"
+                type="password"
+                name="userpwd"
+                value={form.userpwd}
+                onChange={handleChange}
+                className={`${styles.input} ${errors.userpwd ? styles.inputError : ''}`}
+                placeholder={signupStrings.fields.userpwd}
+                autoComplete="new-password"
+                aria-invalid={!!errors.userpwd}
+              />
+              <span className={styles.errorText}>{errors.userpwd}</span>
+            </div>
 
-          {/* 이름 */}
-          <div className={styles.formRow}>
-            <label htmlFor="name" className={styles.label}>
-              {signupStrings.fields.name}
-            </label>
-            <input
-              id="name"
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-              placeholder={signupStrings.fields.name}
-              autoComplete="name"
-              aria-invalid={!!errors.name}
-            />
-            <span className={styles.errorText}>{errors.name}</span>
-          </div>
+            {/* 비밀번호 확인 */}
+            <div className={styles.formRow}>
+              <label htmlFor="userpwdCheck" className={styles.label}>
+                {signupStrings.fields.userpwdCheck}
+              </label>
+              <input
+                id="userpwdCheck"
+                type="password"
+                name="userpwdCheck"
+                value={form.userpwdCheck}
+                onChange={handleChange}
+                className={`${styles.input} ${errors.userpwdCheck ? styles.inputError : ''}`}
+                placeholder={signupStrings.fields.userpwdCheck}
+                autoComplete="new-password"
+                aria-invalid={!!errors.userpwdCheck}
+              />
+              <span className={styles.errorText}>{errors.userpwdCheck}</span>
+            </div>
 
-          {/* 나이 */}
-          <div className={styles.formRow}>
-            <label htmlFor="age" className={styles.label}>
-              {signupStrings.fields.age}
-            </label>
-            <input
-              id="age"
-              type="number"
-              name="age"
-              value={form.age}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.age ? styles.inputError : ''}`}
-              placeholder={signupStrings.fields.age}
-              inputMode="numeric"
-              min={0}
-              aria-invalid={!!errors.age}
-            />
-            <span className={styles.errorText}>{errors.age}</span>
-          </div>
+            {/* 이름 */}
+            <div className={styles.formRow}>
+              <label htmlFor="name" className={styles.label}>
+                {signupStrings.fields.name}
+              </label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+                placeholder={signupStrings.fields.name}
+                autoComplete="name"
+                aria-invalid={!!errors.name}
+              />
+              <span className={styles.errorText}>{errors.name}</span>
+            </div>
 
-          {/* 성별 */}
-          <div className={styles.formRow}>
-            <span className={styles.label}>{signupStrings.fields.gender}</span>
-            <div className={styles.segmented}>
+            {/* 나이 */}
+            <div className={styles.formRow}>
+              <label htmlFor="age" className={styles.label}>
+                {signupStrings.fields.age}
+              </label>
+              <input
+                id="age"
+                type="number"
+                name="age"
+                value={form.age}
+                onChange={handleChange}
+                className={`${styles.input} ${errors.age ? styles.inputError : ''}`}
+                placeholder={signupStrings.fields.age}
+                inputMode="numeric"
+                min={0}
+                aria-invalid={!!errors.age}
+              />
+              <span className={styles.errorText}>{errors.age}</span>
+            </div>
+
+            {/* 성별 */}
+            <div className={styles.formRow}>
+              <span className={styles.label}>{signupStrings.fields.gender}</span>
+              <div className={styles.segmented}>
+                <button
+                  type="button"
+                  className={`${styles.segmentedBtn} ${form.gender === 'male' ? styles.selected : ''}`}
+                  onClick={() => setForm((prev) => ({ ...prev, gender: 'male' }))}
+                  aria-pressed={form.gender === 'male'}
+                >
+                  {signupStrings.genderOptions.male}
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.segmentedBtn} ${form.gender === 'female' ? styles.selected : ''}`}
+                  onClick={() => setForm((prev) => ({ ...prev, gender: 'female' }))}
+                  aria-pressed={form.gender === 'female'}
+                >
+                  {signupStrings.genderOptions.female}
+                </button>
+              </div>
+              <span className={styles.errorText}>{errors.gender}</span>
+            </div>
+
+            {/* 소속 */}
+            <div className={styles.formRow}>
+              <label htmlFor="organization" className={styles.label}>
+                {signupStrings.fields.organization}
+              </label>
+              <input
+                id="organization"
+                type="text"
+                name="organization"
+                value={form.organization}
+                onChange={handleChange}
+                className={`${styles.input} ${errors.organization ? styles.inputError : ''}`}
+                placeholder={signupStrings.fields.organization}
+                autoComplete="organization"
+                aria-invalid={!!errors.organization}
+              />
+              <span className={styles.errorText}>{errors.organization}</span>
+            </div>
+
+            {/* 직급 */}
+            <div className={styles.formRow}>
+              <label htmlFor="job" className={styles.label}>
+                {signupStrings.fields.job}
+              </label>
+              <input
+                id="job"
+                type="text"
+                name="job"
+                value={form.job}
+                onChange={handleChange}
+                className={`${styles.input} ${errors.job ? styles.inputError : ''}`}
+                placeholder={signupStrings.fields.job}
+                autoComplete="organization-title"
+                aria-invalid={!!errors.job}
+              />
+              <span className={styles.errorText}>{errors.job}</span>
+            </div>
+
+            {/* 제출 버튼 */}
+            <div className={styles.submitRow}>
               <button
-                type="button"
-                className={`${styles.segmentedBtn} ${form.gender === 'male' ? styles.selected : ''}`}
-                onClick={() => setForm((prev) => ({ ...prev, gender: 'male' }))}
-                aria-pressed={form.gender === 'male'}
+                type="submit"
+                className={styles.submitBtn}
+                disabled={submitting}
               >
-                {signupStrings.genderOptions.male}
-              </button>
-              <button
-                type="button"
-                className={`${styles.segmentedBtn} ${form.gender === 'female' ? styles.selected : ''}`}
-                onClick={() => setForm((prev) => ({ ...prev, gender: 'female' }))}
-                aria-pressed={form.gender === 'female'}
-              >
-                {signupStrings.genderOptions.female}
+                {submitting ? signupStrings.submitting ?? '처리 중…' : signupStrings.submit}
               </button>
             </div>
-            <span className={styles.errorText}>{errors.gender}</span>
-          </div>
-
-          {/* 소속 */}
-          <div className={styles.formRow}>
-            <label htmlFor="organization" className={styles.label}>
-              {signupStrings.fields.organization}
-            </label>
-            <input
-              id="organization"
-              type="text"
-              name="organization"
-              value={form.organization}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.organization ? styles.inputError : ''}`}
-              placeholder={signupStrings.fields.organization}
-              autoComplete="organization"
-              aria-invalid={!!errors.organization}
-            />
-            <span className={styles.errorText}>{errors.organization}</span>
-          </div>
-
-          {/* 직급 */}
-          <div className={styles.formRow}>
-            <label htmlFor="job" className={styles.label}>
-              {signupStrings.fields.job}
-            </label>
-            <input
-              id="job"
-              type="text"
-              name="job"
-              value={form.job}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.job ? styles.inputError : ''}`}
-              placeholder={signupStrings.fields.job}
-              autoComplete="organization-title"
-              aria-invalid={!!errors.job}
-            />
-            <span className={styles.errorText}>{errors.job}</span>
-          </div>
-
-          {/* 제출 버튼 */}
-          <div className={styles.submitRow}>
-            <button
-              type="submit"
-              className={styles.submitBtn}
-              disabled={submitting}
-            >
-              {submitting ? signupStrings.submitting ?? '처리 중…' : signupStrings.submit}
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
