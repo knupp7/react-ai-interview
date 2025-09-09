@@ -25,6 +25,10 @@ export default function Interview() {
   const [selectedCompany, setSelectedCompany] = useState(cachedData.selectedCompany || DEFAULT_COMPANIES[0]);
   const [selectedRole, setSelectedRole] = useState(cachedData.selectedRole || DEFAULT_ROLES[0]);
   const [resume, setResume] = useState(cachedData.resume || "");
+  const [resumeMode, setResumeMode] = useState(cachedData.resumeMode || "upload"); // 'upload' | 'text'
+  const [resumeFileSelected, setResumeFileSelected] = useState(
+    typeof cachedData.resumeFileSelected === "boolean" ? cachedData.resumeFileSelected : false
+  );
 
   const [errors, setErrors] = useState({
     name: "",
@@ -157,10 +161,12 @@ export default function Interview() {
       selectedCompany,
       selectedRole,
       resume,
+      resumeMode,
+      resumeFileSelected,
       profileImage,
     };
     localStorage.setItem(FORM_CACHE_KEY, JSON.stringify(formData));
-  }, [name, age, gender, organization, position, selectedCompany, selectedRole, resume, profileImage]);
+  }, [name, age, gender, organization, position, selectedCompany, selectedRole, resume, resumeMode, resumeFileSelected, profileImage]);
 
   // 캐시 삭제 & 상태 초기화
   const handleReset = () => {
@@ -209,6 +215,8 @@ export default function Interview() {
         selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany}
         selectedRole={selectedRole} setSelectedRole={setSelectedRole}
         resume={resume} setResume={setResume}
+        resumeMode={resumeMode} setResumeMode={setResumeMode}
+        resumeFileSelected={resumeFileSelected} setResumeFileSelected={setResumeFileSelected}
         errors={errors} />
 
       {loading ? (

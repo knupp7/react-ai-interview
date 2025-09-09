@@ -1,18 +1,18 @@
 import { useEffect, useRef } from "react";
 import { INTERVIEW_LABELS } from "../../constants/interviewFormStrings";
 import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../../data/interviewSelectOptions";
+import ResumeUploader from './ResumeUploader';
 import styles from "../../styles/interview.module.css";
 
 const CompanySection = ({
-  selectedCompany,
-  setSelectedCompany,
-  selectedRole,
-  setSelectedRole,
-  resume,
-  setResume,
+  selectedCompany, setSelectedCompany,
+  selectedRole, setSelectedRole,
+  resume, setResume,
+  resumeMode, setResumeMode,
+  resumeFileSelected, setResumeFileSelected,
   errors
 }) => {
-
+  const sessionCode = localStorage.getItem('sessionCode') || '';
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -70,28 +70,65 @@ const CompanySection = ({
         </select>
       </div>
 
-      <div className={styles.form_group}>  {/* ▶ 자기소개서 입력 */}
-        <label>
-          {INTERVIEW_LABELS.resume}
-          <span className={styles.label_required}>*</span>
-        </label>
-        <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-          <textarea
-            ref={textareaRef}
-            spellCheck={false}
-            value={resume}
-            onChange={(e) => {
-              setResume(e.target.value)
-              handleResize();
-            }}
-            placeholder={INTERVIEW_LABELS.resumePlaceholder} />
-          {errors.resume && (
-            <span className={`${styles.error_msg} ${styles.resume_error}`}>
-              {errors.resume}
-            </span>
-          )}
+      {/* ▶ 업로드/입력 선택 */}
+      <div className={styles.form_row}>
+        <label className={styles.label}>{INTERVIEW_LABELS.resumeMode}</label>
+        <div className={styles.segmented}>
+          <button
+            type="button"
+            className={`${styles.segmentedBtn} ${resumeMode === 'upload' ? styles.selected : ''}`}
+            onClick={() => setResumeMode('upload')}
+            aria-pressed={resumeMode === 'upload'}
+          >
+            PDF 업로드
+          </button>
+          <button
+            type="button"
+            className={`${styles.segmentedBtn} ${resumeMode === 'text' ? styles.selected : ''}`}
+            onClick={() => setResumeMode('text')}
+            aria-pressed={resumeMode === 'text'}
+          >
+            직접 입력
+          </button>
         </div>
       </div>
+      
+      {/* 업로드 모드일때 */}
+      {resumeMode === 'upload' ? (
+        <div className={styles.form_row}>
+          <label className={styles.label}>{INTERVIEW_LABELS.resume}</label>
+          <div className={styles.input_with_error}>
+            <ResumeUploader
+              setResume={(txt) => setResume(txt)}
+              onExtracted={() => setResumeFileSelected(true)}
+            />
+            {errors.resume && <span className={styles.error_msg}>{errors.resume}</span>}
+          </div>
+        </div>
+      ) : (
+        <div className={styles.form_group}>  {/* ▶ 자기소개서 입력 */}
+          <label>
+            {INTERVIEW_LABELS.resume}
+            <span className={styles.label_required}>*</span>
+          </label>
+          <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <textarea
+              ref={textareaRef}
+              spellCheck={false}
+              value={resume}
+              onChange={(e) => {
+                setResume(e.target.value)
+                handleResize();
+              }}
+              placeholder={INTERVIEW_LABELS.resumePlaceholder} />
+            {errors.resume && (
+              <span className={`${styles.error_msg} ${styles.resume_error}`}>
+                {errors.resume}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }
