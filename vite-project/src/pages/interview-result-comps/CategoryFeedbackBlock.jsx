@@ -6,7 +6,7 @@ export default function CategoryFeedbackBlock({ feedback }) {
   return (
     <div className={styles.block}>
       <h3 className={styles.heading}>
-        <span className={styles.icon}>📝</span> {feedback.key}
+        {feedback.key}
       </h3>
       <div className={styles.feedback}>
         <p>{feedback.text}</p>
