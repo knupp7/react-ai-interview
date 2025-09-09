@@ -111,77 +111,87 @@ export default function InterviewResult() {
     if (!evalData) return <LoadingSpinner />;
 
     return (
-        <div className={styles.wrapper}>
-            {/* ▶ 헤더: 상단 날짜 + PDF 버튼 */}
+        <div className={`${styles.wrapper} ${styles.pageBg}`}>
+            {/* 헤더: 상단 날짜 + PDF 버튼 */}
             <div className={styles.header}>
                 <p className={styles.metaTitle}>{RESULT_STRINGS.title}</p>
                 <ExportPDFButton onExport={handleExportPDF} />
             </div>
 
-            {/* ▶ PDF로 내보낼 전체 영역 */}
-            <div id="export-target" className={styles.reportBox}>
-                {/* ▷ 분석 요약 섹션: 게이지 + 질문 요약 */}
-                <section>
-                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.summary}</h2>
+            {/* PDF로 내보낼 전체 영역 */}
+            <div id="export-target" className={`${styles.reportBox} ${styles.card}`}>
+                {/* 분석 요약 */}
+                <section className={`${styles.section} ${styles.sectionCard}`}>
+                    <h2 className={`${styles.sectionTitle} ${styles.sectionTitleAccent}`}>
+                        {RESULT_STRINGS.summary}
+                    </h2>
                     <div className={styles.gaugeRow}>
-                        {/* total score */}
                         <GaugeChart score={score} />
                         <div className={styles.questionBox}>
-                            {/* total_q */}
-                            <div className={styles.questionCard}>
+                            <div className={`${styles.questionCard} ${styles.accentBorder}`}>
                                 <p className={styles.label}>{RESULT_STRINGS.totalQuestions}</p>
                                 <span className={styles.value}>{totalQuestions}</span>
                             </div>
-                            {/* deprecated - missed question */}
-                            {/* <div className={styles.questionCard}>
-                                <p className={styles.label}>{RESULT_STRINGS.missedQuestions}</p>
-                                <p className={styles.value}>{missedQuestions} / {totalQuestions}</p>
-                            </div> */}
                         </div>
                     </div>
                 </section>
 
-                {/* ▷ 카테고리별 평가 (레이더 차트, 수평차트) */}
-                <section className={styles.sectionSpacing}>
-                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.category}</h2>
+                {/* 카테고리별 평가 */}
+                <section className={`${styles.sectionSpacing} ${styles.sectionCard}`}>
+                    <h2 className={`${styles.sectionTitle} ${styles.sectionTitleAccent}`}>
+                        {RESULT_STRINGS.category}
+                    </h2>
                     <div className={styles.chartRow}>
-                        <div className={styles.radarChartWrapper}>
+                        <div className={`${styles.radarChartWrapper} ${styles.subCard}`}>
                             <RadarChart data={radarScores} />
                         </div>
-                        <div className={styles.barChartWrapper}>
+                        <div className={`${styles.barChartWrapper} ${styles.subCard}`}>
                             <HorizontalBarChart data={radarScores} />
                         </div>
                     </div>
                 </section>
 
-                {/* ▷ 카테고리별 피드백 상세 블럭 */}
-                {categoryFeedback && Object.entries(categoryFeedback).map(([key, value], index) => (
-                    <CategoryFeedbackBlock
-                        key={index}
-                        feedback={{ key, text: value }}
-                    />
-                ))}
-
-                {/* ▷ 질문 상세 분석 (Accordion) */}
-                <section className={styles.sectionSpacing}>
-                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.questions}</h2>
-                    {questions && questions.map((q, idx) => (
-                        <QuestionAccordion
-                            key={idx}
-                            index={idx}
-                            question={q.question}
-                            answer={q.answer}
-                            scores={q.scores}
-                            feedbacks={q.feedbacks}
-                            forceOpen={isExporting}
-                        />
-                    ))}
+                {/* 카테고리 피드백 */}
+                <section className={`${styles.sectionSpacing} ${styles.sectionCard}`}>
+                    <h2 className={`${styles.sectionTitle} ${styles.sectionTitleAccentSm}`}>
+                        카테고리별 피드백
+                    </h2>
+                    <div className={styles.categoryGrid}>
+                        {categoryFeedback && Object.entries(categoryFeedback).map(([key, value], idx) => (
+                            <div key={idx} className={styles.categoryItem}>
+                                <CategoryFeedbackBlock feedback={{ key, text: value }} />
+                            </div>
+                        ))}
+                    </div>
                 </section>
 
-                {/* ▷ 최종 총평 영역 */}
-                <section className={styles.sectionSpacing}>
-                    <h2 className={styles.sectionTitle}>{RESULT_STRINGS.final}</h2>
-                    <div className={styles.finalBox}>
+                {/* 질문 상세 */}
+                <section className={`${styles.sectionSpacing} ${styles.sectionCard}`}>
+                    <h2 className={`${styles.sectionTitle} ${styles.sectionTitleAccentSm}`}>
+                        {RESULT_STRINGS.questions}
+                    </h2>
+                    <div className={styles.qaList}>
+                        {questions && questions.map((q, idx) => (
+                            <div key={idx} className={styles.qaItem}>
+                                <QuestionAccordion
+                                    index={idx}
+                                    question={q.question}
+                                    answer={q.answer}
+                                    scores={q.scores}
+                                    feedbacks={q.feedbacks}
+                                    forceOpen={isExporting}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* 최종 총평 */}
+                <section className={`${styles.sectionSpacing} ${styles.sectionCard}`}>
+                    <h2 className={`${styles.sectionTitle} ${styles.sectionTitleAccentSm}`}>
+                        {RESULT_STRINGS.final}
+                    </h2>
+                    <div className={`${styles.finalBox} ${styles.accentLeft}`}>
                         {finalFeedback}
                     </div>
                 </section>

@@ -18,21 +18,36 @@ export default function QuestionAccordion({ question, answer, scores, feedbacks,
 
   return (
     <div className={styles.accordion}>
-      <button className={styles.header} onClick={() => setIsOpen(!isOpen)}>
-        질문 {index + 1}
-        <span className={styles.icon}>{isOpen ? "▲" : "▼"}</span>
+      <button
+        type="button"
+        className={`${styles.header} ${isOpen ? styles.open : ""}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+      >
+        <span className={styles.title}>질문 {index + 1}</span>
+        <span className={styles.icon} aria-hidden>▼</span>
       </button>
 
       {isOpen && (
         <div className={styles.panel}>
-          <p><strong>질문 내용:</strong> {question}</p>
-          <p><strong>내 답변:</strong> {answer}</p>
+          <p className={styles.row}>
+            <strong className={styles.label}>질문 내용</strong>
+            <span className={styles.text}>{question}</span>
+          </p>
+          <p className={styles.row}>
+            <strong className={styles.label}>내 답변</strong>
+            <span className={styles.text}>{answer}</span>
+          </p>
+
           <div className={styles.feedbackBlock}>
-            <p><strong>AI 피드백:</strong></p>
+            <p className={styles.fbHeader}><strong>AI 피드백</strong></p>
             {feedbacks.map((fb, i) => (
               <div key={i} className={styles.feedbackItem}>
-                <p><strong>{categories[i]}</strong> (점수: {scores[i]})</p>
-                <p>{fb}</p>
+                <div className={styles.feedbackHead}>
+                  <span className={styles.badge}>{categories[i]}</span>
+                  <span className={styles.score}>점수 {scores[i]}</span>
+                </div>
+                <p className={styles.feedbackText}>{fb}</p>
               </div>
             ))}
           </div>

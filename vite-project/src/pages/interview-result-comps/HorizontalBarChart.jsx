@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend
 } from "chart.js";
+import styles from "../../styles/HorizontalBarChart.module.css";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -35,7 +36,19 @@ const HorizontalBarChart = ({ data }) => {
         suggestedMin: 0,
         suggestedMax: 100,
         ticks: {
-          stepSize: 20
+          stepSize: 20,
+          color: "#6b7280"
+        },
+        grid: {
+          color: "#e5e7eb"
+        }
+      },
+      y: {
+        ticks: {
+          color: "#374151"
+        },
+        grid: {
+          display: false
         }
       }
     },
@@ -44,7 +57,13 @@ const HorizontalBarChart = ({ data }) => {
     }
   };
 
-  return <Bar data={chartData} options={options} />;
+  return (
+    <div className={styles.chartContainer}>
+      <p className={styles.chartTitle}>카테고리별 점수</p>
+      <Bar data={chartData} options={options} />
+      <p className={styles.caption}>각 역량 항목을 100점 만점으로 환산</p>
+    </div>
+  );
 };
 
-export default HorizontalBarChart
+export default HorizontalBarChart;

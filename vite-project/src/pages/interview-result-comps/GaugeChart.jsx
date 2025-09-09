@@ -27,16 +27,20 @@ const GaugeChart = ({ score }) => {
     rotation: 270,
     plugins: {
       legend: { display: false },
-      tooltip: {
-        enabled: false,
-      },
+      tooltip: { enabled: false },
     },
   };
 
   return (
-    <div className={styles.chartContainer}>
-      <Doughnut data={chartData} options={options} />
-      <div className={styles.scoreText}>{score}점</div>
+    <div className={styles.chartCard}>
+      <div className={styles.chartContainer}>
+        <Doughnut data={chartData} options={options} />
+        <div className={styles.scoreText}>
+          {score}
+          <span className={styles.scoreUnit}>점</span>
+        </div>
+      </div>
+      <p className={styles.caption}>총점</p>
     </div>
   );
 };

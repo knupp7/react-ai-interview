@@ -1,97 +1,274 @@
+:global(:root) {
+    /* 지난번 쓰던 파란색으로 교체하세요 */
+    --accent: #3b82f6;
+    /* ex) Tailwind blue-600 */
+    --bg-page: #f5f6f8;
+    /* 연한 회색 배경 */
+    --bg-card: #ffffff;
+    --bg-subtle: #f9fafb;
+    --text-strong: #111827;
+    --text-muted: #6b7280;
+    --border-soft: #e5e7eb;
+    --shadow-soft: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ===== Layout ===== */
 .wrapper {
-    max-width: 60%;
-    margin: 50px auto;
-    margin-top: 60px;
+    max-width: 960px;
+    margin: 72px auto 80px;
     padding: 0 20px;
 }
 
+.pageBg {
+    /* 전체 페이지 배경 */
+    background: var(--bg-page);
+    background-clip: padding-box;
+}
+
+/* 헤더 */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 1.0rem;
+    margin-bottom: 1rem;
 }
 
 .metaTitle {
-    font-size: 0.9rem;
-    color: #6b7280;
+    font-size: 0.95rem;
+    color: var(--text-muted);
 }
 
+/* 메인 카드 (PDF 영역) */
+.reportBox {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+}
+
+/* 공통 카드 */
+.card {
+    border-radius: 16px;
+}
+
+.subCard {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+/* 섹션 */
+.section {
+    margin-top: 0;
+}
+
+.sectionSpacing {
+    margin-top: 2.25rem;
+}
+
+.sectionCard {
+    background: transparent;
+}
+
+/* 섹션 타이틀 */
 .sectionTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: #111827;
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0 0 1rem 0;
+    color: var(--text-strong);
     text-align: left;
+    letter-spacing: -0.01em;
 }
 
+.sectionTitleAccent {
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.sectionTitleAccent::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 64px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.9;
+}
+
+.sectionTitleAccentSm {
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.sectionTitleAccentSm::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    width: 44px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.85;
+}
+
+/* 요약 행 */
 .gaugeRow {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 8rem;
+    gap: 4rem;
     flex-wrap: wrap;
 }
 
-.reportBox {
-    background: white;
-    border-radius: 1rem;
-    padding: 2rem;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
-}
-
+/* 질문 요약 카드 */
 .questionBox {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: 0.75rem;
     margin: 0;
 }
 
 .questionCard {
-    /* background-color: #f9fafb; */
-    /* border: 1px solid rgb(181, 181, 181); */
-    padding: 1rem;
-    /* border-radius: 0.5rem; */
-    min-width: 120px;
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-soft);
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    min-width: 140px;
 }
 
 .label {
-    font-size: 1.5rem;
-    color: #6b7280;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
 }
 
 .value {
-    font-size: 5rem;
-    font-weight: bold;
-    color: #141414;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #0f172a;
+    /* slate-900 */
+    line-height: 1.1;
 }
 
-.sectionSpacing {
-    margin-top: 3rem;
-}
-
-.finalBox {
-    background-color: #f9fafb;
-    padding: 1rem 1.5rem;
-    border-radius: 0.5rem;
-    line-height: 1.6;
-    color: #374151;
-    font-size: 0.95rem;
-    white-space: pre-line;
-}
-
+/* 차트 행 */
 .chartRow {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     flex-wrap: wrap;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
 }
 
 .radarChartWrapper,
 .barChartWrapper {
-    flex: 1 1 350px;
-    max-width: 500px;
+    flex: 1 1 360px;
+    max-width: 520px;
+}
+
+/* 카테고리 피드백 레이아웃 */
+.categoryGrid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 900px) {
+    .categoryGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.categoryItem {
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+/* 질문 아코디언 리스트 */
+.qaList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.qaItem {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 0.5rem 0.75rem;
+}
+
+/* 최종 총평 */
+.finalBox {
+    background-color: #f3f4f6;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    line-height: 1.65;
+    color: #374151;
+    font-size: 0.98rem;
+    white-space: pre-line;
+    border: 1px solid var(--border-soft);
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+    .wrapper {
+        max-width: 840px;
+    }
+
+    .value {
+        font-size: 2.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper {
+        max-width: 100%;
+        margin: 56px auto 64px;
+    }
+
+    .reportBox {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    .gaugeRow {
+        gap: 2rem;
+    }
+
+    .value {
+        font-size: 2.2rem;
+    }
+}
+
+/* 프린트(HTML → PDF) 최적화 */
+@media print {
+    .pageBg {
+        background: #fff !important;
+    }
+
+    .reportBox,
+    .subCard,
+    .categoryItem,
+    .qaItem,
+    .finalBox,
+    .questionCard {
+        box-shadow: none !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .sectionTitleAccent::after,
+    .sectionTitleAccentSm::after {
+        background: #1f4fd7;
+        /* 인쇄 대비용 약간 진한 파란색 */
+    }
 }
