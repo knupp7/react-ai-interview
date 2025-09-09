@@ -49,13 +49,17 @@ export default function InterviewResult() {
         if (isExporting) {
             const timer = setTimeout(() => {
                 const element = document.getElementById('export-target');
+
+                const pxW = element.scrollWidth;     // 가로
+                const pxH = element.scrollHeight;    // 세로(매우 길어질 수 있음)
                 html2pdf()
                     .set({
-                        margin: 0.5,
+                        margin: 0,                         // 여백 없애기 (원하면 조정)
                         filename: 'interview-analysis.pdf',
                         image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: { scale: 2 },
-                        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+                        html2canvas: { scale: 2, useCORS: true }, // 해상도↑, CORS 이미지 허용
+                        jsPDF: { unit: 'px', format: [pxW, pxH], orientation: 'portrait' },
+                        // pagebreak 옵션은 기본값 유지 (강제분할 금지 목적)
                     })
                     .from(element)
                     .save()

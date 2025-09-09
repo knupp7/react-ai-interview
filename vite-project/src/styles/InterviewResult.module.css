@@ -12,6 +12,21 @@
     --shadow-soft: 0 4px 18px rgba(0, 0, 0, 0.06);
 }
 
+/* 카드/패널 전형들 자동 보호
+.sectionCard,
+.subCard,
+.finalBox,
+.questionCard,
+.qaItem,
+.categoryItem,
+.chartContainer,
+.block,
+.reportBox > section,
+.radarChartWrapper,
+.barChartWrapper {
+  break-inside: avoid;
+  page-break-inside: avoid;
+} */
 
 /* ===== Layout ===== */
 .wrapper {
