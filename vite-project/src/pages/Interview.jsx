@@ -215,7 +215,7 @@ export default function Interview() {
           position={position} setPosition={setPosition}
           errors={errors} />
 
-        <hr />
+        <hr className={styles.hr}/>
 
         <CompanySection
           selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany}
