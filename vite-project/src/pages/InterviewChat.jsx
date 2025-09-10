@@ -4,7 +4,9 @@ import styles from "../styles/interviewChat.module.css";
 import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
 import ChattingArea from "./interviewChat-comps/ChattingArea";
 // import InputBox from "./interviewChat-comps/InputBox";
-import SpeechStreamButtonWS from "./interviewChat-comps/SpeechStreamButtonWS";
+// import SpeechStreamButtonWS from "./interviewChat-comps/SpeechStreamButtonWS";
+import SpeechAnswerButtonMP3 from "./interviewChat-comps/SpeechAnswerButtonMP3";
+import SpeechAnswerButtonFFmpeg from "./interviewChat-comps/SpeechAnswerButtonFFmpeg";
 
 export default function InterviewStart() {
   const location = useLocation();
@@ -19,10 +21,17 @@ export default function InterviewStart() {
   const [msg, setMsg] = useState([]);
   const [isInterviewFinished, setIsInterviewFinished] = useState(false);
 
-  const wsRef = useRef(null);                  // ★ 단일 WS
+  const [sttReady, setSttReady] = useState(false);
+  const [awaitingAnswer, setAwaitingAnswer] = useState(false);
+  const wsRef = useRef(null);
+
+
   const audioRecvRef = useRef(null);           // { mime, chunks: [] }
   const audioQueueRef = useRef([]);            // 재생 큐
   const audioElRef = useRef(null);
+
+  const rxPcmRef = useRef(null);      // { sr, fmt, chunks: ArrayBuffer[] }
+  const audioCtxRef = useRef(null);
 
   const sessionCode = localStorage.getItem("sessionCode");
   const userProfile = {
@@ -51,6 +60,42 @@ export default function InterviewStart() {
       console.warn("페르소나가 저장되어 있지 않습니다.");
     }
   }, []);
+
+  const getAudioCtx = () => {
+    if (!audioCtxRef.current) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      audioCtxRef.current = new Ctx();
+    }
+    return audioCtxRef.current;
+  };
+
+  // ArrayBuffer[] -> ArrayBuffer
+  const concatArrayBuffers = (chunks) => {
+    const total = chunks.reduce((n, ab) => n + ab.byteLength, 0);
+    const out = new Uint8Array(total);
+    let off = 0;
+    for (const ab of chunks) { out.set(new Uint8Array(ab), off); off += ab.byteLength; }
+    return out.buffer;
+  };
+
+  // PCM S16LE -> Float32 [-1,1]
+  const s16ToF32 = (ab) => {
+    const in16 = new Int16Array(ab);
+    const out = new Float32Array(in16.length);
+    for (let i = 0; i < in16.length; i++) out[i] = in16[i] / 0x8000;
+    return out;
+  };
+
+  const playPcm = async (float32, sampleRate) => {
+    const ctx = getAudioCtx();
+    if (ctx.state === "suspended") { try { await ctx.resume(); } catch { } }
+    const buf = ctx.createBuffer(1, float32.length, sampleRate);
+    buf.copyToChannel(float32, 0);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start();
+  };
 
   // 재생 큐 유틸
   const playNext = () => {
@@ -87,18 +132,22 @@ export default function InterviewStart() {
   // WS
   useEffect(() => {
     if (!sessionCode) return;
-    const ws = new WebSocket(`ws://localhost:8000/sessions/${sessionCode}/ws/chat`);
+    const ws = new WebSocket(`ws://localhost:8000/sessions/${sessionCode}/ws/stt`);
     ws.binaryType = "arraybuffer";
     wsRef.current = ws;
+    let alive = true;
 
     ws.onopen = () => {
-      // 핸드셰이크: 포맷/수용 가능한 TTS MIME 알림
-      ws.send(JSON.stringify({
-        type: "HELLO",
-        sessionCode,
-        audio: { format: "pcm_s16le", sample_rate: 16000, channels: 1 },
-        ttsAccepted: ["audio/webm;codecs=opus", "audio/wav"]
-      }));
+      // // 핸드셰이크: 포맷/수용 가능한 TTS MIME 알림
+      // ws.send(JSON.stringify({
+      //   type: "HELLO",
+      //   sessionCode,
+      //   audio: { format: "pcm_s16le", sample_rate: 16000, channels: 1 },
+      //   ttsAccepted: ["audio/webm;codecs=opus", "audio/wav"]
+      // }));
+      console.log("STT WS open");
+      if (!alive) return;
+      if (wsRef.current === ws) setSttReady(true);
     };
 
     ws.onmessage = (event) => {
@@ -106,50 +155,82 @@ export default function InterviewStart() {
       if (typeof event.data === "string") {
         try {
           const data = JSON.parse(event.data);
-          switch (data.type) {
+          const evt = data.type || data.event;
+
+          switch (evt) {
             case "QUESTION":
-              setMsg(prev => [...prev, { from: "ai", text: data.text }]);
+            case "question":
+              setMsg(prev => [...prev, { from: "ai", text: data.text || data.question }]);
               break;
+
             case "EVENT":
+            case "event":
               if (data.name === "면접 종료") {
                 localStorage.setItem("interviewFinished", "true");
                 alert("면접이 종료되었습니다. 면접 종료 버튼을 눌러주세요.");
                 setIsInterviewFinished(true);
               }
               break;
-            case "AUDIO_START":
-              audioRecvRef.current = { mime: data.mime || "audio/webm", chunks: [] };
+
+            // 서버가 보내는 PCM 전용 이벤트 (질문 오디오)
+            case "question_audio_start":
+              rxPcmRef.current = {
+                sr: data.sample_rate || 16000,
+                fmt: data.format || "pcm_s16le",
+                chunks: [],
+              };
+              setAwaitingAnswer(false);
               break;
-            case "AUDIO_END":
-              if (audioRecvRef.current) {
-                const { mime, chunks } = audioRecvRef.current;
-                const blob = new Blob(chunks, { type: mime });
-                audioRecvRef.current = null;
-                enqueueAndPlay(blob);
+
+            case "question_audio_end":
+              if (rxPcmRef.current?.chunks?.length) {
+                const merged = concatArrayBuffers(rxPcmRef.current.chunks);
+                const f32 = s16ToF32(merged);
+                playPcm(f32, rxPcmRef.current.sr);
               }
+              setAwaitingAnswer(true);
+              rxPcmRef.current = null;
               break;
-            case "FINAL_TEXT": // (선택) 서버가 텍스트로도 넘겨줄 때
-              setMsg(prev => [...prev, { from: "ai", text: data.text }]);
+
+            case "final_text":
+              setMsg(prev => [...prev, { from: "ai", text: data.text || data.final_text }]);
               break;
+
             default:
               break;
           }
         } catch { }
       } else {
         // 바이너리(TTS 청크)
-        if (audioRecvRef.current) {
+        if (rxPcmRef.current) {
+          // PCM: ArrayBuffer 그대로 누적
+          rxPcmRef.current.chunks.push(event.data);
+        } else if (audioRecvRef.current) {
+          // 컨테이너 오디오(webm/wav): Blob으로 누적
           audioRecvRef.current.chunks.push(new Blob([event.data]));
         }
       }
     };
 
-    ws.onclose = (e) => { console.log("WS closed:", e.code, e.reason); wsRef.current = null; };
+    ws.onclose = (e) => {
+      console.log("WS closed:", e.code, e.reason);
+      if (!alive) return;
+      if (wsRef.current === ws) {                    // ✅ 최신 소켓일 때만 정리
+        wsRef.current = null;
+        setSttReady(false);
+        setAwaitingAnswer(false);
+      }
+    };
     ws.onerror = (e) => { console.error("WS error:", e); };
 
     return () => {
-      try {
-        ws.close();
-      } catch { }
+      alive = false;
+      if (wsRef.current === ws) {                    // ✅ 내가 만든 소켓만 닫기
+        try {
+          ws.close();
+        } catch { }
+        wsRef.current = null;
+      }
       //  오디오 자원 정리
       audioQueueRef.current = [];
       if (audioElRef.current) {
@@ -198,7 +279,9 @@ export default function InterviewStart() {
       <div className={styles.chatWrapper}>
         <ChattingArea messages={msg} interviewer={persona} interviewee={userProfile} />
         {/* <InputBox onSend={handleSend} /> */}
-        <SpeechStreamButtonWS wsRef={wsRef} onUserText={appendUserText} />
+        {/* <SpeechStreamButtonWS wsRef={wsRef} onUserText={appendUserText} /> */}
+        {/* <SpeechAnswerButtonMP3 wsRef={wsRef} onUserText={appendUserText} /> */}
+        <SpeechAnswerButtonFFmpeg wsRef={wsRef} onUserText={appendUserText} canSend={sttReady && awaitingAnswer} />
       </div>
     </div>
   );
