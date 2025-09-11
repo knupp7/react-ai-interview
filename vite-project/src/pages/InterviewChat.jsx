@@ -163,13 +163,10 @@ export default function InterviewStart() {
               setMsg(prev => [...prev, { from: "ai", text: data.text || data.question }]);
               break;
 
-            case "EVENT":
-            case "event":
-              if (data.name === "면접 종료") {
-                localStorage.setItem("interviewFinished", "true");
-                alert("면접이 종료되었습니다. 면접 종료 버튼을 눌러주세요.");
-                setIsInterviewFinished(true);
-              }
+            case "면접 종료":
+              localStorage.setItem("interviewFinished", "true");
+              alert("면접이 종료되었습니다. 면접 종료 버튼을 눌러주세요.");
+              setIsInterviewFinished(true);
               break;
 
             // 서버가 보내는 PCM 전용 이벤트 (질문 오디오)
