@@ -1,6 +1,7 @@
 // src/components/interviewChat-comps/SpeechAnswerButtonFFmpeg.jsx
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/interviewChat.module.css";
+import IconMic from "./IconMic";
 
 export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, canSend }) {
     const [isRec, setIsRec] = useState(false);
@@ -182,7 +183,7 @@ export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, canSend })
                 disabled={busy || !canSend}
                 aria-pressed={isRec}
                 title={isRec ? "녹음 종료(전송)" : "녹음 시작"}
-            >🎤</button>
+            ><IconMic /></button>
 
             <div className={styles.sttPreview}>
                 {isRec

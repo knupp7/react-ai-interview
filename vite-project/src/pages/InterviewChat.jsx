@@ -5,7 +5,7 @@ import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
 import ChattingArea from "./interviewChat-comps/ChattingArea";
 // import InputBox from "./interviewChat-comps/InputBox";
 // import SpeechStreamButtonWS from "./interviewChat-comps/SpeechStreamButtonWS";
-import SpeechAnswerButtonMP3 from "./interviewChat-comps/SpeechAnswerButtonMP3";
+// import SpeechAnswerButtonMP3 from "./interviewChat-comps/SpeechAnswerButtonMP3";
 import SpeechAnswerButtonFFmpeg from "./interviewChat-comps/SpeechAnswerButtonFFmpeg";
 
 export default function InterviewStart() {
@@ -212,7 +212,7 @@ export default function InterviewStart() {
     ws.onclose = (e) => {
       console.log("WS closed:", e.code, e.reason);
       if (!alive) return;
-      if (wsRef.current === ws) {                    // ✅ 최신 소켓일 때만 정리
+      if (wsRef.current === ws) {                    // 최신 소켓일 때만 정리
         wsRef.current = null;
         setSttReady(false);
         setAwaitingAnswer(false);
@@ -222,7 +222,7 @@ export default function InterviewStart() {
 
     return () => {
       alive = false;
-      if (wsRef.current === ws) {                    // ✅ 내가 만든 소켓만 닫기
+      if (wsRef.current === ws) {                    // 내가 만든 소켓만 닫기
         try {
           ws.close();
         } catch { }
@@ -255,10 +255,16 @@ export default function InterviewStart() {
   //   socketRef.current?.send(text);
   // };
 
+  const status = !sttReady
+    ? { label: "연결 대기", cls: styles.statusOff }
+    : awaitingAnswer
+      ? { label: "내 차례", cls: styles.statusReady }
+      : { label: "면접관이 말하는 중", cls: styles.statusListening };
+
   return (
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
-        <InterviewerAgent profile={persona} />
+        <InterviewerAgent profile={persona} status={status} />
         <button
           className={styles.endInterviewBtn}
           onClick={handleStartInterviewResult}
@@ -276,8 +282,6 @@ export default function InterviewStart() {
       <div className={styles.chatWrapper}>
         <ChattingArea messages={msg} interviewer={persona} interviewee={userProfile} />
         {/* <InputBox onSend={handleSend} /> */}
-        {/* <SpeechStreamButtonWS wsRef={wsRef} onUserText={appendUserText} /> */}
-        {/* <SpeechAnswerButtonMP3 wsRef={wsRef} onUserText={appendUserText} /> */}
         <SpeechAnswerButtonFFmpeg wsRef={wsRef} onUserText={appendUserText} canSend={sttReady && awaitingAnswer} />
       </div>
     </div>
