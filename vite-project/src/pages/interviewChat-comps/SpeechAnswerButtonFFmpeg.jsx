@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/interviewChat.module.css";
 import IconMic from "./IconMic";
 
-export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, canSend }) {
+export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, onAnswerSubmitted, canSend }) {
     const [isRec, setIsRec] = useState(false);
     const [sec, setSec] = useState(0);
     const [hint, setHint] = useState("");
@@ -170,7 +170,13 @@ export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, canSend })
     };
 
     const stop = () => {
-        try { if (mrRef.current && mrRef.current.state !== "inactive") mrRef.current.stop(); } catch { }
+        try {
+            if (mrRef.current && mrRef.current.state !== "inactive") {
+                mrRef.current.stop();
+                onAnswerSubmitted?.()
+            }
+
+        } catch { }
     };
 
     useEffect(() => () => stop(), []);

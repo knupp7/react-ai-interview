@@ -4,9 +4,8 @@ import styles from "../styles/interviewChat.module.css";
 import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
 import ChattingArea from "./interviewChat-comps/ChattingArea";
 // import InputBox from "./interviewChat-comps/InputBox";
-// import SpeechStreamButtonWS from "./interviewChat-comps/SpeechStreamButtonWS";
-// import SpeechAnswerButtonMP3 from "./interviewChat-comps/SpeechAnswerButtonMP3";
 import SpeechAnswerButtonFFmpeg from "./interviewChat-comps/SpeechAnswerButtonFFmpeg";
+import { startQATimer, stopQATimer } from "../utils/qaTimer";
 
 export default function InterviewStart() {
   const location = useLocation();
@@ -25,6 +24,7 @@ export default function InterviewStart() {
   const [awaitingAnswer, setAwaitingAnswer] = useState(false);
   const wsRef = useRef(null);
 
+  const qIndexRef = useRef(0); // 질문 인덱스(0,1,2..)
 
   const audioRecvRef = useRef(null);           // { mime, chunks: [] }
   const audioQueueRef = useRef([]);            // 재생 큐
@@ -167,6 +167,7 @@ export default function InterviewStart() {
               localStorage.setItem("interviewFinished", "true");
               alert("면접이 종료되었습니다. 면접 종료 버튼을 눌러주세요.");
               setIsInterviewFinished(true);
+              stopQATimer(sessionCode, qIndexRef.current);
               break;
 
             // 서버가 보내는 PCM 전용 이벤트 (질문 오디오)
@@ -187,6 +188,7 @@ export default function InterviewStart() {
               }
               setAwaitingAnswer(true);
               rxPcmRef.current = null;
+              startQATimer(sessionCode, qIndexRef.current);
               break;
 
             case "final_text":
@@ -246,6 +248,7 @@ export default function InterviewStart() {
 
   // 종료 버튼
   const handleStartInterviewResult = () => {
+    stopQATimer(sessionCode, qIndexRef.current);
     navigate("/interview/result", { state: formData });
   };
 
@@ -261,6 +264,13 @@ export default function InterviewStart() {
       ? { label: "내 차례", cls: styles.statusReady }
       : { label: "면접관이 말하는 중", cls: styles.statusListening };
 
+  // 사용자가 최종 답변을 전송 완료했을 때(버튼 컴포넌트에서 호출)
+  const handleAnswerSubmitted = (finalUserText) => {
+    // 말풍선(원하면 유지)
+    if (finalUserText) appendUserText(finalUserText);
+    stopQATimer(sessionCode, qIndexRef.current);
+    qIndexRef.current += 1;
+  };
   return (
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
@@ -282,7 +292,12 @@ export default function InterviewStart() {
       <div className={styles.chatWrapper}>
         <ChattingArea messages={msg} interviewer={persona} interviewee={userProfile} />
         {/* <InputBox onSend={handleSend} /> */}
-        <SpeechAnswerButtonFFmpeg wsRef={wsRef} onUserText={appendUserText} canSend={sttReady && awaitingAnswer} />
+        <SpeechAnswerButtonFFmpeg
+          wsRef={wsRef}
+          onUserText={appendUserText}
+          onAnswerSubmitted={handleAnswerSubmitted}
+          canSend={sttReady && awaitingAnswer}
+        />
       </div>
     </div>
   );
