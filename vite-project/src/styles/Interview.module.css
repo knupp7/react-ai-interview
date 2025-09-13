@@ -120,10 +120,14 @@
     border-left: 2px solid var(--border, #e5e7eb);
 }
 
-.gender_btn.active,
-.selected {
+.gender_btn.active {
     background: var(--primary, #3b82f6);
     color: #fff;
+}
+
+.selected {
+    background: #e5e7eb;
+    color: var(--ink-2);
 }
 
 /* ========== Company / Resume ========== */

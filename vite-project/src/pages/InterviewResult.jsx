@@ -208,11 +208,11 @@ export default function InterviewResult() {
                 </div>
                 <div className={`${styles.questionCard} ${styles.accentBorder}`}>
                   <p className={styles.label}>{RESULT_STRINGS.missedQuestions}</p>
-                  <span className={styles.value}>{missedQuestions}</span> {/* 수정 요망 */}
+                  <span className={styles.value}>{missedQuestions}</span>
                 </div>
                 <div className={`${styles.questionCard} ${styles.accentBorder}`}>
                   <p className={styles.label}>{RESULT_STRINGS.avgAnsTime}</p>
-                  <span className={styles.value}>{avgAnswerSec}</span> {/* 수정 요망 */}
+                  <span className={styles.value}>{(avgAnswerSec)+'s'}</span>
                 </div>
               </div>
             </div>
