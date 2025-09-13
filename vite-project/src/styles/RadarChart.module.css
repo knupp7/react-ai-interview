@@ -14,7 +14,6 @@
 
 .chartContainer {
   width: 100%;
-  margin: 0;
   padding: 1rem 1.25rem;
   background-color: var(--bg-card, #ffffff);
   border-radius: 1rem;
@@ -32,7 +31,7 @@
   font-weight: 600;
   margin-bottom: 0.75rem;
   color: var(--text-strong, #111827);
-  text-align: left;
+  text-align: center;
 }
 
 .caption {

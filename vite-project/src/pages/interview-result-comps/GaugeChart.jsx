@@ -33,6 +33,7 @@ const GaugeChart = ({ score }) => {
 
   return (
     <div className={styles.chartCard}>
+      <p className={styles.caption}>총점</p>
       <div className={styles.chartContainer}>
         <Doughnut data={chartData} options={options} />
         <div className={styles.scoreText}>
@@ -40,7 +41,6 @@ const GaugeChart = ({ score }) => {
           <span className={styles.scoreUnit}>점</span>
         </div>
       </div>
-      <p className={styles.caption}>총점</p>
     </div>
   );
 };
