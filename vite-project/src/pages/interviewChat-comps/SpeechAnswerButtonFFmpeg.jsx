@@ -1,6 +1,6 @@
 // src/components/interviewChat-comps/SpeechAnswerButtonFFmpeg.jsx
 import { useEffect, useRef, useState } from "react";
-import styles from "../../styles/interviewChat.module.css";
+import styles from "../../styles/InterviewChat.module.css";
 import IconMic from "./IconMic";
 
 export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, onAnswerSubmitted, canSend }) {
@@ -124,20 +124,20 @@ export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, onAnswerSu
 
                     if (api === "modern") {
                         await ff.writeFile(inputName, bytes);
-                        setHint("MP3 변환 중…");
-                        await ff.exec(["-i", inputName, "-vn", "-ac", "1", "-b:a", "96k", "out.mp3"]);
-                        const out = await ff.readFile("out.mp3"); // Uint8Array
-                        const mp3Blob = new Blob([out.buffer], { type: "audio/mpeg" });
-                        await sendOverWS(mp3Blob);
-                        try { await ff.deleteFile?.(inputName); await ff.deleteFile?.("out.mp3"); } catch { }
+                        setHint("WAV 변환 중…");
+                        await ff.exec(["-i", inputName, "-vn", "-ac", "1", "-ar", "16000", "-f", "wav", "out.wav"]);
+                        const out = await ff.readFile("out.wav"); // Uint8Array
+                        const wavBlob = new Blob([out.buffer], { type: "audio/wav" });
+                        await sendOverWS(wavBlob);
+                        try { await ff.deleteFile?.(inputName); await ff.deleteFile?.("out.wav"); } catch { }
                     } else {
                         ff.FS("writeFile", inputName, bytes);
-                        setHint("MP3 변환 중…");
-                        await ff.run("-i", inputName, "-vn", "-ac", "1", "out.mp3", "-b:a", "96k");
-                        const out = ff.FS("readFile", "out.mp3");
-                        const mp3Blob = new Blob([out.buffer], { type: "audio/mpeg" });
-                        await sendOverWS(mp3Blob);
-                        try { ff.FS("unlink", inputName); ff.FS("unlink", "out.mp3"); } catch { }
+                        setHint("WAV 변환 중…");
+                        await ff.run("-i", inputName, "-vn", "-ac", "1", "-ar", "16000", "-f", "wav", "out.wav");
+                        const out = ff.FS("readFile", "out.wav");
+                        const wavBlob = new Blob([out.buffer], { type: "audio/wav" });
+                        await sendOverWS(wavBlob);
+                        try { ff.FS("unlink", inputName); ff.FS("unlink", "out.wav"); } catch { }
                     }
                 } catch (e) {
                     setHint(`인코딩 실패: ${e.message || e}`);
