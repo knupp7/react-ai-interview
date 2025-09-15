@@ -1,9 +1,9 @@
-// src/components/interviewChat-comps/SpeechAnswerButtonFFmpeg.jsx
+// src/components/interviewChat-comps/SpeechAnswerButton.jsx
 import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/InterviewChat.module.css";
 import IconMic from "./IconMic";
 
-export default function SpeechAnswerButtonFFmpeg({ wsRef, onUserText, onAnswerSubmitted, canSend }) {
+export default function SpeechAnswerButton({ wsRef, onUserText, onAnswerSubmitted, canSend }) {
     const [isRec, setIsRec] = useState(false);
     const [sec, setSec] = useState(0);
     const [hint, setHint] = useState("");

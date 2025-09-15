@@ -4,7 +4,7 @@ import styles from "../styles/interviewChat.module.css";
 import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
 import ChattingArea from "./interviewChat-comps/ChattingArea";
 // import InputBox from "./interviewChat-comps/InputBox";
-import SpeechAnswerButtonFFmpeg from "./interviewChat-comps/SpeechAnswerButtonFFmpeg";
+import SpeechAnswerButton from "./interviewChat-comps/SpeechAnswerButton";
 import { startQATimer, stopQATimer } from "../utils/qaTimer";
 
 export default function InterviewStart() {
@@ -292,7 +292,7 @@ export default function InterviewStart() {
       <div className={styles.chatWrapper}>
         <ChattingArea messages={msg} inter  viewer={persona} interviewee={userProfile} />
         {/* <InputBox onSend={handleSend} /> */}
-        <SpeechAnswerButtonFFmpeg
+        <SpeechAnswerButton
           wsRef={wsRef}
           onUserText={appendUserText}
           onAnswerSubmitted={handleAnswerSubmitted}
