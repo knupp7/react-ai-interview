@@ -6,7 +6,7 @@ export const INTERVIEW_LABELS = {
     name: "이름",
     age: "나이",
     gender: "성별",
-    organization: "회사/학교/소속기관",
+    organization: "소속기관",
     position: "직급/직업",
     company: "기업 선택",
     role: "직군 선택",

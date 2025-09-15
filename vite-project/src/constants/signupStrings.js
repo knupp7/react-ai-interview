@@ -9,7 +9,7 @@ const signupStrings = {
       name: '이름',
       age: '나이',
       gender: '성별',
-      organization: '회사/학교/소속기관',
+      organization: '소속기관',
       job: '직급/직업',
     },
     genderOptions: {

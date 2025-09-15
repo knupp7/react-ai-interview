@@ -218,7 +218,7 @@ export default function SignUp() {
                 value={form.organization}
                 onChange={handleChange}
                 className={`${styles.input} ${errors.organization ? styles.inputError : ''}`}
-                placeholder={signupStrings.fields.organization}
+                placeholder={(signupStrings.fields.organization)+(" (학교, 회사 등)")}
                 autoComplete="organization"
                 aria-invalid={!!errors.organization}
               />

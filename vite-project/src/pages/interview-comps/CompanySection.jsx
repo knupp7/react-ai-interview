@@ -122,6 +122,7 @@ const CompanySection = ({
           </div>
         </div>
       )}
+      
       {/* ▶ 업로드/입력 선택 */}
       <div className={styles.form_row}>
         <span className={styles.label}>{INTERVIEW_LABELS.resumeMode}</span>

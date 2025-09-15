@@ -90,7 +90,7 @@ export default function ResumeUploader({ setResume, onExtracted, maxSizeMB = 10 
             />
 
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <button type="button" onClick={pickFile} disabled={busy} style={{ backgroundColor: '#3b82f6', color: '#fff' }}>
+                <button type="button" onClick={pickFile} disabled={busy} style={{ backgroundColor: '#1C57A5', color: '#fff' }}>
                     PDF 선택
                 </button>
                 <span style={{ fontSize: 12, color: '#64748b' }}>

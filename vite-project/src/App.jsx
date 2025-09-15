@@ -7,6 +7,7 @@ import InterviewChat from './pages/InterviewChat'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import './App.css'
+import './styles/tokens.css'
 import NavBar from './components/NavBar';
 import InterviewResult from './pages/InterviewResult'
 

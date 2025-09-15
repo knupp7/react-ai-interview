@@ -1,22 +1,11 @@
-* {
+/* * {
     box-sizing: border-box;
-}
-
-:root {
-    --primary: #3b82f6;
-    --primary-dark: #2563eb;
-    --ink-1: #111827;
-    --ink-2: #374151;
-    --muted: #64748b;
-    --border: #e5e7eb;
-    --card-border: #e1f5fe;
-    --bg: #f0f8ff;
-}
+} */
 
 /* 컨테이너: 로그인과 동일한 톤 */
 .signupContainer {
     min-height: max(90vh, calc(100dvh - 75px));
-    background-color: var(--bg);
+    background-color: var(--bg-2);
     display: flex;
     align-items: center;
     justify-content: center;

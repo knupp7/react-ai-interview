@@ -290,7 +290,7 @@ export default function InterviewStart() {
        * interviewee: 면접자(유저) 프로필
        */}
       <div className={styles.chatWrapper}>
-        <ChattingArea messages={msg} interviewer={persona} interviewee={userProfile} />
+        <ChattingArea messages={msg} inter  viewer={persona} interviewee={userProfile} />
         {/* <InputBox onSend={handleSend} /> */}
         <SpeechAnswerButtonFFmpeg
           wsRef={wsRef}

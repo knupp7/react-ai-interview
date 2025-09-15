@@ -1,6 +1,6 @@
 .container {
   min-height: max(90vh,calc(100dvh - 75px));
-  background-color: #f0f8ff;
+  background-color: var(--bg-2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,22 +37,10 @@
   object-fit: cover;
 }
 
-.defaultIcon {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background-color: #3b82f6;
-  color: white;
-  font-size: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .title {
   font-size: 28px;
   font-weight: 700;
-  color: #1e40af;
+  color: var(--primary);
   margin: 0 0 8px 0;
 }
 
@@ -123,7 +111,7 @@
 
 .loginButton {
   width: 100%;
-  background-color: #3b82f6;
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -135,7 +123,7 @@
 }
 
 .loginButton:hover {
-  background-color: #2563eb;
+  background-color: var(--primary-dark);
 }
 
 .signupSection {
@@ -146,13 +134,13 @@
 
 .signupText {
   font-size: 14px;
-  color: #64748b;
+  color: var(--muted);
   margin-right: 8px;
 }
 
 .signupButton {
   background-color: transparent;
-  color: #3b82f6;
+  color: var(--primary);
   border: none;
   font-size: 14px;
   font-weight: 600;
