@@ -6,6 +6,7 @@ import ChattingArea from "./interviewChat-comps/ChattingArea";
 // import InputBox from "./interviewChat-comps/InputBox";
 import SpeechAnswerButton from "./interviewChat-comps/SpeechAnswerButton";
 import { startQATimer, stopQATimer } from "../utils/qaTimer";
+import AudioWave from "./interviewChat-comps/AudioWave";
 
 export default function InterviewStart() {
   const location = useLocation();
@@ -22,6 +23,8 @@ export default function InterviewStart() {
 
   const [sttReady, setSttReady] = useState(false);
   const [awaitingAnswer, setAwaitingAnswer] = useState(false);
+  const [analyserNode, setAnalyserNode] = useState(null);
+
   const wsRef = useRef(null);
 
   const qIndexRef = useRef(0); // 질문 인덱스(0,1,2..)
@@ -32,6 +35,7 @@ export default function InterviewStart() {
 
   const rxPcmRef = useRef(null);      // { sr, fmt, chunks: ArrayBuffer[] }
   const audioCtxRef = useRef(null);
+  const analyserRef = useRef(null);
 
   const sessionCode = localStorage.getItem("sessionCode");
   const userProfile = {
@@ -87,15 +91,37 @@ export default function InterviewStart() {
   };
 
   const playPcm = async (float32, sampleRate) => {
-    const ctx = getAudioCtx();
-    if (ctx.state === "suspended") { try { await ctx.resume(); } catch { } }
-    const buf = ctx.createBuffer(1, float32.length, sampleRate);
-    buf.copyToChannel(float32, 0);
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    src.connect(ctx.destination);
-    src.start();
+  const ctx = getAudioCtx();
+  if (ctx.state === "suspended") {
+    try { await ctx.resume(); } catch {}
+  }
+
+  const buf = ctx.createBuffer(1, float32.length, sampleRate);
+  buf.copyToChannel(float32, 0);
+
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+
+  // analyser 준비
+  if (!analyserRef.current) {
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 1024;                 // 시간영역 해상도 ↑
+    analyser.smoothingTimeConstant = 0.15;   // 잔상 줄이기
+    analyserRef.current = analyser;
+    analyser.connect(ctx.destination);
+    setAnalyserNode(analyser);
+  }
+
+  // 소스 → analyser → destination
+  src.connect(analyserRef.current);
+
+  // 끝나면 소스 끊어주기(누적 방지)
+  src.onended = () => {
+    try { src.disconnect(); } catch {}
   };
+
+  src.start();
+};
 
   // 재생 큐 유틸
   const playNext = () => {
@@ -122,11 +148,6 @@ export default function InterviewStart() {
     }
     el.src = url;
     el.play().catch(() => { });
-  };
-
-  const enqueueAndPlay = (blob) => {
-    audioQueueRef.current.push(blob);
-    if (!audioElRef.current) playNext();
   };
 
   // WS
@@ -290,7 +311,9 @@ export default function InterviewStart() {
        * interviewee: 면접자(유저) 프로필
        */}
       <div className={styles.chatWrapper}>
-        <ChattingArea messages={msg} inter  viewer={persona} interviewee={userProfile} />
+        <AudioWave analyser={analyserNode} />
+
+        {/* <ChattingArea messages={msg} inter  viewer={persona} interviewee={userProfile} /> */}
         {/* <InputBox onSend={handleSend} /> */}
         <SpeechAnswerButton
           wsRef={wsRef}

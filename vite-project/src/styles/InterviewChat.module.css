@@ -26,7 +26,8 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
   background: #fafafa;
 }
@@ -181,12 +182,9 @@
 }
 
 .inputRow {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -393,10 +391,6 @@
 
 
 /* ── 3) 채팅 하단 페이드(스크롤 유도) ─────────────────── */
-.chatWrapper {
-  position: relative;
-}
-
 .chatWrapper::after {
   content: "";
   position: absolute;
