@@ -1,6 +1,4 @@
 :global(:root) {
-    /* 지난번 쓰던 파란색으로 교체하세요 */
-    --accent: #3b82f6;
     /* ex) Tailwind blue-600 */
     --bg-page: #f5f6f8;
     /* 연한 회색 배경 */

@@ -31,10 +31,10 @@ const RadarChart = ({ data }) => {
         label: '면접 점수',
         data: scores,
         backgroundColor: 'rgba(37, 99, 235, 0.16)',   // var(--accent) 투명 버전
-        borderColor: '#3b82f6',
+        borderColor: '#3080E2',
         borderWidth: 2,
-        pointBackgroundColor: '#3b82f6',
-        pointBorderColor: '#3b82f6',
+        pointBackgroundColor: '#1C57A5',
+        pointBorderColor: '#1C57A5',
         pointRadius: 3,
         pointHoverRadius: 5,
       },

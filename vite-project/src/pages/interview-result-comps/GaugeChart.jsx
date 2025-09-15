@@ -15,7 +15,7 @@ const GaugeChart = ({ score }) => {
     datasets: [
       {
         data: [score, 100 - score],
-        backgroundColor: ['#3b82f6', '#e5e7eb'],
+        backgroundColor: ['#1C57A5', '#e5e7eb'],
         borderWidth: 0,
         cutout: '75%',
       },

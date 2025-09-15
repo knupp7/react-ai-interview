@@ -22,7 +22,7 @@ const HorizontalBarChart = ({ data }) => {
       {
         label: "점수",
         data: scores,
-        backgroundColor: "#3b82f6",
+        backgroundColor: "#1C57A5",
         borderRadius: 8,
       }
     ]
