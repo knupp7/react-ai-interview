@@ -4,6 +4,7 @@ import LOGIN_STRINGS from '../constants/loginStrings';
 import { useNavigate } from 'react-router-dom';
 import { joinSession } from '../api/session';
 
+
 export default function Login() {
   const [userId, setUserId] = useState('');
   const [userPwd, setUserPwd] = useState('');
@@ -60,7 +61,7 @@ export default function Login() {
           <div className={styles.iconWrapper}>
             {!imgError && (
               <img
-                src="/duri.png"
+                src="/duri_new_p.png"
                 alt="duri character"
                 className={styles.characterImg}
                 onError={() => setImgError(true)}

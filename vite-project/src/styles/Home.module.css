@@ -1,23 +1,9 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html,
-body,
-#root {
-    height: 100%;
-}
-
-body {
-    font-family: sans-serif;
-    color: black;
-}
-
 .snap_container {
+    position: relative;
+    /* 스태킹 컨텍스트 */
     width: 100%;
     height: 100vh;
+    margin: auto;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -32,18 +18,145 @@ body {
 .snap_section {
     width: 100%;
     min-height: 100dvh;
-    flex-direction: column;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
     padding: 16px;
 }
 
 .snap_section:first-child {
-    /* background-color: #f8f9fd; */
-    background-color: linear-gradient(180deg, #f5f9ff, 80%, #ffffff, 100%);
+    background:
+        /* 가로선 */
+        repeating-linear-gradient(0deg,
+            rgba(28, 87, 165, .05) 0 1px, transparent 1px 40px),
+        /* 세로선 */
+        repeating-linear-gradient(90deg,
+            rgba(28, 87, 165, .05) 0 1px, transparent 1px 40px),
+        linear-gradient(180deg, #f7faff 0%, #ffffff 85%);
+
+    position: relative;
+    /* ::before/::after 기준 */
+    overflow: hidden;
+    /* 레이어 넘침 방지 */
+    background: linear-gradient(180deg, #f7faff 0%, #ffffff 85%);
+}
+
+/* 접근성: 모션 최소화 설정 시 애니 끄기 */
+@media (prefers-reduced-motion: reduce) {
+    .snap_section:first-child {
+        background: #fff;
+    }
+}
+
+/* @media (max-width: 1024px){
+  .snap_section:first-child{ background:#fff; }
+} */
+
+/* 가벼운 리페인트를 위해 별도 레이어(::before)로 */
+.snap_section:first-child::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    /* 살짝 크게 만들어 이동 여유 줌 */
+    pointer-events: none;
+    opacity: .80;
+
+    /* 얇은 선의 그리드 2장 */
+    background:
+        repeating-linear-gradient(0deg,
+            rgba(28, 87, 165, .08) 0 1px, transparent 1px 40px),
+        repeating-linear-gradient(90deg,
+            rgba(28, 87, 165, .08) 0 1px, transparent 1px 40px);
+
+    /* GPU 가속 힌트 */
+    transform: translateZ(0);
+    will-change: transform;
+
+    /* 아주 느리게, 미세하게 이동 + 미세 스케일로 착시 */
+    animation: grid-pan-a 36s linear infinite;
+}
+
+/* 살짝 다른 간격/투명도의 그리드 1장을 더 얹어서 간섭무늬 느낌 */
+.snap_section:first-child::after {
+    content: "";
+    position: absolute;
+    inset: -22%;
+    pointer-events: none;
+    opacity: .60;
+
+    background:
+        repeating-linear-gradient(0deg,
+            rgba(28, 87, 165, .05) 0 1px, transparent 1px 38px),
+        repeating-linear-gradient(90deg,
+            rgba(28, 87, 165, .05) 0 1px, transparent 1px 38px);
+
+    transform: translateZ(0);
+    will-change: transform;
+
+    /* 반대 방향/속도로 이동 */
+    animation: grid-pan-b 44s linear infinite;
+}
+
+@keyframes grid-pan-a {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate3d(-2.2%, -1.6%, 0) scale(1.005);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+}
+
+@keyframes grid-pan-b {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1.005);
+    }
+
+    50% {
+        transform: translate3d(2.0%, 1.2%, 0) scale(1);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) scale(1.005);
+    }
+}
+
+.hero_glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        radial-gradient(900px 520px at 88% 92%, rgba(93, 134, 255, .08), transparent 60%);
+    background-repeat: no-repeat;
+    background-size: 120% 120%;
+    background-position: 80% 88%;
+    /* 시작 위치 */
+    animation: glow-drift 38s ease-in-out infinite alternate;
+}
+
+@keyframes glow-drift {
+    0% {
+        background-position: 80% 88%;
+    }
+
+    100% {
+        background-position: 20% 12%;
+    }
+}
+
+
+@media (max-width: 768px){
+  .snap_section:first-child::before,
+  .snap_section:first-child::after,
+  .hero_glow { animation: none; opacity:.2; } /* 혹은 display:none */
 }
 
 .start_button {
@@ -52,9 +165,68 @@ body {
     border: none;
     font-size: 1rem;
     cursor: pointer;
-    background: #5a81fa;
+    background: var(--secondary-dark);
+    /* opacity: 0.8; */
     color: #ffffff;
     border-radius: 8px;
 }
 
+.start_button:hover {
+    scale: 1.05;
+}
 
+.mascot_fixed {
+    position: fixed;
+    /* 뷰포트 기준 고정 */
+    right: clamp(8px, 4vw, 7vw);
+    bottom: -4px;
+    width: clamp(180px, 28vw, 360px);
+    pointer-events: none;
+    filter: drop-shadow(0 10px 24px rgba(28, 87, 165, .18));
+    z-index: 9;
+    /* NavBar가 있다면 NavBar보다 낮거나 높게 조절 */
+}
+
+/* 모바일 보호 */
+@media (max-width: 640px) {
+    .mascot_fixed {
+        right: clamp(4px, 2.5vw, 24px);
+        bottom: -2px;
+        width: clamp(150px, 36vw, 280px);
+    }
+}
+
+:global(body.home-page)::before,
+:global(body.home-page)::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: min(16vw, 240px);
+    pointer-events: none;
+    z-index: 1;
+    /* 필요에 따라 NavBar보다 낮/높 조절 */
+    background: linear-gradient(to right, #eff5ff 0%, transparent 85%);
+}
+
+/* 좌측 패널 */
+:global(body.home-page)::before {
+    left: 0;
+    /* ← 누락돼 있던 부분 */
+}
+
+/* 우측 패널 */
+:global(body.home-page)::after {
+    right: 0;
+    left: auto;
+    transform: scaleX(-1);
+}
+
+@media (max-width: 1024px) {
+
+    :global(body.home-page)::before,
+    :global(body.home-page)::after {
+        display: none;
+        /* 또는 content:none; 둘 중 하나 */
+    }
+}

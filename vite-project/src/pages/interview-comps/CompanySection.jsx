@@ -84,31 +84,6 @@ const CompanySection = ({
         </select>
       </div>
 
-      {/* ▶ 업로드/입력 선택 */}
-      <div className={styles.form_row}>
-        <span className={styles.label}>{INTERVIEW_LABELS.resumeMode}</span>
-        <div className={styles.segmented} role="tablist" aria-label="자기소개서 입력 방식">
-          <button
-            type="button"
-            className={`${styles.segmentedBtn} ${resumeMode === 'upload' ? styles.selected : ''}`}
-            onClick={onSwitchToUpload}
-            aria-pressed={resumeMode === 'upload'}
-            role="tab"
-          >
-            PDF 업로드
-          </button>
-          <button
-            type="button"
-            className={`${styles.segmentedBtn} ${resumeMode === 'text' ? styles.selected : ''}`}
-            onClick={onSwitchToText}
-            aria-pressed={resumeMode === 'text'}
-            role="tab"
-          >
-            직접 입력
-          </button>
-        </div>
-      </div>
-
       {/* ▶ 업로드 모드 */}
       {resumeMode === 'upload' ? (
         <div className={styles.form_row}>
@@ -147,6 +122,31 @@ const CompanySection = ({
           </div>
         </div>
       )}
+      
+      {/* ▶ 업로드/입력 선택 */}
+      <div className={styles.form_row}>
+        <span className={styles.label}>{INTERVIEW_LABELS.resumeMode}</span>
+        <div className={styles.segmented} role="tablist" aria-label="자기소개서 입력 방식">
+          <button
+            type="button"
+            className={`${styles.segmentedBtn} ${resumeMode === 'upload' ? styles.selected : ''}`}
+            onClick={onSwitchToUpload}
+            aria-pressed={resumeMode === 'upload'}
+            role="tab"
+          >
+            PDF 업로드
+          </button>
+          <button
+            type="button"
+            className={`${styles.segmentedBtn} ${resumeMode === 'text' ? styles.selected : ''}`}
+            onClick={onSwitchToText}
+            aria-pressed={resumeMode === 'text'}
+            role="tab"
+          >
+            직접 입력
+          </button>
+        </div>
+      </div>
     </>
   );
 };

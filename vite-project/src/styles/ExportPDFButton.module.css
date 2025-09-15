@@ -1,7 +1,7 @@
 .exportButton {
     margin-top: 2rem;
     padding: 0.75rem 1.5rem;
-    background-color: #3b82f6;
+    background-color: var(--primary);
     color: white;
     font-size: 1rem;
     border: none;
@@ -11,5 +11,5 @@
 }
 
 .exportButton:hover {
-    background-color: #2563eb;
+    background-color: var(--primary-dark);
 }

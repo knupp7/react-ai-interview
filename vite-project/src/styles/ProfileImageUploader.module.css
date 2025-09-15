@@ -1,7 +1,5 @@
 :root {
   /* 프로젝트 전역 변수와 톤 맞추기 */
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
   --muted: #64748b;
   --border: #e5e7eb;
   --bg-soft: #f0f8ff;

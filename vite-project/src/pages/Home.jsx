@@ -13,7 +13,7 @@ export default function Home() {
     document.body.classList.add("home-page");
     return () => document.body.classList.remove("home-page");
   }, []);
-  
+
   const handleStartClick = () => {
     const token = localStorage.getItem("sessionToken");
 
@@ -28,16 +28,25 @@ export default function Home() {
     <div className={styles.snap_container}>
       {/* Section 1: Banner */}
       <section className={styles.snap_section}>
-          <HomeBanner />
-          <button className={styles.start_button} onClick={handleStartClick}>
-            {HOME_STRINGS.HERO.START_BUTTON}
-          </button>
+        <span className={styles.hero_glow} aria-hidden />
+        <HomeBanner />
+        <button className={styles.start_button} onClick={handleStartClick}>
+          {HOME_STRINGS.HERO.START_BUTTON}
+        </button>
       </section>
 
       {/* 섹션 2~4: Slider가 내부에서 3개 섹션을 렌더 */}
       <FullSnapper />
+
+      <img
+        className={styles.mascot_fixed}
+        src="/duri_new.png"
+        alt=""
+        aria-hidden="true"
+      />
     </div>
-    
+
+
     // <div className={styles.home_container}>
     //   <HomeBanner />
     //   <button className={styles.start_button} onClick={handleStartClick}>

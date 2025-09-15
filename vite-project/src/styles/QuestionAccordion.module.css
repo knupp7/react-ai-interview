@@ -1,29 +1,136 @@
+/* 바깥에서(.qaItem) 카드 스타일을 주는 경우가 많아
+   여기서는 카드 스타일(배경, 외곽선)을 제거하고 내용만 정돈 */
 .accordion {
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    background-color: #f9fafb;
-    text-align: left;
+  margin-bottom: 0.75rem;
+  text-align: left;
+  background: transparent;
+  border: none;
 }
 
+/* 헤더 버튼 */
 .header {
-    width: 100%;
-    padding: 1rem;
-    background-color: #eeeeee;
-    border: none;
-    text-align: left;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    cursor: pointer;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-soft, #e5e7eb);
+  border-radius: 0.5rem;
+  background-color: var(--bg-subtle, #f9fafb);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 }
 
-.panel {
-    padding: 1rem;
-    background-color: #ffffff;
-    border-top: 1px solid #d1d5db;
+.header:hover {
+  background-color: #f3f4f6;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
+.open {
+  border-color: var(--secondary, #2563eb);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+}
+
+/* 제목 텍스트 */
+.title {
+  color: var(--text-strong, #111827);
+  letter-spacing: -0.01em;
+}
+
+/* 드롭 아이콘 (▼) 회전 */
 .icon {
-    font-size: 0.85rem;
+  display: inline-block;
+  transition: transform 160ms ease;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+.open .icon {
+  transform: rotate(180deg);
+  color: var(--secondary, #2563eb);
+}
+
+/* 패널 */
+.panel {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background-color: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-soft, #e5e7eb);
+  border-radius: 0.5rem;
+}
+
+/* 라벨/내용 한 줄 */
+.row {
+  margin: 0 0 0.65rem 0;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 0.5rem;
+  align-items: start;
+}
+.label {
+  color: var(--text-muted, #6b7280);
+}
+.text {
+  color: var(--text-strong, #111827);
+  line-height: 1.6;
+}
+
+/* 피드백 블록 */
+.feedbackBlock {
+  margin-top: 1rem;
+}
+.fbHeader {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-strong, #111827);
+}
+
+/* 개별 피드백 아이템 */
+.feedbackItem {
+  background: var(--bg-subtle, #f9fafb);
+  border: 1px solid var(--border-soft, #e5e7eb);
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* 피드백 상단 (배지 + 점수) */
+.feedbackHead {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: rgba(37, 99, 235, 0.1);   /* var(--accent) 투명 */
+  color: var(--primary, #2563eb);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.score {
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+/* 피드백 내용 */
+.feedbackText {
+  margin: 0.25rem 0 0 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
 }

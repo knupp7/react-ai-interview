@@ -90,7 +90,7 @@ const ProfileSection = ({
             type="text"
             value={organization}
             onChange={(e) => setOrganization(e.target.value)}
-            placeholder={INTERVIEW_LABELS.organization}
+            placeholder={(INTERVIEW_LABELS.organization)+(" (학교, 회사 등)")}
             className={styles.input}
             autoComplete="organization"
           />

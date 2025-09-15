@@ -42,7 +42,7 @@
 
 .navLinks li:hover,
 .navLinks .active {
-    color: var(--primary-color);
+    color: var(--primary);
     font-weight: bold;
 }
 
@@ -63,7 +63,7 @@
 
 .login,
 .logout {
-    background: var(--primary-color);
+    background: var(--primary);
     color: white;
 }
 
@@ -75,7 +75,7 @@
 .signup {
     background: white;
     color: #141414;
-    border: 0.5px solid #141414aa;
+    border: 0.5px solid #14141444;
 }
 
 .signup:hover {

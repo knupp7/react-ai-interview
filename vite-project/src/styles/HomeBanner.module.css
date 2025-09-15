@@ -68,9 +68,10 @@
 }
 
 .vr {
-    width: 1px;
-    height: 10vh;
+    width: 2px;
+    height: 15vh;
     background: linear-gradient(180deg, black, 50%, blue 100%);
     margin: 0.5rem 0;
+    opacity: 0.6;
 
 }

@@ -1,13 +1,5 @@
 :root {
-    --background-color: #fff;
-
     --marker-size: clamp(56px, 7vw, 88px);
-    --marker-color: #5a81fa;
-    --card-bg: #f2f5ff;
-    --card-border: #e5e7eb;
-    --title-color: #1f1f1f;
-    --desc-color: #6a6283;
-
 }
 
 .snap_section {
@@ -19,7 +11,7 @@
     justify-content: center;
     padding: 16px;
     padding-right: 0;
-    background-color: var(--background-color);
+    background-color: var(--bg);
 
     /* scroll-snap: 부모 컨테이너가 scroll-snap-type을 갖고 있어야 동작 */
     scroll-snap-align: start;
@@ -77,7 +69,7 @@
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: var(--marker-color);
+    background: var(--secondary);
     color: #fff;
     font-weight: 500;
     font-size: 1.5rem;
@@ -95,7 +87,7 @@
 }
 
 .step_label {
-    color: var(--title-color);
+    color: var(--ink-1);
     font-weight: 800;
     font-size: clamp(1.05rem, 2.4vw, 1.4rem);
     line-height: 1.25;
@@ -121,7 +113,7 @@
     font-size: clamp(0.95rem, 2vw, 1.05rem);
     line-height: 1.6;
     word-break: keep-all;
-    color: var(--desc-color);
+    color: var(--ink-2);
 }
 
 /* 아주 좁은 폭(폰)에서는 좌우 패딩/폭을 더 조정 */
