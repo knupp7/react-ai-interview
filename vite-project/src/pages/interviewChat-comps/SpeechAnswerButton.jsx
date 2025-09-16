@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/InterviewChat.module.css";
 import IconMic from "./IconMic";
 
-export default function SpeechAnswerButton({ wsRef, onUserText, onAnswerSubmitted, canSend }) {
+export default function SpeechAnswerButton({ wsRef, onUserText, onAnswerSubmitted, onRecAnalyser, canSend }) {
     const [isRec, setIsRec] = useState(false);
     const [sec, setSec] = useState(0);
     const [hint, setHint] = useState("");
@@ -14,6 +14,10 @@ export default function SpeechAnswerButton({ wsRef, onUserText, onAnswerSubmitte
     const chunksRef = useRef([]);
     const mimeRef = useRef("");
     const ffRef = useRef(null); // { api: 'modern'|'legacy', ff }
+
+    const micCtxRef = useRef(null);
+    const micSrcRef = useRef(null);
+    const micAnalyserRef = useRef(null);
 
     // ---- helpers ----
     const toBlobURL = async (url, type) => {
@@ -102,6 +106,20 @@ export default function SpeechAnswerButton({ wsRef, onUserText, onAnswerSubmitte
         }
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            // 마이크 → Analyser 준비
+            if (!micCtxRef.current) {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                micCtxRef.current = new Ctx();
+            }
+            if (micCtxRef.current.state === "suspended") { try { await micCtxRef.current.resume(); } catch { } }
+            micAnalyserRef.current = micCtxRef.current.createAnalyser();
+            micAnalyserRef.current.fftSize = 1024;
+            micAnalyserRef.current.smoothingTimeConstant = 0.12;
+            micSrcRef.current = micCtxRef.current.createMediaStreamSource(stream);
+            micSrcRef.current.connect(micAnalyserRef.current);
+            // 부모에 전달 → 파형이 마이크 analyser로 전환
+            onRecAnalyser?.(micAnalyserRef.current);
+
             const mime = pickMime();
             mimeRef.current = mime;
 
@@ -162,7 +180,7 @@ export default function SpeechAnswerButton({ wsRef, onUserText, onAnswerSubmitte
         setHint(`인코딩 완료 ${Math.round(mp3Blob.size / 1024)} KB`);
         if (wsRef.current?.readyState === WebSocket.OPEN) {
             wsRef.current.send(await mp3Blob.arrayBuffer()); // 서버가 요구하는 "바이너리 1프레임"
-            onUserText?.("(음성 응답 전송)");
+            // onUserText?.("(음성 응답 전송)");
         } else {
             setHint("WS 연결이 열려 있지 않습니다");
             console.log({ WebSocket })
@@ -175,7 +193,11 @@ export default function SpeechAnswerButton({ wsRef, onUserText, onAnswerSubmitte
                 mrRef.current.stop();
                 onAnswerSubmitted?.()
             }
-
+            // 마이크 analyser 정리
+            try { micSrcRef.current?.disconnect(); } catch { }
+            micSrcRef.current = null;
+            micAnalyserRef.current = null;
+            onRecAnalyser?.(null);
         } catch { }
     };
 

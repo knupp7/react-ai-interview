@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/interviewChat.module.css";
 import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
-import ChattingArea from "./interviewChat-comps/ChattingArea";
+// import ChattingArea from "./interviewChat-comps/ChattingArea";
 // import InputBox from "./interviewChat-comps/InputBox";
 import SpeechAnswerButton from "./interviewChat-comps/SpeechAnswerButton";
 import { startQATimer, stopQATimer } from "../utils/qaTimer";
@@ -23,7 +23,8 @@ export default function InterviewStart() {
 
   const [sttReady, setSttReady] = useState(false);
   const [awaitingAnswer, setAwaitingAnswer] = useState(false);
-  const [analyserNode, setAnalyserNode] = useState(null);
+  const [aiAnalyser, setAiAnalyser] = useState(null);      // 면접관(재생)용
+  const [userAnalyser, setUserAnalyser] = useState(null);  // 내 마이크용
 
   const wsRef = useRef(null);
 
@@ -90,38 +91,40 @@ export default function InterviewStart() {
     return out;
   };
 
-  const playPcm = async (float32, sampleRate) => {
-  const ctx = getAudioCtx();
-  if (ctx.state === "suspended") {
-    try { await ctx.resume(); } catch {}
-  }
+  const playPcm = (float32, sampleRate) => {
+    return new Promise(async (resolve) => {
+      const ctx = getAudioCtx();
+      if (ctx.state === "suspended") {
+        try { await ctx.resume(); } catch { }
+      }
 
-  const buf = ctx.createBuffer(1, float32.length, sampleRate);
-  buf.copyToChannel(float32, 0);
+      const buf = ctx.createBuffer(1, float32.length, sampleRate);
+      buf.copyToChannel(float32, 0);
 
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
 
-  // analyser 준비
-  if (!analyserRef.current) {
-    const analyser = ctx.createAnalyser();
-    analyser.fftSize = 1024;                 // 시간영역 해상도 ↑
-    analyser.smoothingTimeConstant = 0.15;   // 잔상 줄이기
-    analyserRef.current = analyser;
-    analyser.connect(ctx.destination);
-    setAnalyserNode(analyser);
-  }
+      // analyser 준비
+      if (!analyserRef.current) {
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 1024;
+        analyser.smoothingTimeConstant = 0.15;
+        analyserRef.current = analyser;
+        analyser.connect(ctx.destination);
+        setAiAnalyser(analyser);
+      }
 
-  // 소스 → analyser → destination
-  src.connect(analyserRef.current);
+      // 소스 → analyser → destination
+      src.connect(analyserRef.current);
 
-  // 끝나면 소스 끊어주기(누적 방지)
-  src.onended = () => {
-    try { src.disconnect(); } catch {}
+      src.onended = () => {
+        try { src.disconnect(); } catch { }
+        resolve(); // 재생이 진짜 끝났음을 알림
+      };
+
+      src.start();
+    });
   };
-
-  src.start();
-};
 
   // 재생 큐 유틸
   const playNext = () => {
@@ -203,13 +206,20 @@ export default function InterviewStart() {
 
             case "question_audio_end":
               if (rxPcmRef.current?.chunks?.length) {
+                const rx = rxPcmRef.current;
                 const merged = concatArrayBuffers(rxPcmRef.current.chunks);
                 const f32 = s16ToF32(merged);
-                playPcm(f32, rxPcmRef.current.sr);
+                const sr = rx.sr || 16000;
+                playPcm(f32, sr).then(() => {
+                  setAwaitingAnswer(true);
+                  startQATimer(sessionCode, qIndexRef.current);
+                });
+              } else {
+                // 혹시 오디오 청크가 비어있다면 즉시 내 차례로 전환
+                setAwaitingAnswer(true);
+                startQATimer(sessionCode, qIndexRef.current);
               }
-              setAwaitingAnswer(true);
               rxPcmRef.current = null;
-              startQATimer(sessionCode, qIndexRef.current);
               break;
 
             case "final_text":
@@ -292,6 +302,9 @@ export default function InterviewStart() {
     stopQATimer(sessionCode, qIndexRef.current);
     qIndexRef.current += 1;
   };
+
+  const activeAnalyser = userAnalyser ?? aiAnalyser;
+
   return (
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
@@ -311,7 +324,7 @@ export default function InterviewStart() {
        * interviewee: 면접자(유저) 프로필
        */}
       <div className={styles.chatWrapper}>
-        <AudioWave analyser={analyserNode} />
+        <AudioWave analyser={activeAnalyser} />
 
         {/* <ChattingArea messages={msg} inter  viewer={persona} interviewee={userProfile} /> */}
         {/* <InputBox onSend={handleSend} /> */}
@@ -319,6 +332,7 @@ export default function InterviewStart() {
           wsRef={wsRef}
           onUserText={appendUserText}
           onAnswerSubmitted={handleAnswerSubmitted}
+          onRecAnalyser={setUserAnalyser}
           canSend={sttReady && awaitingAnswer}
         />
       </div>
