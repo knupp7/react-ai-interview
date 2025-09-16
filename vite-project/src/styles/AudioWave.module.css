@@ -1,41 +1,45 @@
+/* AudioWave.module.css */
 .waveContainer {
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;          /* ← 부모가 자식 폭 줄이는 걸 허용 */
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  padding: 1.5rem;
-  box-sizing: border-box;
-  width: 100%;           /* ← 명시적으로 폭 확보 */
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;          /* ← 부모가 자식 폭 줄이는 걸 허용 */
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    width: 100%;           /* ← 명시적으로 폭 확보 */
 }
 
+/* 컨테이너는 가운데 정렬 */
 .wave {
-  flex: 1 1 auto;
-  min-width: 0;          /* ← 중요: 0으로 수축 계산 방지 */
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 2px;
-  max-height: 420px;
-  width: 100%;           /* ← 폭 100% */
-  background: #f8f8f8;
-  border-radius: 12px;
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    align-items: center;         /* ★ 중앙선에 바의 중심을 맞춤 */
+    justify-content: center;
+    gap: 2px;
+    inline-size: 100%;
+    max-block-size: 420px;
+    background: #f8f8f8;
+    border-radius: 12px;
 }
 
+/* 막대: 중앙을 기준으로 scaleY */
 .bar {
-  flex: 1 1 0;           /* 남은 공간 균등 분배 */
-  min-width: 3px;        /* ★ 최소 폭 보장 */
-  max-width: 10px;       /* 선택: 지나치게 두꺼워지는 것 방지 */
-  height: 100%;
-  background: #1c57a5;
-  border-radius: 6px;
-  transform-origin: bottom center;
-  transform: scaleY(0.08);
-  will-change: transform;
+    flex: 1 1 0;
+    min-width: 3px;
+     max-width: 10px;
+    block-size: 100%;
+    background: #1c57a5;
+    border-radius: 999px;        /* 위/아래 둥글게 */
+    transform-origin: center center;   /* ★ 중앙 기준 */
+    transform: scaleY(0.12);     /* 최소값 (양쪽으로 살짝 보이게) */
+    will-change: transform;
 }
 
 /* 모션 최소화 환경 고려(옵션) */
 @media (prefers-reduced-motion: reduce) {
-  .bar { transition: none !important; }
+    .bar { transition: none !important; }
 }

@@ -1,18 +1,23 @@
 // AudioWave.jsx
+// v2, 대칭
 import { useEffect, useMemo, useRef } from "react";
 import styles from "../../styles/AudioWave.module.css";
 
-const BAR_COUNT = 50;
+const BAR_COUNT = 100;
 
 export default function AudioWave({ analyser }) {
   const rafRef = useRef(null);
-  const barsRef = useRef([]);            // 각 막대 DOM 참조
-  const emaRef = useRef(new Float32Array(BAR_COUNT)); // 부드럽게(감쇠)용
-  const dataRef = useRef(null);          // Uint8Array 재사용
+  const barsRef = useRef([]);
+  const dataRef = useRef(null);
+  const emaRef = useRef(null);
 
-  // 빈 div를 고정 렌더(리렌더링 없음)
+  const HALF = Math.floor(BAR_COUNT / 2);
+
+  // 바 DOM 고정 렌더
   const bars = useMemo(
-    () => Array.from({ length: BAR_COUNT }, (_, i) => <div key={i} className={styles.bar} ref={el => (barsRef.current[i] = el)} />),
+    () => Array.from({ length: BAR_COUNT }, (_, i) => (
+      <div key={i} className={styles.bar} ref={el => (barsRef.current[i] = el)} />
+    )),
     []
   );
 
@@ -20,48 +25,64 @@ export default function AudioWave({ analyser }) {
     if (!analyser) return;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
-    // 주파수 도메인 사용 (스펙트럼 느낌). 필요시 getByteTimeDomainData로 교체 가능.
-    const binCount = analyser.frequencyBinCount; // fftSize / 2
+    const binCount = analyser.frequencyBinCount; // = fftSize/2
     if (!dataRef.current || dataRef.current.length !== binCount) {
       dataRef.current = new Uint8Array(binCount);
     }
-    const buf = dataRef.current;
+    if (!emaRef.current || emaRef.current.length !== HALF) {
+      emaRef.current = new Float32Array(HALF);
+    }
 
-    // 한 막대가 먹을 bin 개수
-    const binsPerBar = Math.max(1, Math.floor(binCount / BAR_COUNT));
-    const alphaUp = 0.5;   // 빠르게 올라가고
-    const alphaDown = 0.15; // 천천히 내려오게 (감쇠)
+    const buf = dataRef.current;
+    const binsPerBand = Math.max(1, Math.floor(binCount / HALF));
+    const alphaUp = 0.5;    // 빠르게 올라가고
+    const alphaDown = 0.15; // 천천히 내려오게
 
     const tick = () => {
       analyser.getByteFrequencyData(buf); // 0..255
 
-      // 집계 → 0..1 정규화
-      for (let b = 0; b < BAR_COUNT; b++) {
-        const start = b * binsPerBar;
-        const end = Math.min(binCount, start + binsPerBar);
+      // b=0(저주파) 값을 "센터"에, b가 커질수록 바깥쪽으로
+      for (let b = 0; b < HALF; b++) {
+        const start = b * binsPerBand;
+        const end = Math.min(binCount, start + binsPerBand);
+
         let sum = 0;
         for (let i = start; i < end; i++) sum += buf[i];
-        const avg = sum / (end - start || 1); // 0..255
-        const target = avg / 255;             // 0..1
+        let target = (sum / (end - start || 1)) / 255; // 0..1
 
-        // EMA (올라갈 때/내려갈 때 가중치 다르게)
+        // 바깥으로 갈수록 살짝 감쇠(시각적인 테이퍼)
+        target *= (1 - (b / HALF) * 0.25); // 1 → 0.75
+
         const prev = emaRef.current[b];
         const a = target > prev ? alphaUp : alphaDown;
         const next = prev + (target - prev) * a;
         emaRef.current[b] = next;
 
-        // transform으로만 반영 (리플로우 회피)
-        const el = barsRef.current[b];
-        if (el) el.style.transform = `scaleY(${0.08 + next * 0.92})`; // 0.08~1.0
+        // ← 왼쪽 / 오른쪽 → (센터 기준 대칭)
+        const leftIdx  = HALF - 1 - b; // 가운데에서 왼쪽으로
+        const rightIdx = HALF + b;     // 가운데에서 오른쪽으로
+        const MIN_SCALE = 0.0;             // 완전 0까지 줄어듦
+        const scale = MIN_SCALE + next * (1 - MIN_SCALE);
+
+        const lEl = barsRef.current[leftIdx];
+        const rEl = barsRef.current[rightIdx];
+        if (lEl) lEl.style.transform = `scaleY(${scale})`;
+        if (rEl) rEl.style.transform = `scaleY(${scale})`;
+      }
+
+      // 홀수 개를 쓰는 경우 중앙 막대 처리
+      if (BAR_COUNT % 2 === 1) {
+        const mid = HALF;
+        const midVal = emaRef.current[0] || 0; // 가장 안쪽 밴드값 사용
+        const mEl = barsRef.current[mid];
+        if (mEl) mEl.style.transform = `scaleY(${0.08 + midVal * 0.92})`;
       }
 
       rafRef.current = requestAnimationFrame(tick);
     };
 
     tick();
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [analyser]);
 
   return (
