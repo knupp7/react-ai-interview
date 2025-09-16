@@ -1,0 +1,127 @@
+/* src/styles/LoadingOverlay.module.css */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.card {
+    width: min(520px, 92vw);
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .2);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.spinner {
+    width: 22px;
+    height: 22px;
+    border: 3px solid #e5e7eb;
+    border-top-color: var(--primary, #1C57A5);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.progressWrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0 6px;
+}
+
+.progressBar {
+    flex: 1;
+    height: 8px;
+    background: #eee;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: var(--primary, #1C57A5);
+    transition: width .3s ease;
+}
+
+.progressText {
+    font-size: 12px;
+    color: #666;
+    width: 42px;
+    text-align: right;
+}
+
+.stepList {
+    margin: 10px 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stepList li {
+    color: #666;
+}
+
+.stepList li.active {
+    color: #111;
+    font-weight: 600;
+}
+
+.stepList li.done {
+    color: #1a7f37;
+    text-decoration: none;
+}
+
+.message {
+    margin-top: 6px;
+    color: #444;
+}
+
+.error {
+    margin-top: 14px;
+    background: #fff1f1;
+    border: 1px solid #ffd6d6;
+    color: #8b0000;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.primary {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary, #1C57A5);
+    color: #fff;
+    cursor: pointer;
+}
+
+.secondary {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+}

@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { getFinalEvaluation } from "../api/eval";
 import html2pdf from 'html2pdf.js';
 import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 export default function InterviewResult() {
   const location = useLocation();
@@ -40,6 +41,18 @@ export default function InterviewResult() {
   });
   const [questions, setQuestions] = useState(null);
   const [finalFeedback, setFinalFeedback] = useState('');
+
+  const [evalOpen, setEvalOpen] = useState(true);   // 처음 진입하면 로딩 오버레이 ON
+  const [evalStep, setEvalStep] = useState(0);
+  const [evalMsg, setEvalMsg] = useState("결과를 불러오고 있어요.");
+  const [evalErr, setEvalErr] = useState("");
+
+  const evalSteps = [
+    "최종 평가 데이터 확인",
+    "캐시/로컬 점검",
+    "서버에서 평가 결과 수신",
+    "리포트 구성 중"
+  ];
 
   const handleExportPDF = () => {
     if (exportRef.current) return;
@@ -85,21 +98,37 @@ export default function InterviewResult() {
   useEffect(() => {
     const fetchEval = async () => {
       const sessionCode = localStorage.getItem("sessionCode");
-      if (!sessionCode) return;
+      if (!sessionCode) {
+        setEvalErr("세션 코드가 없습니다. 다시 로그인해 주세요.");
+        return;
+      }
       try {
+        setEvalOpen(true);
+        setEvalErr("");
+        setEvalStep(0);
+        setEvalMsg("최종 평가 데이터 확인 중...");
+
+        // 0 → 1: 캐시/로컬 점검
+        await new Promise(r => setTimeout(r, 150));
+        setEvalStep(1);
+        setEvalMsg("캐시를 확인하고 있어요...");
+
         /**
          * total_score: int
          * questions: list
          * question_count: int
          * final_feedback: str
-         * category_scores: list
-         * category_feedbacks: list
+         * category_scores: dict
+         * category_feedbacks: dict
          */
+        // getFinalEvaluation: 캐시가 있으면 즉시 반환
         const res = await getFinalEvaluation(sessionCode);
-        setEvalData(res);
-        console.log("평가 결과:", res);
 
-        // report data
+        // 1 → 2: 서버 수신(UX용 단계 업)
+        setEvalStep(2);
+        setEvalMsg("서버에서 평가 결과를 수신했어요. 정리 중...");
+
+        setEvalData(res);
         setScore(Math.round((res.total_score) * 20));
         setTotalQuestions(res.question_count);
 
@@ -109,10 +138,9 @@ export default function InterviewResult() {
         }
         setRadarScores(scaledScores);
         setCategoryFeedback(res.category_feedbacks);
+        setQuestions(res.questions);
 
-        setQuestions(res.questions)
-
-        // fetchEval 내부에서 res 처리 후에 놓친 질문 계산
+        // 놓친 질문 계산
         const sumScores = (scores) => {
           if (!scores) return 0;
           if (Array.isArray(scores)) return scores.reduce((a, b) => a + (Number(b) || 0), 0);
@@ -126,10 +154,16 @@ export default function InterviewResult() {
         }, 0);
 
         setMissedQuestions(missed);
+        setFinalFeedback(res.final_feedback);
 
-        setFinalFeedback(res.final_feedback)
+        setEvalStep(3);
+        setEvalMsg("리포트를 구성하고 있어요...");
+
+        await new Promise(r => setTimeout(r, 200));
+        setEvalOpen(false);
       } catch (err) {
         console.error("최종 평가 가져오기 실패:", err);
+        setEvalErr(err?.message || "최종 평가를 불러오는 중 문제가 발생했어요.");
       }
     };
 
@@ -156,7 +190,35 @@ export default function InterviewResult() {
     }
   }, [evalData]);
 
-  if (!evalData) return <LoadingSpinner />;
+  const handleEvalRetry = async () => {
+    setEvalErr("");
+    // 강제 갱신이 필요하면 getFinalEvaluation(sessionCode, { force: true })로 바꿔도 됨
+    setEvalOpen(true);
+    // 위 useEffect와 같은 흐름을 재실행하려면 함수로 분리하거나:
+    // 간단히 아래처럼 트리거만 다시 걸고 싶다면 fetchEval을 바깥으로 빼도 됨.
+    // 여기서는 페이지 리로드가 가장 단순:
+    window.location.reload();
+  };
+
+  const handleEvalCancel = () => {
+    setEvalOpen(false);
+    // 필요 시 뒤로 가기 또는 채팅 화면 유지
+    // navigate("/interview/chat");
+  };
+
+  if (!evalData) {
+    return (<LoadingOverlay
+      isOpen={evalOpen}
+      steps={evalSteps}
+      currentStep={evalStep}
+      message={evalMsg}
+      error={evalErr}
+      onRetry={evalErr ? handleEvalRetry : undefined}
+      onCancel={handleEvalCancel}
+      title="면접 결과를 준비하고 있어요..."
+    />
+    )
+  };
 
   return (
     <div className={`${styles.wrapper} ${styles.pageBg}`}>
@@ -212,7 +274,7 @@ export default function InterviewResult() {
                 </div>
                 <div className={`${styles.questionCard} ${styles.accentBorder}`}>
                   <p className={styles.label}>{RESULT_STRINGS.avgAnsTime}</p>
-                  <span className={styles.value}>{(avgAnswerSec)+'s'}</span>
+                  <span className={styles.value}>{(avgAnswerSec) + 's'}</span>
                 </div>
               </div>
             </div>

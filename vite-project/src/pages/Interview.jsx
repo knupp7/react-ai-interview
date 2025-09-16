@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from '../styles/interview.module.css';
 import { INTERVIEW_LABELS, GENDER } from "../constants/interviewFormStrings";
 import { DEFAULT_COMPANIES, DEFAULT_ROLES } from "../data/interviewSelectOptions";
@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import ProfileSection from "./interview-comps/ProfileSection";
 import CompanySection from "./interview-comps/CompanySection";
 import { postProfileInfo, postInterviewInfo, postPersona, postQuestions, getPersona } from "../api/interview";
-import LoadingSpinner from "../components/LoadingSpinner";
+// import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 const FORM_CACHE_KEY = "interviewFormData";
 
@@ -38,6 +39,22 @@ export default function Interview() {
   });
   const [loading, setLoading] = useState(false);
 
+  const [loadingOpen, setLoadingOpen] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
+  const [loadingMsg, setLoadingMsg] = useState("");
+  const [loadingErr, setLoadingErr] = useState("");
+
+  const steps = [
+    "프로필 저장 중",
+    "지원 정보 저장 중",
+    "면접관 구성 중",
+    "면접관 정보 불러오는 중",
+    "질문 생성 중"
+  ];
+
+  // 재시도를 위해 마지막 payload들을 기억
+  const lastPayload = useRef(null);
+
   useEffect(() => {
     const sessionToken = localStorage.getItem('sessionToken');
     if (!sessionToken) {
@@ -55,61 +72,33 @@ export default function Interview() {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
-    const sessionCode = localStorage.getItem("sessionCode");
-    if (!sessionCode) {
-      alert("세션 코드가 없습니다. 로그인 상태를 확인해주세요.");
-      return;
-    }
-
+    lastPayload.current = { // 필요시 저장
+      name, age, gender, organization, position, selectedCompany, selectedRole, resume
+    };
     try {
-      setLoading(true);
-      await postProfileInfo(sessionCode, {
-        name,
-        age,
-        gender,
-        education: {
-          school: organization, // 상태에서 입력 받도록 수정
-          major: position,  // 상태에서 입력 받도록 수정
-          gradYear: 2024, // 상태에서 입력 받도록 수정
-        },
-        email: "keshicool9123@gmail.com", // 상태에서 입력 받도록 수정
-      });
-
-      await postInterviewInfo(sessionCode, {
-        company: selectedCompany,
-        position: selectedRole,
-        self_intro: resume,
-      });
-
-      await postPersona(sessionCode)
-      const personaRes = await getPersona(sessionCode);
-      if (personaRes) {
-        const enrichedPersona = {
-          name: personaRes.persona_name,
-          department: personaRes.department,
-          profileImage: "/bot_avatar.png"
-        };
-        localStorage.setItem("persona", JSON.stringify(enrichedPersona));
-      }
-
-      await postQuestions(sessionCode, { num_questions: 5 });
-      console.log(personaRes);
-
-      setLoading(false);
-      navigate("/interview/chat", {
-        state: {
-          name,
-          profileImage,
-          selectedCompany,
-          selectedRole,
-          resume,
-        },
-      });
+      await runFlow();
     } catch (err) {
-      console.error("면접 시작 실패:", err);
-      alert("면접 정보를 저장하는 데 실패했습니다.");
+      console.error(err);
+      setLoadingErr(err?.message || "알 수 없는 오류가 발생했습니다.");
     }
+  };
+
+  const handleRetry = async () => {
+    try {
+      await runFlow();
+    } catch (err) {
+      console.error(err);
+      setLoadingErr(err?.message || "다시 실패했습니다.");
+    }
+  };
+
+  const handleCancel = () => {
+    setLoadingOpen(false);
+    setLoadingErr("");
+    setLoadingStep(0);
+    setLoadingMsg("");
+    // 필요하면 홈으로
+    // navigate("/");
   };
 
   const validateForm = () => {
@@ -202,6 +191,62 @@ export default function Interview() {
     localStorage.removeItem(FORM_CACHE_KEY);
   };
 
+  const runFlow = async () => {
+    const sessionCode = localStorage.getItem("sessionCode");
+    if (!sessionCode) throw new Error("세션 코드가 없습니다. 로그인 상태를 확인해주세요.");
+
+    setLoadingOpen(true);
+    setLoadingErr("");
+    setLoadingStep(0);
+    setLoadingMsg("입력하신 프로필을 저장하고 있어요.");
+
+    // 1. 프로필
+    await postProfileInfo(sessionCode, {
+      name, age, gender,
+      education: { school: organization, major: position, gradYear: 2024 },
+      email: "keshicool9123@gmail.com",
+    });
+
+    setLoadingStep(1);
+    setLoadingMsg(`${selectedCompany} ${selectedRole} 지원 정보를 저장하고 있어요.`);
+
+    // 2. 인터뷰 정보
+    await postInterviewInfo(sessionCode, {
+      company: selectedCompany, position: selectedRole, self_intro: resume,
+    });
+
+    setLoadingStep(2);
+    setLoadingMsg("면접관 캐릭터를 구성 중입니다.");
+
+    // 3. 페르소나 생성
+    await postPersona(sessionCode);
+
+    setLoadingStep(3);
+    setLoadingMsg("면접관 정보를 불러오고 있어요.");
+
+    // 4. 페르소나 조회 → localStorage 저장
+    const personaRes = await getPersona(sessionCode);
+    if (personaRes) {
+      const enrichedPersona = {
+        name: personaRes.persona_name,
+        department: personaRes.department,
+        profileImage: "/bot_avatar.png",
+      };
+      localStorage.setItem("persona", JSON.stringify(enrichedPersona));
+    }
+
+    setLoadingStep(4);
+    setLoadingMsg("기술 면접 질문을 생성하고 있어요. 잠시만 기다려 주세요.");
+
+    // 5. 질문 생성
+    await postQuestions(sessionCode, { num_questions: 5 });
+
+    // 완료
+    setLoadingOpen(false);
+    navigate("/interview/chat", {
+      state: { name, profileImage, selectedCompany, selectedRole, resume },
+    });
+  };
 
   return (
     <div className={styles.interview_container}>
@@ -215,7 +260,7 @@ export default function Interview() {
           position={position} setPosition={setPosition}
           errors={errors} />
 
-        <hr className={styles.hr}/>
+        <hr className={styles.hr} />
 
         <CompanySection
           selectedCompany={selectedCompany} setSelectedCompany={setSelectedCompany}
@@ -225,14 +270,27 @@ export default function Interview() {
           resumeFileSelected={resumeFileSelected} setResumeFileSelected={setResumeFileSelected}
           errors={errors} />
 
-        {loading ? (
-          <LoadingSpinner isActive={loading} />
-        ) : (
+
+        {!loadingOpen ? (
           <div className={styles.interviewStart_btn}>
             <button className={styles.resetButton} onClick={handleReset}>{INTERVIEW_LABELS.reset}</button>
             <button className={styles.submitButton} onClick={handleSubmit}>{INTERVIEW_LABELS.submit}</button>
           </div>
+        ) : (
+          <LoadingOverlay
+            isOpen={loadingOpen}
+            steps={steps}
+            currentStep={loadingStep}
+            message={loadingMsg}
+            error={loadingErr}
+            onRetry={loadingErr ? handleRetry : undefined}
+            onCancel={handleCancel}
+            title="맞춤 기술면접 세팅 중..."
+          />
         )}
+
+
+
       </div>
     </div>
   );
