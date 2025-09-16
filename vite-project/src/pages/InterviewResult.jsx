@@ -14,7 +14,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function InterviewResult() {
   const location = useLocation();
-  const formData = location.state; // 사용자 정보 (현재 미사용)
+  const formData = location.state;
 
   const [isExporting, setIsExporting] = useState(false);
   const exportRef = useRef(false);    // 배포용 ref

@@ -91,38 +91,40 @@ export default function InterviewStart() {
     return out;
   };
 
-  const playPcm = async (float32, sampleRate) => {
-  const ctx = getAudioCtx();
-  if (ctx.state === "suspended") {
-    try { await ctx.resume(); } catch {}
-  }
+  const playPcm = (float32, sampleRate) => {
+    return new Promise(async (resolve) => {
+      const ctx = getAudioCtx();
+      if (ctx.state === "suspended") {
+        try { await ctx.resume(); } catch { }
+      }
 
-  const buf = ctx.createBuffer(1, float32.length, sampleRate);
-  buf.copyToChannel(float32, 0);
+      const buf = ctx.createBuffer(1, float32.length, sampleRate);
+      buf.copyToChannel(float32, 0);
 
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
 
-  // analyser 준비
-  if (!analyserRef.current) {
-    const analyser = ctx.createAnalyser();
-    analyser.fftSize = 1024;                 // 시간영역 해상도 ↑
-    analyser.smoothingTimeConstant = 0.15;   // 잔상 줄이기
-    analyserRef.current = analyser;
-    analyser.connect(ctx.destination);
-    setAiAnalyser(analyser);
-  }
+      // analyser 준비
+      if (!analyserRef.current) {
+        const analyser = ctx.createAnalyser();
+        analyser.fftSize = 1024;
+        analyser.smoothingTimeConstant = 0.15;
+        analyserRef.current = analyser;
+        analyser.connect(ctx.destination);
+        setAiAnalyser(analyser);
+      }
 
-  // 소스 → analyser → destination
-  src.connect(analyserRef.current);
+      // 소스 → analyser → destination
+      src.connect(analyserRef.current);
 
-  // 끝나면 소스 끊어주기(누적 방지)
-  src.onended = () => {
-    try { src.disconnect(); } catch {}
+      src.onended = () => {
+        try { src.disconnect(); } catch { }
+        resolve(); // 재생이 진짜 끝났음을 알림
+      };
+
+      src.start();
+    });
   };
-
-  src.start();
-};
 
   // 재생 큐 유틸
   const playNext = () => {
@@ -204,13 +206,20 @@ export default function InterviewStart() {
 
             case "question_audio_end":
               if (rxPcmRef.current?.chunks?.length) {
+                const rx = rxPcmRef.current;
                 const merged = concatArrayBuffers(rxPcmRef.current.chunks);
                 const f32 = s16ToF32(merged);
-                playPcm(f32, rxPcmRef.current.sr);
+                const sr = rx.sr || 16000;
+                playPcm(f32, sr).then(() => {
+                  setAwaitingAnswer(true);
+                  startQATimer(sessionCode, qIndexRef.current);
+                });
+              } else {
+                // 혹시 오디오 청크가 비어있다면 즉시 내 차례로 전환
+                setAwaitingAnswer(true);
+                startQATimer(sessionCode, qIndexRef.current);
               }
-              setAwaitingAnswer(true);
               rxPcmRef.current = null;
-              startQATimer(sessionCode, qIndexRef.current);
               break;
 
             case "final_text":
