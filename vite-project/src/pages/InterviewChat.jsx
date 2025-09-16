@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/interviewChat.module.css";
 import InterviewerAgent from "./interviewChat-comps/InterviewerAgent";
-import ChattingArea from "./interviewChat-comps/ChattingArea";
+// import ChattingArea from "./interviewChat-comps/ChattingArea";
 // import InputBox from "./interviewChat-comps/InputBox";
 import SpeechAnswerButton from "./interviewChat-comps/SpeechAnswerButton";
 import { startQATimer, stopQATimer } from "../utils/qaTimer";
@@ -23,7 +23,8 @@ export default function InterviewStart() {
 
   const [sttReady, setSttReady] = useState(false);
   const [awaitingAnswer, setAwaitingAnswer] = useState(false);
-  const [analyserNode, setAnalyserNode] = useState(null);
+  const [aiAnalyser, setAiAnalyser] = useState(null);      // 면접관(재생)용
+  const [userAnalyser, setUserAnalyser] = useState(null);  // 내 마이크용
 
   const wsRef = useRef(null);
 
@@ -109,7 +110,7 @@ export default function InterviewStart() {
     analyser.smoothingTimeConstant = 0.15;   // 잔상 줄이기
     analyserRef.current = analyser;
     analyser.connect(ctx.destination);
-    setAnalyserNode(analyser);
+    setAiAnalyser(analyser);
   }
 
   // 소스 → analyser → destination
@@ -292,6 +293,9 @@ export default function InterviewStart() {
     stopQATimer(sessionCode, qIndexRef.current);
     qIndexRef.current += 1;
   };
+
+  const activeAnalyser = userAnalyser ?? aiAnalyser;
+
   return (
     <div className={styles.interviewContainer}>
       <div className={styles.header}>
@@ -311,7 +315,7 @@ export default function InterviewStart() {
        * interviewee: 면접자(유저) 프로필
        */}
       <div className={styles.chatWrapper}>
-        <AudioWave analyser={analyserNode} />
+        <AudioWave analyser={activeAnalyser} />
 
         {/* <ChattingArea messages={msg} inter  viewer={persona} interviewee={userProfile} /> */}
         {/* <InputBox onSend={handleSend} /> */}
@@ -319,6 +323,7 @@ export default function InterviewStart() {
           wsRef={wsRef}
           onUserText={appendUserText}
           onAnswerSubmitted={handleAnswerSubmitted}
+          onRecAnalyser={setUserAnalyser}
           canSend={sttReady && awaitingAnswer}
         />
       </div>
