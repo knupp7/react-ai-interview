@@ -12,6 +12,7 @@ import { getFinalEvaluation } from "../api/eval";
 import html2pdf from 'html2pdf.js';
 import LoadingSpinner from "../components/LoadingSpinner";
 import LoadingOverlay from "../components/LoadingOverlay";
+import FinalFeedback from "./interview-result-comps/FinalFeedback";
 
 export default function InterviewResult() {
   const location = useLocation();
@@ -331,15 +332,7 @@ export default function InterviewResult() {
           </div>
         </section>
 
-        {/* 최종 총평 */}
-        <section className={`${styles.sectionSpacing} ${styles.sectionCard}`}>
-          <h2 className={`${styles.sectionTitle} ${styles.sectionTitleAccentSm}`}>
-            {RESULT_STRINGS.final}
-          </h2>
-          <div className={`${styles.finalBox} ${styles.accentLeft}`}>
-            {finalFeedback}
-          </div>
-        </section>
+        <FinalFeedback contents={finalFeedback}/>
       </div>
     </div>
   );
