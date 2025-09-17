@@ -30,6 +30,8 @@
   font-size: 0.95rem;
   line-height: 1.55;
   color: var(--text-muted, #374151);
+  word-break: keep-all;      /* CJK(한글) 단어 중간 끊김 방지 */
+  overflow-wrap: break-word; /* 너무 긴 토큰(긴영단어/URL)만 안전하게 줄바꿈 */
 }
 
 .feedback p {
